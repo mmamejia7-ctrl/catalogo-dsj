@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pedidos y Recarga · DSJ</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0f3d5e">
+<link rel="icon" href="icon-192.png">
+<link rel="manifest" href="manifest-pedidos.json">
+<link rel="apple-touch-icon" href="icon-pedidos-192.png">
+<link rel="stylesheet" href="print.css">
+<style>
+:root{--neg:#0f3d5e;--rojo:#1a6fa8;--rojo2:#1592e6;--tx:#555}
+*{box-sizing:border-box}html,body{margin:0;overflow-x:hidden}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--neg);background:linear-gradient(160deg,#f7f9fb,#e6edf3) fixed;min-height:100vh}
+header{background:var(--neg);color:#fff;border-bottom:5px solid var(--rojo);position:sticky;top:0;z-index:10}
+.top{display:flex;align-items:center;gap:10px;padding:10px 14px;max-width:1000px;margin:auto}
+.top img{width:42px;height:42px;border-radius:9px;background:#f6f5f1;object-fit:contain;padding:3px}
+.top div{flex:1;min-width:0}.top b{display:block}.top small{color:#bbb;font-size:.8em}
+.salir{background:#333;color:#fff;border:0;border-radius:999px;padding:8px 12px;font-weight:700}
+main{max-width:1000px;margin:auto;padding:14px 14px 60px}
+.card{background:#fff;border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:12px}
+label{display:block;margin:8px 0}label span{display:block;font-weight:700;font-size:.85em;margin-bottom:4px}
+input,select{width:100%;border:1px solid #ccc;border-radius:10px;padding:11px;font:inherit;background:#fff}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.b{border:0;border-radius:12px;padding:12px 14px;font:inherit;font-weight:800;cursor:pointer;background:var(--neg);color:#fff}
+.b.r{background:var(--rojo2)}.b.l{background:#eee;color:var(--neg)}
+.tabs{display:flex;gap:8px;margin:4px 0 12px}.tabs button{flex:1;border:0;border-radius:12px;padding:12px;font:inherit;font-weight:800;background:#fff;color:var(--neg);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.tabs button.on{background:var(--rojo2);color:#fff}
+.res{display:flex;gap:10px;flex-wrap:wrap;font-size:.9em;color:var(--tx);margin:0 2px 10px}.res b{color:var(--neg)}
+.ped{background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:10px;overflow:hidden}
+.ped .h{display:flex;gap:10px;align-items:center;padding:12px 14px;cursor:pointer}
+.ped .n{background:var(--neg);color:#fff;border-radius:10px;padding:6px 9px;font-weight:900;font-size:.9em}
+.ped .i{flex:1;min-width:0}.ped .i b{display:block}.ped .i small{color:var(--tx)}
+.ped .t{font-weight:900;color:var(--rojo)}
+.ped .det{display:none;border-top:1px solid #eee;padding:10px 14px}.ped.open .det{display:block}
+.ped table{width:100%;border-collapse:collapse;font-size:.88em}.ped td{padding:5px 3px;border-bottom:1px solid #f0f0f0}
+.r{text-align:right}.acts{display:flex;gap:8px;margin-top:10px}.acts .b{flex:1;font-size:.9em;padding:10px}
+.chk{width:22px;height:22px;flex:none}
+table.rec{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.rec th{background:var(--neg);color:#fff;text-align:left;padding:10px;font-size:.85em}.rec td{padding:10px;border-bottom:1px solid #eee}
+.rec td.q{font-weight:900;font-size:1.15em;text-align:right;color:var(--rojo)}
+.rec tr.sec td{background:#f4ece3;font-weight:800;font-size:.85em}
+.vh{margin:18px 2px 8px;font-size:1.15em;display:flex;align-items:center;gap:8px}.vh:before{content:"";width:6px;height:1.1em;background:var(--rojo);border-radius:3px}
+.vacio{text-align:center;color:var(--tx);padding:40px 10px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.bar .b{flex:1;min-width:140px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--neg);color:#fff;padding:10px 16px;border-radius:999px;font-size:.85em;z-index:60;opacity:0;transition:.3s;pointer-events:none}.toast.on{opacity:1}
+#login{max-width:420px;margin:30px auto}
+/* cartel de Netlify */
+main{padding-bottom:120px!important}
+.cli{background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:10px;padding:12px 14px}
+.cli .t{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.cli b{display:block}.cli small{color:var(--tx)}
+.cli .tel{font-weight:800;color:#1d5fa8;text-decoration:none;white-space:nowrap}
+.cli select{margin-top:8px}.cli .meta{font-size:.8em;color:var(--tx);margin-top:6px}
+.cli.sin{border-left:5px solid #d9480f}
+.lchip{display:inline-block;background:#1f7a4d;color:#fff;border-radius:6px;padding:1px 7px;font-size:.72em;font-weight:800;vertical-align:middle}
+.lchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}.lc{border:2px solid #1f7a4d;background:#fff;color:#1f7a4d;border-radius:999px;padding:7px 11px;font:700 .82em system-ui,Arial;cursor:pointer}.lc.on{background:#1f7a4d;color:#fff}
+.prod{width:100%;margin-top:10px;padding:10px;font-size:.88em}
+.b.wa{background:#25d366;color:#fff}
+.pbar{display:flex;gap:8px;position:sticky;top:-14px;background:#fff;padding:4px 0 8px;z-index:2}.pbar button{flex:1}
+.pcount{font-size:.85em;color:#555;margin-bottom:6px;font-weight:700}
+.psec{border:1px solid #eee;border-radius:12px;padding:6px 10px;margin-bottom:8px}.psh{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid #f0f0f0}
+.pit{display:flex;gap:10px;align-items:center;padding:6px 0;font-size:.9em}.pit img{width:38px;height:38px;object-fit:contain;background:#f6f6f6;border-radius:6px}
+.ov label.psh,.ov label.pit{display:flex!important;margin:0}.ov .psec input[type=checkbox]{width:22px!important;height:22px;flex:none;padding:0;accent-color:#1f7a4d}.ov .pit span,.ov .psh b{display:inline!important;margin:0;font-size:1em;font-weight:inherit}.ov .psh b{font-weight:800}
+.solok,.solno{border:1px solid #ccc;background:#fff;border-radius:8px;padding:4px 10px;margin:4px 4px 0 0;font:inherit;font-weight:700;cursor:pointer}.solok{border-color:#1f7a4d;color:#1f7a4d}.solno{border-color:#b3261e;color:#b3261e}
+
+/* ===== Azul difuminado (estilo tarjeta OnePay) ===== */
+header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f 70%,#2a7aa8 100%)!important;border-bottom-color:#1fa3ff!important}
+.b.cot{background:#e6f2fc;color:#0f3d5e;border:1px solid #9ccbf0}
+.cql{display:grid;gap:0;border:1px solid #e3e9ef;border-radius:12px;overflow:hidden}
+.cq{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;padding:10px 12px;border-top:1px solid #eef2f6}.cq:first-child{border-top:0}
+.cq b{display:block;font-size:.92em}.cq small{color:#666;font-size:.8em}
+.cq label{display:flex;align-items:center;gap:4px;font-weight:800;color:#0f3d5e;margin:0}
+.ov .cq input{width:96px!important;font:700 1.05em system-ui,Arial!important;text-align:right!important;padding:8px!important;border:1px solid #c6d1dc!important;border-radius:9px!important}
+.cq .cs{grid-column:1/-1;text-align:right;font-size:.82em;color:#53606b}
+.cqt{display:flex;justify-content:space-between;align-items:center;padding:12px 4px 4px;font-size:1.1em}.cqt b{font-size:1.3em;color:#0f3d5e}
+.cqn{display:block;margin-top:10px}.cqn span{display:block;font-size:.82em;font-weight:700;margin-bottom:4px}.cqn textarea{width:100%;border:1px solid #c6d1dc;border-radius:10px;padding:10px;font:inherit;box-sizing:border-box}
+.pv{font-size:.85em;color:#33414f;margin-top:10px}.pv b{color:#0f3d5e}
+.sws{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 4px}
+@media(max-width:560px){.sws{grid-template-columns:1fr}}
+.sw{display:flex;align-items:center;gap:8px;border:1px solid #d5dde6;background:#fff;border-radius:12px;padding:9px 10px;font-weight:700;font-size:.88em;color:#33414f;cursor:pointer;text-align:left}
+.sw b{margin-left:auto;font-size:.95em;color:#8a94a0}
+.sw .sk{flex:none;width:34px;height:20px;border-radius:999px;background:#c9d1da;position:relative;transition:.2s}
+.sw .sk::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.sw.on{border-color:#1f78b4;background:#eef6fd;color:#0f3d5e}.sw.on b{color:#1f78b4}.sw.on .sk{background:#1f78b4}.sw.on .sk::after{left:16px}
+.cli .meta{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.borrar{border:0;background:none;color:#b3261e;font-weight:700;font-size:.85em;padding:6px 0;cursor:pointer}
+.ck{display:flex!important;align-items:center;gap:8px;font-weight:700;margin:6px 0}.ck input{width:20px;height:20px;margin:0}
+</style>
+</head>
+<body>
+<header><div class="top"><img src="img/logo.jpg" alt=""><div><b>Pedidos y Recarga</b><small id="who">Distribuidora San Jorge</small></div><a class="salir" id="alCat" href="./" style="display:none;text-decoration:none">🛒 Catálogo</a><button class="salir" id="salir" style="display:none">Salir</button></div></header>
+<main>
+ <div id="login" class="card">
+  <h2 style="margin-top:0">Entrar</h2>
+  <label><span>¿Quién es?</span><select id="lq"><option value="oficina">Oficina (ve todas las rutas)</option></select></label>
+  <label><span>Clave</span><input id="lk" type="password" autocomplete="current-password" autocapitalize="off" placeholder="Números o letras"></label>
+  <button class="b r" id="lgo" style="width:100%">Entrar</button>
+  <p id="lmsg" style="color:var(--tx);font-size:.85em"></p>
+ </div>
+ <div id="app" style="display:none">
+  <div class="card">
+   <div class="g">
+    <label><span>Desde</span><input type="date" id="fd"></label>
+    <label><span>Hasta</span><input type="date" id="fh"></label>
+    <label id="fvw"><span>Vendedor</span><select id="fv"><option value="">Todos los vendedores</option></select></label>
+    <label><span>Hecho por</span><select id="fo"><option value="">Todos</option><option value="cli">📱 Solo hechos por el cliente</option><option value="ven">🚚 Solo hechos por vendedor/oficina</option></select></label>
+   </div>
+   <div class="g" style="margin-top:6px"><button class="b l" id="hoy">Hoy</button><button class="b l" id="man">Mañana</button><button class="b" id="buscar">🔄 Cargar pedidos</button></div>
+  </div>
+  <div class="tabs"><button data-t="p" class="on">📋 Pedidos</button><button data-t="r">🚚 Recarga</button><button data-t="c" id="tabC">👥 Clientes</button></div>
+  <div class="res" id="res"></div>
+  <div id="tp">
+   <div class="bar"><button class="b" id="pT">🖨 Imprimir marcados 3"</button><button class="b" id="pC">🖨 Imprimir marcados carta</button></div>
+   <label style="display:flex;gap:8px;align-items:center;margin:0 2px 10px"><input type="checkbox" class="chk" id="todos" checked><span style="margin:0">Marcar todos</span></label>
+   <div id="lista"></div>
+  </div>
+  <div id="tc" style="display:none">
+   <div class="card" style="padding:12px">
+    <input id="cq" type="search" placeholder="🔍 Buscar cliente, negocio o teléfono…" autocomplete="off">
+    <div class="g" style="margin-top:8px"><label><span>Vendedor</span><select id="cfv"><option value="">Todos</option><option value="__sin">— Sin vendedor —</option></select></label><button class="b r" id="cnew" style="align-self:end">+ Nuevo cliente</button></div>
+   </div>
+   <div class="res" id="cres"></div>
+   <div id="clis"></div>
+  </div>
+  <div id="tr" style="display:none">
+   <div class="bar"><button class="b l" id="rmodo">Ver: por vendedor</button><button class="b" id="rT">🖨 Recarga 3"</button><button class="b" id="rC">🖨 Recarga carta</button></div>
+   <div id="rec"></div>
+  </div>
+ </div>
+</main>
+<div class="toast" id="toast"></div>
+<script src="config.js"></script>
+<script src="productos.js"></script>
+<script src="comun.js"></script>
+<script>
+const PRODUCTOS = window.PRODUCTOS, ORD = Object.fromEntries(PRODUCTOS.map((p, i) => [p.c, i])), PX = Object.fromEntries(PRODUCTOS.map(p => [p.c, p]));
+let ses = LS.get('ses', null), pedidos = [], marcados = new Set(), porVend = true;
+const demo = !API;
+function sumDias(n) { const d = new Date(); d.setDate(d.getDate() + n); return hoyISO(d); }
+$('#fd').value = $('#fh').value = hoyISO();
+$('#hoy').onclick = () => { $('#fd').value = $('#fh').value = hoyISO(); buscar(); };
+$('#man').onclick = () => { $('#fd').value = $('#fh').value = sumDias(1); buscar(); };
+
+async function iniciarLogin() {
+  try { const vs = API ? (await apiGet({ a: 'datos' })).vendedores : []; $('#lq').innerHTML += vs.map(v => `<option value="v:${esc(v.nombre)}">${esc(v.nombre)}</option>`).join(''); LS.set('vendedores', vs); } catch (e) {}
+  if (demo) $('#lmsg').textContent = 'Falta configurar el enlace del servidor (config.js). Se muestran pedidos de ejemplo.';
+}
+$('#lgo').onclick = async () => {
+  const q = $('#lq').value, k = $('#lk').value.trim(); if (!k && !demo) return toast('Escriba la clave');
+  const vend = q.startsWith('v:') ? q.slice(2) : '';
+  try { const j = demo ? { rol: vend ? 'vendedor' : 'oficina', nombre: vend || 'Oficina' } : await apiGet({ a: 'login', k, vend }); ses = { k, vend, rol: j.rol, nombre: j.nombre, ts: Date.now() }; LS.set('ses', ses); entrar(); }
+  catch (e) { toast(e.message || 'No se pudo entrar'); }
+};
+$('#salir').onclick = () => { LS.set('ses', null); location.reload(); };
+async function cargarPreciosP() { try { const j = await apiGet({ a: 'datos' }); window._PRECIOS = mapaPrecios(j.precios); } catch (e) { const c = LS.get('precios', null); if (c) window._PRECIOS = c.p; } pintar && pedidos.length && pintar(); }
+function entrar() {
+  cargarPreciosP();
+  $('#login').style.display = 'none'; $('#app').style.display = 'block'; $('#salir').style.display = 'block'; $('#alCat').style.display = 'block';
+  $('#who').textContent = ses.rol == 'oficina' ? 'Oficina · todas las rutas' : 'Vendedor · ' + ses.nombre;
+  $('#tabC').style.display = ses.rol == 'oficina' ? '' : 'none';
+  if (ses.rol == 'oficina') { const vs = LS.get('vendedores', []); $('#cfv').innerHTML = '<option value="">Todos</option><option value="__sin">— Sin vendedor —</option>' + vs.map(v => `<option>${esc(v.nombre)}</option>`).join(''); $('#fv').innerHTML = '<option value="">Todos los vendedores</option>' + vs.map(v => `<option>${esc(v.nombre)}</option>`).join(''); } else { $('#fvw').style.display = 'none'; porVend = false; $('#rmodo').style.display = 'none'; }
+  buscar();
+}
+async function buscar() {
+  $('#lista').innerHTML = '<div class="vacio">Cargando…</div>';
+  try {
+    if (demo) pedidos = ejemplo();
+    else pedidos = (await apiGet({ a: 'pedidos', k: ses.k, vend: ses.vend, desde: $('#fd').value, hasta: $('#fh').value, vendedor: $('#fv').value })).pedidos;
+    const fo = $('#fo').value; if (fo) pedidos = pedidos.filter(p => fo == 'cli' ? hechoCliente(p) : !hechoCliente(p));
+    marcados = new Set(pedidos.map(p => p.numero)); $('#todos').checked = true; pintar();
+  } catch (e) { $('#lista').innerHTML = `<div class="vacio">No se pudo cargar: ${esc(e.message)}</div>`; if (/clave/i.test(e.message)) { LS.set('ses', null); setTimeout(() => location.reload(), 1500); } }
+}
+$('#buscar').onclick = buscar; $('#fv').onchange = buscar; $('#fo').onchange = buscar;
+const hechoCliente = p => p.origen == 'cliente' || p.origen == 'especial';
+const quienHizo = p => p.origen ? (hechoCliente(p) ? '<b style="color:#1d5fa8">📱 Hecho por el cliente</b>' : '🚚 Hecho por ' + (p.origen == 'oficina' ? 'la oficina' : 'el vendedor')) : '';
+function pintar() {
+  const tot = pedidos.reduce((s, p) => s + p.total, 0), un = pedidos.reduce((s, p) => s + p.items.reduce((a, i) => a + i.q, 0), 0);
+  $('#res').innerHTML = `<span><b>${pedidos.length}</b> pedidos</span><span><b>${new Set(pedidos.map(p => p.cliente)).size}</b> clientes</span><span><b>${un}</b> unidades</span><span>Total <b>${fmt(tot)}</b></span>`;
+  $('#lista').innerHTML = pedidos.length ? pedidos.map(p => `<div class="ped" data-n="${p.numero}"><div class="h"><input type="checkbox" class="chk" data-n="${p.numero}" ${marcados.has(p.numero) ? 'checked' : ''}><span class="n">#${esc(p.numero)}</span><div class="i"><b>${esc(p.cliente)}${p.negocio ? ' · ' + esc(p.negocio) : ''}</b><small>${fechaTxt(p)} · ${esc(p.vendedor)} · ${p.items.length} prod.${p.firma ? ' · ✍ firmado' : ''}${p.tipo == 'especial' ? ' · <b style="color:#1f7a4d">★ especial</b>' : ''}<br>${p.estado == 'por_firmar' ? '<b style="color:#b26a00">⏳ Esperando firma del cliente</b> · ' : p.estado == 'firmado' ? '<b style="color:#1f7a4d">✅ Firmado por el cliente' + (p.firmado_en ? ' · ' + esc(p.firmado_en) : '') + (p.tel_firma ? ' · 📱 ' + esc(p.tel_firma) : '') + '</b> · ' : ''}${p.solicitud == 'pendiente' ? '<b style="color:#b26a00">🙋 Pide ★ Precio Autorizado con menos cantidad · si se aprueba: ' + fmt(p.total_sol) + '</b>' + (ses.rol == 'oficina' ? ` <button class="solok" data-sa="${p.numero}">✅ Aprobar</button><button class="solno" data-sr="${p.numero}">❌ No</button>` : ' (esperando a la oficina)') + '<br>' : p.solicitud == 'aprobada' ? '<b style="color:#1f7a4d">✅ Precio autorizado aprobado</b><br>' : p.solicitud == 'rechazada' ? '<b style="color:#b3261e">❌ Precio autorizado no aprobado: va a precio normal</b><br>' : ''}${quienHizo(p)}${p.telefono ? ' · 📞 <a href="tel:' + esc(p.telefono) + '">' + esc(p.telefono) + '</a>' : ''}</small></div><span class="t">${fmt(p.total)}</span></div>
+   <div class="det"><table>${p.items.map(i => `<tr><td class="r"><b>${esc(i.q)}</b></td><td>${esc(i.n)}</td><td>${esc(i.nivel)}</td><td class="r">${i.sub ? fmt(i.sub) : '—'}</td></tr>`).join('')}</table>${fardosDe(p.items).map(z => `<div style="display:flex;justify-content:space-between;background:#e8f1fb;color:#1d5fa8;border-radius:10px;padding:8px 10px;margin-top:8px;font-weight:700"><span>Total ${esc(z.u || 'fardos')} ${esc(grupoNom(z.g))}</span><b>${Math.round(z.n * 10) / 10}</b></div>`).join('')}${p.nota ? `<p><b>Nota:</b> ${esc(p.nota)}</p>` : ''}${p.firma ? `<div style="margin-top:8px"><img src="${p.firma}" alt="Firma del cliente" style="max-width:220px;width:100%;border-bottom:1px solid #999;display:block"><small style="color:#777">Firma del cliente</small></div>` : ''}
+   <div class="acts"><button class="b" style="background:#25d366" data-pf="${p.numero}">📷 Foto</button><button class="b" data-pt="${p.numero}">🖨 3"</button><button class="b" data-pc="${p.numero}">🖨 Carta</button>${p.telefono ? `<button class="b cot" data-cot="${p.numero}">💲 Ver precios</button>` : ''}</div></div></div>`).join('') : '<div class="vacio">No hay pedidos en esas fechas.</div>';
+  recarga();
+}
+$('#lista').addEventListener('click', e => {
+  const n = e.target.dataset;
+  if (n.sa || n.sr) { const num = n.sa || n.sr, ok = !!n.sa; confirmar(ok ? '¿Aprobar el ★ Precio Autorizado al pedido #' + num + '?' : '¿No aprobar? El pedido #' + num + ' queda a precio normal.', async () => { try { await apiPost({ a: 'solicitud', k: ses.k, numero: num, valor: ok ? 'aprobada' : 'rechazada' }); toast(ok ? 'Aprobado ✓' : 'Queda a precio normal ✓'); buscar(); } catch (er) { toast('No se pudo: ' + er.message); } }); return; }
+  if (e.target.classList.contains('chk')) { const k = +n.n; e.target.checked ? marcados.add(k) : marcados.delete(k); return; }
+  if (n.pf) { const ped = pedidos.find(p => p.numero == n.pf); e.target.textContent = 'Creando…'; imagenPedido(ped).then(b => { e.target.textContent = '📷 Foto'; compartirImagen(b, 'pedido-' + ped.numero + '.jpg', 'Pedido #' + ped.numero + ' · ' + ped.cliente); }); return; }
+  if (n.cot) return cotizar(pedidos.find(p => p.numero == n.cot));
+  if (n.pt) return imprimir(pedidoHTML(pedidos.find(p => p.numero == n.pt), 'ticket'), 'ticket');
+  if (n.pc) return imprimir(pedidoHTML(pedidos.find(p => p.numero == n.pc), 'carta'), 'carta');
+  const h = e.target.closest('.h'); if (h) h.parentNode.classList.toggle('open');
+});
+$('#todos').onchange = e => { marcados = new Set(e.target.checked ? pedidos.map(p => p.numero) : []); pintar(); };
+const sel = () => pedidos.filter(p => marcados.has(p.numero)).sort((a, b) => a.numero - b.numero);
+$('#pT').onclick = () => { const s = sel(); if (!s.length) return toast('Marque al menos un pedido'); imprimir(s.map(p => pedidoHTML(p, 'ticket')).join(''), 'ticket'); };
+$('#pC').onclick = () => { const s = sel(); if (!s.length) return toast('Marque al menos un pedido'); imprimir(s.map(p => pedidoHTML(p, 'carta')).join(''), 'carta'); };
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x == b)); $('#tp').style.display = b.dataset.t == 'p' ? '' : 'none'; $('#tr').style.display = b.dataset.t == 'r' ? '' : 'none'; $('#tc').style.display = b.dataset.t == 'c' ? '' : 'none'; const sc = b.dataset.t == 'c'; document.querySelector('main > #app > .card').style.display = sc ? 'none' : ''; $('#res').style.display = sc ? 'none' : ''; if (sc && !clientesO.length) cargarClientesO(); });
+// ---------- CLIENTES (oficina): ver y asignar vendedor ----------
+let clientesO = [], listasO = [];
+const PRECIOS_OP = [{ id: '', nombre: 'Normal' }, { id: 'p4', nombre: 'Precio 4' }, { id: 'especial', nombre: 'Precio Especial' }, { id: 'autorizado', nombre: 'Precio Autorizado' }];
+const vE = c => /especial/i.test(c.precio || ''), vA = c => /autorizado/i.test(c.precio || '');
+const juntar = (e, a) => [e ? 'especial' : '', a ? 'autorizado' : ''].filter(Boolean).join(',');
+const pnom = id => { const e = /especial/i.test(id || ''), a = /autorizado/i.test(id || ''); return e && a ? 'Especial y Autorizado' : e ? 'Precio Especial' : a ? 'Precio Autorizado' : ''; };
+const sw = (on, i, k, t) => `<button class="sw${on ? ' on' : ''}" data-sw="${i}" data-k="${k}"><span class="sk"></span>${t}<b>${on ? 'Sí' : 'No'}</b></button>`;
+async function cargarClientesO() {
+  $('#clis').innerHTML = '<div class="vacio">Cargando clientes…</div>';
+  try { clientesO = (await apiGet({ a: 'clientes', k: ses.k, t: Date.now() })).clientes; try { listasO = (await apiGet({ a: 'especiales', k: ses.k })).listas || []; } catch (e) { listasO = []; } pintarClientes(); }
+  catch (e) { $('#clis').innerHTML = `<div class="vacio">No se pudieron cargar: ${esc(e.message)}</div>`; }
+}
+const qa = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+function optVend(sel) { const vs = LS.get('vendedores', []); return '<option value="">— Sin vendedor —</option>' + vs.map(v => `<option${v.nombre == sel ? ' selected' : ''}>${esc(v.nombre)}</option>`).join('') + (sel && !vs.some(v => v.nombre == sel) ? `<option selected>${esc(sel)}</option>` : ''); }
+function pintarClientes() {
+  const q = qa($('#cq').value.trim()), fv = $('#cfv').value;
+  const l = clientesO.filter(c => (!q || qa(c.nombre + ' ' + c.negocio + ' ' + c.telefono).includes(q)) && (!fv || (fv == '__sin' ? !c.vendedor : c.vendedor == fv)))
+    .sort((a, b) => (a.negocio || a.nombre).localeCompare(b.negocio || b.nombre));
+  $('#cres').innerHTML = `<span><b>${l.length}</b> clientes</span><span><b>${clientesO.filter(c => !c.vendedor).length}</b> sin vendedor</span>`;
+  $('#clis').innerHTML = l.length ? l.map(c => { const i = clientesO.indexOf(c); return `<div class="cli${c.vendedor ? '' : ' sin'}"><div class="t"><div><b>${esc(c.negocio || c.nombre)}${pnom(c.precio) ? ` <span class="lchip">${pnom(c.precio)}</span>` : ''}</b><small>${esc(c.nombre)}</small></div>${c.telefono ? `<a class="tel" href="tel:${esc(c.telefono)}">📞 ${esc(c.telefono)}</a>` : '<small>sin teléfono</small>'}</div>
+     <label><span style="font-size:.8em;font-weight:700">Vendedor que lo atiende</span><select data-ci="${i}">${optVend(c.vendedor)}</select></label>
+     <div class="pv"><b>Precios que ve:</b> Detalle y Precio 1, 2, 3, 4</div><div class="sws">${sw(vE(c), i, 'e', 'Ver Precio Especial')}${sw(vA(c), i, 'a', 'Ver Precio Autorizado')}</div>
+     <button class="b wa prod" data-enl="${i}"><svg class="avion" viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.18em;margin-right:.3em"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>Mandarle su catálogo privado</button>
+     ${c.amarrado ? `<button class="b l prod" data-lib="${i}">🔓 Liberar enlace (cambió de celular)</button>` : ''}
+     <button class="b l prod" data-pr="${i}">🛒 Productos que ve: <b>${c.productos ? String(c.productos).split(',').filter(Boolean).length : 'todos'}</b></button>
+     <div class="meta"><span>${c.pedidos ? c.pedidos + ' pedido(s)' : 'Sin pedidos todavía'}${c.ultimo ? ' · último: ' + c.ultimo.split('-').reverse().join('/') : ''}</span><button class="borrar" data-del="${i}">🗑 Borrar cliente</button></div></div>`; }).join('') : '<div class="vacio">No hay clientes con esa búsqueda.</div>';
+}
+
+// Escoger qué productos le aparecen a un cliente (vacío = todos)
+function elegirProductos(i) {
+  const c = clientesO[i], sel = new Set(String(c.productos || '').split(',').map(s => s.trim()).filter(Boolean)), todos = !sel.size;
+  const secs = [...new Set(PRODUCTOS.map(p => p.s))];
+  const html = `<div class="pbar"><button class="no" id="pAll">✓ Seleccionar todos</button><button class="no" id="pNone">Quitar todos</button></div><div class="pcount" id="pCnt"></div>` +
+    secs.map(s => `<div class="psec"><label class="psh"><input type="checkbox" data-sec="${esc(s)}"> <b>${esc(s)}</b></label>${PRODUCTOS.filter(p => p.s == s).map(p => `<label class="pit"><input type="checkbox" data-pc="${esc(p.c)}"${todos || sel.has(p.c) ? ' checked' : ''}><img src="img/${p.i}_s.jpg" alt=""><span>${esc(p.n)}</span></label>`).join('')}</div>`).join('');
+  const { o, cerrar } = abrirOv('Productos de ' + (c.negocio || c.nombre), html, '<button class="no" id="pX">Cancelar</button><button class="si" id="pOk">Guardar</button>');
+  const cajas = () => [...o.querySelectorAll('[data-pc]')];
+  const sync = () => { o.querySelectorAll('[data-sec]').forEach(s => { const cs = [...o.querySelectorAll('.psec')].find(d => d.contains(s)).querySelectorAll('[data-pc]'); s.checked = [...cs].every(x => x.checked); s.indeterminate = !s.checked && [...cs].some(x => x.checked); });
+    const n = cajas().filter(x => x.checked).length; o.querySelector('#pCnt').textContent = n == cajas().length ? 'Ve todos los productos (' + n + ')' : 'Ve ' + n + ' de ' + cajas().length + ' productos'; };
+  o.addEventListener('change', e => { const s = e.target.dataset.sec; if (s !== undefined) e.target.closest('.psec').querySelectorAll('[data-pc]').forEach(x => x.checked = e.target.checked); sync(); });
+  o.querySelector('#pAll').onclick = () => { cajas().forEach(x => x.checked = true); sync(); };
+  o.querySelector('#pNone').onclick = () => { cajas().forEach(x => x.checked = false); sync(); };
+  o.querySelector('#pX').onclick = cerrar; sync();
+  o.querySelector('#pOk').onclick = async () => { const marc = cajas().filter(x => x.checked).map(x => x.dataset.pc); if (!marc.length) return toast('Marque al menos un producto');
+    const val = marc.length == cajas().length ? '' : marc.join(',');
+    try { await apiPost({ a: 'cliente', k: ses.k, antes_nombre: c.nombre, antes_negocio: c.negocio, nombre: c.nombre, negocio: c.negocio, productos: val }); c.productos = val; cerrar(); pintarClientes(); toast((c.negocio || c.nombre) + (val ? ' ve ' + marc.length + ' productos ✓' : ' ve todos los productos ✓')); }
+    catch (er) { toast('No se guardó: ' + er.message); } };
+}
+async function enlacePrivado(i) { const c = clientesO[i];
+  try { const j = await apiPost({ a: 'cliente_enlace', k: ses.k, nombre: c.nombre, negocio: c.negocio }); const link = new URL('./' + '?c=' + j.token, location.href).toString();
+    const msg = `Hola ${c.nombre}, le saludamos de Distribuidora San Jorge. Este es su catálogo${c.precio ? ' con *sus precios*' : ''}. Desde aquí puede hacer sus pedidos cuando los necesite:\n\n${link}\n\nGuárdelo en su celular: en Chrome toque ⋮ → Instalar y crear acceso directo.`;
+    const tel = telWA(c.telefono);
+    abrirOv('Catálogo privado de ' + (c.negocio || c.nombre), `<p class="nota" style="margin:0 0 8px">Ve detalle y Precio 1 al 4${pnom(c.precio) ? ' + <b>' + pnom(c.precio) + '</b>' : ''}${c.productos ? ' y solo <b>' + String(c.productos).split(',').filter(Boolean).length + ' productos</b>' : ''}. Sus pedidos le llegan a <b>${esc(c.vendedor || 'la oficina')}</b>. Si le cambia el precio o los productos, el enlace se actualiza solo.</p><div style="word-break:break-all;background:#f1f4f7;border-radius:10px;padding:10px;font-size:.85em">${esc(link)}</div>`,
+      `<a class="btn wa full" href="https://wa.me/${tel.length >= 11 ? tel : ''}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">💬 Mandarlo por WhatsApp</a>` + (window.DEMO ? `<a class="btn no full" href="${esc(link)}">Abrir como el cliente (prueba)</a>` : ''));
+  } catch (er) { toast('No se pudo crear el enlace: ' + er.message); } }
+$('#clis').addEventListener('click', async e => { const en = e.target.closest('[data-enl]'); if (en) return enlacePrivado(+en.dataset.enl); const lb = e.target.closest('[data-lib]'); if (lb) { const c = clientesO[+lb.dataset.lib]; return confirmar('¿Liberar el catálogo de ' + (c.negocio || c.nombre) + '? Úselo si el cliente cambió de celular.', async () => { try { await apiPost({ a: 'liberar_enlace', k: ses.k, nombre: c.nombre, negocio: c.negocio }); c.amarrado = 0; pintarClientes(); toast('Enlace liberado ✓ Mándele su catálogo otra vez'); } catch (er) { toast(er.message); } }); } const pr = e.target.closest('[data-pr]'); if (pr) return elegirProductos(+pr.dataset.pr);
+  const dl = e.target.closest('[data-del]'); if (dl) { const c = clientesO[+dl.dataset.del]; return confirmar('¿Borrar a ' + (c.negocio || c.nombre) + ' de la lista? Sus pedidos viejos no se borran. Su enlace deja de funcionar.', async () => { try { const r = await apiPost({ a: 'borrar_clientes', k: ses.k, lista: [{ nombre: c.nombre, negocio: c.negocio }] }); if (!r.borrados) throw new Error('No se encontró en la hoja'); clientesO.splice(clientesO.indexOf(c), 1); pintarClientes(); toast((c.negocio || c.nombre) + ' borrado ✓'); } catch (er) { toast('No se borró: ' + er.message); } }); }
+  const b = e.target.closest('[data-sw]'); if (!b) return; const c = clientesO[+b.dataset.sw]; let ve = vE(c), va = vA(c); if (b.dataset.k == 'e') ve = !ve; else va = !va; const lid = juntar(ve, va);
+  try { await apiPost({ a: 'cliente', k: ses.k, antes_nombre: c.nombre, antes_negocio: c.negocio, nombre: c.nombre, negocio: c.negocio, precio: lid }); c.precio = lid; pintarClientes(); toast((c.negocio || c.nombre) + ': ' + (lid ? 've ' + pnom(lid) : 'solo precios normales') + ' ✓' + (lid ? ' Le pedirá los últimos 4 números de su celular' : '')); }
+  catch (er) { toast('No se guardó: ' + er.message); } });
+$('#cq').addEventListener('input', pintarClientes); $('#cfv').onchange = pintarClientes;
+$('#clis').addEventListener('change', async e => { const i = e.target.dataset.ci; if (i === undefined) return; const c = clientesO[+i], v = e.target.value;
+  try { await apiPost({ a: 'cliente', k: ses.k, antes_nombre: c.nombre, antes_negocio: c.negocio, nombre: c.nombre, negocio: c.negocio, vendedor: v }); c.vendedor = v; pintarClientes(); toast((c.negocio || c.nombre) + (v ? ' ahora es de ' + v : ' quedó sin vendedor') + ' ✓'); }
+  catch (er) { toast('No se guardó: ' + er.message); pintarClientes(); } });
+$('#cnew').onclick = () => {
+  const { o, cerrar } = abrirOv('Nuevo cliente', `<label><span>Nombre del negocio</span><input id="nn" placeholder="Ej. Pulpería La Bendición"></label>
+    <label><span>Nombre del cliente</span><input id="nc" placeholder="Ej. Rosa Pérez"></label>
+    <label><span>Teléfono</span><input id="nt" type="tel" inputmode="numeric" placeholder="8 números"></label>
+    <label><span>Vendedor que lo atiende</span><select id="nv">${optVend('')}</select></label>
+    <p class="pv" style="margin:6px 0"><b>Precios que ve:</b> Detalle y Precio 1, 2, 3, 4</p>
+    <label class="ck"><input type="checkbox" id="nE"> Puede ver Precio Especial</label>
+    <label class="ck"><input type="checkbox" id="nA"> Puede ver Precio Autorizado</label>`, '<button class="no" id="nx">Cancelar</button><button class="si" id="nok">Guardar</button>');
+  o.querySelector('#nx').onclick = cerrar;
+  o.querySelector('#nok').onclick = async () => { const neg = o.querySelector('#nn').value.trim(), nom = o.querySelector('#nc').value.trim() || neg, tel = o.querySelector('#nt').value.trim(), v = o.querySelector('#nv').value, nl = juntar(o.querySelector('#nE').checked, o.querySelector('#nA').checked);
+    if (!neg) return toast('Escriba el nombre del negocio'); if (tel.replace(/\D/g, '').length < 8) return toast('Escriba el teléfono (8 números)');
+    try { await apiPost({ a: 'cliente', k: ses.k, nombre: nom, negocio: neg, telefono: tel, vendedor: v, precio: nl }); clientesO.push({ nombre: nom, negocio: neg, telefono: tel, vendedor: v, precio: nl, pedidos: 0 }); cerrar(); pintarClientes(); toast(neg + ' guardado ✓' + (v ? ' Ya le aparece a ' + v : '')); }
+    catch (er) { toast('No se guardó: ' + er.message); } };
+};
+
+
+// ---------- RECARGA UNIFICADA ----------
+function sumar(lista) {
+  const m = {};
+  for (const p of lista) for (const i of p.items) { const x = m[i.c] || (m[i.c] = { c: i.c, n: i.n, q: 0, ped: new Set() }); x.q += i.q; x.ped.add(p.numero); }
+  return Object.values(m).sort((a, b) => (ORD[a.c] ?? 9e9) - (ORD[b.c] ?? 9e9));
+}
+function grupos() {
+  const base = sel().length ? sel() : pedidos;
+  if (!porVend) return [{ v: ses.rol == 'vendedor' ? ses.nombre : ($('#fv').value || 'Todas las rutas'), items: sumar(base), np: base.length }];
+  const vs = [...new Set(base.map(p => p.vendedor))].sort();
+  return vs.map(v => { const l = base.filter(p => p.vendedor == v); return { v, items: sumar(l), np: l.length }; });
+}
+function recarga() {
+  const gs = grupos();
+  $('#rec').innerHTML = gs.length ? gs.map(g => { let s = '';
+    return `<div class="vh">${esc(g.v)} · ${g.np} pedidos</div><table class="rec"><thead><tr><th>Producto</th><th>Código</th><th class="r">Cantidad</th></tr></thead><tbody>${g.items.map(i => { const sc = PX[i.c] ? PX[i.c].s : ''; const h = sc != s ? `<tr class="sec"><td colspan="3">${esc(sc)}</td></tr>` : ''; s = sc; return h + `<tr><td>${esc(i.n)}<br><small style="color:#777">en ${i.ped.size} pedido(s)</small></td><td>${esc(i.c)}</td><td class="q">${i.q}</td></tr>`; }).join('')}</tbody></table>`; }).join('') : '<div class="vacio">No hay pedidos para sumar.</div>';
+}
+$('#rmodo').onclick = () => { porVend = !porVend; $('#rmodo').textContent = porVend ? 'Ver: por vendedor' : 'Ver: todo junto'; recarga(); };
+function recargaHTML(g, f) {
+  const fe = $('#fd').value == $('#fh').value ? $('#fd').value.split('-').reverse().join('/') : $('#fd').value.split('-').reverse().join('/') + ' al ' + $('#fh').value.split('-').reverse().join('/');
+  const un = g.items.reduce((s, i) => s + i.q, 0);
+  const cab = `<div class="ph"><div class="pt">DISTRIBUIDORA SAN JORGE</div><div class="ps">RECARGA</div></div><div class="pm"><div><b>Vendedor:</b> ${esc(g.v)}</div><div><b>Fecha:</b> ${fe}</div><div><b>Pedidos:</b> ${g.np}</div><div><b>Impreso:</b> ${new Date().toLocaleString('es-HN')}</div></div>`;
+  const pie = `<div class="pf"><div class="tt"><span>TOTAL UNIDADES</span><span>${un}</span></div><div>${g.items.length} productos distintos</div><div class="fi">Entregó: ____________________</div><div class="fi">Recibió: ____________________</div></div>`;
+  if (f == 'ticket') return `<div class="doc">${cab}<div class="hr"></div><table>${g.items.map(i => `<tr><td style="width:12mm"><b>${i.q}</b></td><td>${esc(i.n)}<br><small>${esc(i.c)}</small></td><td>☐</td></tr>`).join('')}</table><div class="hr"></div>${pie}<div class="cut">- - - - - - - - - - - - - - - -</div></div>`;
+  return `<div class="doc">${cab}<table><thead><tr><th class="r">Cant.</th><th>Producto</th><th>Código</th><th class="c">Cargado</th></tr></thead><tbody>${g.items.map(i => `<tr><td class="r"><b>${esc(i.q)}</b></td><td>${esc(i.n)}</td><td>${esc(i.c)}</td><td class="c">☐</td></tr>`).join('')}</tbody></table>${pie}</div>`;
+}
+$('#rT').onclick = () => { const g = grupos(); if (!g.length) return toast('No hay pedidos'); imprimir(g.map(x => recargaHTML(x, 'ticket')).join(''), 'ticket'); };
+$('#rC').onclick = () => { const g = grupos(); if (!g.length) return toast('No hay pedidos'); imprimir(g.map(x => recargaHTML(x, 'carta')).join(''), 'carta'); };
+
+function ejemplo() {
+  const P = PRODUCTOS, mk = (n, v, cli, neg, its) => { const items = its.map(([k, q, pr]) => ({ c: P[k].c, n: P[k].n, q, nivel: 'P1', precio: pr, sub: pr * q })); return { numero: n, dia: hoyISO(), hora: '08:' + (10 + n), vendedor: v, cliente: cli, negocio: neg, tipo: 'mayoreo', nota: '', total: items.reduce((s, i) => s + i.sub, 0), items }; };
+  return [mk(3, 'Juan - Ruta 1', 'Rosa Pérez', 'Pulpería La Bendición', [[0, 5, 110], [44, 3, 95]]), mk(2, 'Juan - Ruta 1', 'Carlos Mejía', 'Bodeguita Carlos', [[0, 10, 105], [52, 2, 210]]), mk(1, 'Pedro - Ruta 2', 'Ana López', 'Minisúper Ana', [[44, 6, 95], [30, 1, 680]])];
+}
+
+// ---------- Mandar precios al cliente (el vendedor puede ajustar el precio antes) ----------
+function precioLista(it) { const px = (window._PRECIOS || {})[String(it.c).toUpperCase()]; if (!px) return 0; const x = precioUnit(px, 'mayoreo', it.q); return x.precio || 0; }
+function cotizar(p) {
+  if (!p) return; const its = p.items.map(i => ({ c: i.c, n: i.n, q: i.q, u: uVenta(i.c, 'mayoreo'), pr: i.precio || precioLista(i) }));
+  const fila = (i, k) => `<div class="cq"><div><b>${esc(i.n)}</b><small>${i.q} ${esc(plural(i.u, i.q) || 'unid.')}</small></div><label>L <input type="number" inputmode="decimal" step="0.01" min="0" data-k="${k}" value="${i.pr || ''}" placeholder="precio"></label><span class="cs" id="cs${k}">${i.pr ? fmt(i.pr * i.q) : '—'}</span></div>`;
+  const { o, cerrar } = abrirOv('Precios · ' + (p.negocio || p.cliente), `<p class="nota" style="margin:0 0 8px">Pedido #${p.numero} · precio de lista. Puede cambiar alguno; si quiere se lo manda al cliente.</p>
+    <div class="cql">${its.map(fila).join('')}</div><div class="cqt"><span>Total</span><b id="cqT"></b></div>
+    <label class="cqn"><span>Nota (opcional)</span><textarea id="cqN" rows="2" placeholder="Ej. le entrego el jueves"></textarea></label>`,
+    `<button class="no">Cerrar</button><button class="wa" id="cqE">${'<svg class="avion" viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.18em;margin-right:.3em"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>'}Enviar al cliente</button>`);
+  const tot = () => { let t = 0; its.forEach((i, k) => { t += (i.pr || 0) * i.q; o.querySelector('#cs' + k).textContent = i.pr ? fmt(i.pr * i.q) : '—'; }); o.querySelector('#cqT').textContent = fmt(Math.round(t * 100) / 100); return t; };
+  o.querySelector('.cql').addEventListener('input', e => { const k = e.target.dataset.k; if (k === undefined) return; its[+k].pr = parseFloat(e.target.value) || 0; tot(); });
+  o.querySelector('.no').onclick = cerrar; tot();
+  o.querySelector('#cqE').onclick = () => {
+    if (its.some(i => !i.pr)) return toast('Ponga el precio a todos los productos');
+    const t = tot(), nota = o.querySelector('#cqN').value.trim();
+    let m = `Hola ${p.cliente} 👋\nEstos son los precios de su pedido #${p.numero}:\n------------------------\n`;
+    its.forEach(i => { m += `▪ ${i.q} ${plural(i.u, i.q) || 'x'} · ${i.n}\n   ${fmt(i.pr)} ${i.u ? 'por ' + i.u : 'c/u'} = ${fmt(i.pr * i.q)}\n`; });
+    m += `------------------------\n*Total: ${fmt(t)}*\n` + (nota ? 'Nota: ' + nota + '\n' : '') + `\n${ses && ses.nombre && ses.rol == 'vendedor' ? ses.nombre + ' · ' : ''}Distribuidora San Jorge`;
+    const tel = String(p.telefono || '').replace(/\D/g, ''), w = tel.length == 8 ? '504' + tel : tel;
+    window.open('https://wa.me/' + w + '?text=' + encodeURIComponent(m), '_blank'); cerrar();
+  };
+}
+if (ses) entrar(); else iniciarLogin();
+</script>
+
+<script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});</script>
+</body>
+</html>

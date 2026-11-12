@@ -1,0 +1,36 @@
+#printArea{display:none}
+@media print{
+ body>*:not(#printArea){display:none!important}
+ html,body{background:#fff!important;margin:0}
+ body:before{display:none!important}
+ #printArea{display:block;color:#000;font-family:Arial,Helvetica,sans-serif}
+ .doc{break-after:page;page-break-after:always}
+ .doc:last-child{break-after:auto;page-break-after:auto}
+}
+/* estilos de los documentos (también se usan para medir el ticket) */
+.ticket,.carta{color:#000;font-family:Arial,Helvetica,sans-serif}
+ /* ----- ticket 3" ----- */
+ .ticket{width:72mm;font-size:11.5px;line-height:1.3}
+ .ticket .doc{break-after:auto;page-break-after:auto;margin-bottom:6mm}
+ .ticket .ph{text-align:center}.ticket .pt{font-weight:900;font-size:14px}.ticket .ps{font-weight:900;font-size:13px;margin:2px 0 4px}
+ .ticket .hr{border-top:1px dashed #000;margin:5px 0}
+ .ticket .tl{margin:3px 0}.ticket .tr{display:flex;justify-content:space-between;font-size:10.5px}
+ .ticket .tt{display:flex;justify-content:space-between;font-weight:900;font-size:15px;margin:2px 0}
+ .ticket .fi{margin-top:14px}.ticket .cut{text-align:center;margin-top:6px}
+ .ticket table{width:100%;border-collapse:collapse;font-size:11px}.ticket td{padding:2px 0;vertical-align:top}
+ /* ----- carta ----- */
+ .carta{font-size:12px}
+ .carta .ph{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #000;padding-bottom:6px}
+ .carta .pt{font-size:20px;font-weight:900}.carta .ps{font-size:16px;font-weight:900}
+ .carta .pm{display:grid;grid-template-columns:1fr 1fr;gap:3px 20px;margin:10px 0}
+ .carta table{width:100%;border-collapse:collapse;margin-top:6px}
+ .carta th{background:#eee;text-align:left;padding:6px;border-bottom:2px solid #000;font-size:11px}
+ .carta td{padding:6px;border-bottom:1px solid #ccc;vertical-align:top}.carta td small{color:#555}
+ .carta .tt{display:flex;justify-content:flex-end;gap:30px;font-size:18px;font-weight:900;margin:10px 0 4px}
+ .carta .pf{text-align:right}.carta .nt{text-align:left;margin-top:8px}.carta .fi{text-align:left;margin-top:40px}
+ .carta .cut,.carta .hr{display:none}
+ .r{text-align:right}.c{text-align:center}
+
+.carta .pr{display:flex;gap:8px;align-items:center}.carta .pr img{width:34px;height:34px;object-fit:contain;flex:none;border:1px solid #ddd;border-radius:4px}
+.fz{margin:4px 0 6px}.fz div{display:flex;justify-content:space-between;font-weight:700}.ticket .fz div{font-size:12px}.carta .fz{display:inline-block;min-width:260px;text-align:left;border:1px solid #000;padding:4px 8px;margin:8px 0}
+.fs{margin-top:10px;text-align:center}.fs img{max-width:60mm;max-height:22mm;display:block;margin:0 auto;border-bottom:1px solid #000}.fs div{font-size:10px;margin-top:2px}.carta .fs{text-align:left}.carta .fs img{margin:0;max-width:70mm}

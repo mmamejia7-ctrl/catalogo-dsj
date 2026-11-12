@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Editor de Precios DSJ</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0f3d5e">
+<link rel="icon" href="icon-192.png">
+<link rel="manifest" href="manifest-precios.json">
+<link rel="apple-touch-icon" href="icon-precios-192.png">
+<style>
+:root{--neg:#0f3d5e;--rojo:#1a6fa8;--rojo2:#1592e6;--tx:#53606b;--line:#e4dbd0;--azul:#1d5fa8;--azul2:#e8f1fb;--ok:#1f9d55;--warn:#b26a00}
+*{box-sizing:border-box}html,body{margin:0;overflow-x:hidden}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--neg);background:linear-gradient(160deg,#f7f9fb,#e6edf3) fixed;min-height:100vh}
+header{background:var(--neg);color:#fff;border-bottom:5px solid var(--rojo);position:sticky;top:0;z-index:10}
+.top{display:flex;align-items:center;gap:10px;padding:10px max(14px,env(safe-area-inset-left));max-width:900px;margin:auto}
+.top img{width:42px;height:42px;border-radius:9px;background:#f6f5f1;object-fit:contain;padding:3px}
+.top div{flex:1;min-width:0}.top b{display:block}.top small{color:#bbb;font-size:.8em}
+.bar{display:flex;gap:8px;padding:0 max(14px,env(safe-area-inset-left)) 10px;max-width:900px;margin:auto}
+.bar input{flex:1;min-width:0;border:0;border-radius:12px;padding:12px;font:inherit}
+nav{display:flex;gap:8px;overflow-x:auto;padding:10px 14px;max-width:900px;margin:auto;scrollbar-width:none}nav::-webkit-scrollbar{display:none}
+nav a{flex:none;text-decoration:none;color:var(--neg);background:#fff;border-radius:999px;padding:8px 13px;font-weight:600;font-size:.85em;box-shadow:0 1px 4px rgba(0,0,0,.08);border-left:4px solid var(--rojo)}
+main{max-width:900px;margin:auto;padding:4px max(14px,env(safe-area-inset-left)) 120px}
+h2{font-size:1.15em;margin:20px 2px 8px;display:flex;align-items:center;gap:8px}h2:before{content:"";width:6px;height:1.1em;background:var(--rojo);border-radius:3px}
+.p{background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:10px;padding:12px;border:2px solid transparent}
+.p.mod{border-color:var(--warn)}.p.bad{border-color:var(--rojo2)}
+.ph{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.ph img{width:54px;height:54px;object-fit:contain;background:#f6f6f6;border-radius:8px;flex:none}
+.ph div{flex:1;min-width:0}.ph b{display:block;line-height:1.2}.ph small{color:var(--tx)}
+.chip{display:inline-block;background:var(--azul2);color:var(--azul);border-radius:6px;padding:1px 7px;font-size:.78em;font-weight:700;margin-top:3px}
+.g{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.f{display:flex;flex-direction:column;gap:3px;min-width:0}
+.f span{font-size:.75em;font-weight:700;color:var(--tx)}
+.f input,.f select{width:100%;border:1px solid #c6d1dc;border-radius:10px;padding:10px;font:inherit;font-variant-numeric:tabular-nums;background:#fff;color:var(--neg)}
+.f input:focus{outline:2px solid var(--rojo2);border-color:transparent}
+.f.det input{background:#f8fbfd}
+.esc{margin-top:10px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.esc .eh{display:grid;grid-template-columns:44px 1fr 1fr;background:#eaf0f5;font-size:.74em;font-weight:800;color:var(--tx);padding:6px 8px}
+.esc .er{display:grid;grid-template-columns:44px 1fr 1fr;gap:6px;padding:6px 8px;border-top:1px solid var(--line);align-items:center}
+.esc .er b{font-size:.85em;color:var(--rojo)}
+.esc input{width:100%;border:1px solid #c6d1dc;border-radius:9px;padding:9px;font:inherit;font-variant-numeric:tabular-nums}
+.esc input[readonly]{background:#f4f4f4;color:#888}
+.res{font-size:.82em;color:var(--tx);margin-top:8px;line-height:1.5}.res b{color:var(--neg)}
+.err{color:var(--rojo2);font-weight:700;font-size:.82em;margin-top:6px}
+details{margin-top:8px}summary{cursor:pointer;color:var(--azul);font-weight:700;font-size:.85em}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.bs{border:0;border-radius:10px;padding:9px 12px;font:inherit;font-weight:700;font-size:.82em;background:var(--azul2);color:var(--azul);cursor:pointer}
+#save{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:10px max(14px,env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom));background:#fff;box-shadow:0 -3px 12px rgba(0,0,0,.12);display:none}
+#save.on{display:block}
+#save .in{max-width:900px;margin:auto;display:flex;gap:10px;align-items:center}
+#save .t{flex:1;font-size:.9em}#save .t b{display:block;font-size:1.05em}
+.b{border:0;border-radius:12px;padding:13px 16px;font:inherit;font-weight:800;cursor:pointer;background:var(--neg);color:#fff}
+.b.r{background:var(--rojo2)}.b.l{background:#eee;color:var(--neg)}
+.card{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+#login{max-width:420px;margin:30px auto}
+label.f{margin:10px 0}
+.salir{background:#333;color:#fff;border:0;border-radius:999px;padding:8px 12px;font-weight:700}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--neg);color:#fff;padding:10px 16px;border-radius:999px;font-size:.85em;z-index:60;opacity:0;transition:.3s;pointer-events:none}.toast.on{opacity:1}
+.ayuda{background:#fff4d6;border-radius:12px;padding:10px 12px;font-size:.85em;line-height:1.45;margin:10px 0}
+/* cartel de Netlify */
+#save{padding-bottom:calc(84px + env(safe-area-inset-bottom))!important}main{padding-bottom:200px!important}
+.lbar{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;margin:10px 0}.lbar .f{margin:0}
+.b.esp{background:#1f7a4d}.ayuda.sp{background:#e6f4ec;color:#14532d}.p.espc{border-left:6px solid #1f7a4d}
+.ref{background:#f4f4f4;border-radius:10px;padding:8px 10px;font-size:.82em;color:var(--tx);margin-bottom:8px}.ref b{color:var(--neg)}
+.ce{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px}.ce b{display:block}.ce small{color:var(--tx)}
+.ce .btns{margin-top:6px}.ce a.bs{text-decoration:none;display:inline-block}.ce.off{opacity:.55}
+.lk{word-break:break-all;background:#f1f4f7;border-radius:8px;padding:8px;font-size:.8em;margin:6px 0}
+.ov .f{margin:8px 0}.ov .f input,.ov .f select{font:400 1em system-ui,Arial;text-align:left;border:1px solid #c6d1dc;border-radius:10px;padding:11px;width:100%;box-sizing:border-box;color:#0f3d5e;background:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}.ov .chipb,.chipb{border:2px solid #1f7a4d;background:#fff;color:#1f7a4d;border-radius:999px;padding:9px 13px;font:700 .9em system-ui,Arial;cursor:pointer}.ov .chipb.on,.chipb.on{background:#1f7a4d;color:#fff}
+.stk{width:100%;border:0;border-radius:10px;padding:11px;margin:0 0 10px;font:800 .9em system-ui,Arial;cursor:pointer;background:#e6f4ec;color:#14532d}.stk.no{background:#5c5f66;color:#fff}
+.p.agp .ph img{filter:grayscale(1);opacity:.5}
+.espg{margin-top:10px;background:#e6f4ec;border-radius:12px;padding:10px}.espg .f span{color:#14532d}
+
+/* ===== Azul difuminado (estilo tarjeta OnePay) ===== */
+header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f 70%,#2a7aa8 100%)!important;border-bottom-color:#1fa3ff!important}
+</style>
+</head>
+<body>
+<header>
+ <div class="top"><img src="img/logo.jpg" alt=""><div><b>Editor de precios</b><small id="who">Distribuidora San Jorge · solo oficina</small></div><button class="salir" id="salir" hidden>Salir</button></div>
+ <div class="bar" id="busq" hidden><input id="q" type="search" placeholder="Buscar producto o código…" autocomplete="off"></div>
+</header>
+<nav id="nav"></nav>
+<main>
+ <div id="login" class="card">
+  <h2 style="margin-top:0">Entrar</h2>
+  <p style="color:var(--tx);font-size:.9em;margin:0 0 6px">Solo la oficina puede cambiar precios.</p>
+  <label class="f"><span>Clave de oficina</span><input id="lk" type="password" autocomplete="current-password" autocapitalize="off"></label>
+  <button class="b r" id="lgo" style="width:100%">Entrar</button>
+  <p id="lmsg" style="color:var(--tx);font-size:.85em"></p>
+ </div>
+ <div id="app" hidden>
+  <div class="lbar" hidden><label class="f"><span>Lista de precios</span><select id="selLista"><option value="">General (todos los clientes)</option></select></label><button class="b esp" id="besp">★ Precios especiales</button></div>
+  <div class="ayuda sp" id="ayEsp" hidden>Lista especial <b><span id="ayNom"></span></b>. Ningún vendedor ve estos precios. Deje vacío el <b>precio 1</b> para que ese producto use el precio general.</div>
+  <div class="ayuda" id="ayGen"><b>Cómo funciona:</b> Los <b>★ Precio Especial</b> y <b>★ Precio Autorizado</b> se asignan a cada cliente en <b>Pedidos → 👥 Clientes</b>. el precio 1 es el mayoreo normal. Los precios 2, 3 y 4 se aplican <b>desde</b> la cantidad que usted ponga. Deje vacío un nivel si no lo usa. Los productos con grupo (por ejemplo pañales) cuentan la suma de todo el grupo.</div>
+  <div id="lista"></div>
+ </div>
+</main>
+<div id="save"><div class="in"><div class="t"><b id="sn"></b><span id="ss">Los cambios no se guardan hasta tocar Guardar</span></div><button class="b l" id="undo">Deshacer</button><button class="b r" id="go">Guardar</button></div></div>
+<div class="toast" id="toast"></div>
+<script src="config.js"></script>
+<script src="productos.js"></script>
+<script src="comun.js"></script>
+<script>
+const PRODUCTOS = window.PRODUCTOS;
+const CAMPOS = ['precio_detalle','unidad_detalle','precio_1','unidad_mayoreo','precio_2','desde_2','precio_3','desde_3','precio_4','desde_4','precio_especial','precio_autorizado','desde_autorizado','grupo','equiv','unidad','agotado'];
+let ses = LS.get('sesP', null), orig = {}, edit = {}, vistos = [];
+// ---- listas especiales con nombre (ej. "Precio Rey", "Precio 4"); a cada cliente se le asigna una lista
+const CE = ['precio_1', 'precio_2', 'desde_2', 'precio_3', 'desde_3', 'precio_4', 'desde_4'];
+let ESPD = { listas: [], clientes: [], precios: {}, whatsapp: '' }, lista = '', eorig = {}, eedit = {};
+const LINK_BASE = window.CATALOGO_URL || './';
+const linkDe = tk => new URL(LINK_BASE + '?c=' + encodeURIComponent(tk), location.href).toString();
+const nomCE = c => c ? (c.negocio || c.nombre) : '';
+const listaDe = id => (ESPD.listas || []).find(l => l.id == id);
+const clientesDe = id => ESPD.clientes.filter(c => (c.lista || c.token) == id);
+async function cargarEsp() { try { ESPD = await apiGet({ a: 'especiales', k: ses.k, t: Date.now() }); ESPD.listas = ESPD.listas || []; } catch (e) { ESPD = { listas: [], clientes: [], precios: {}, whatsapp: '' }; } llenarLista(); }
+function llenarLista() { $('#selLista').innerHTML = '<option value="">General (todos los clientes)</option>' + ESPD.listas.map(l => `<option value="${esc(l.id)}"${l.id == lista ? ' selected' : ''}>★ ${esc(l.nombre)} (${clientesDe(l.id).length} clientes)</option>`).join(''); }
+function prepararEsp() { if (!lista || eorig[lista]) return; const m = (ESPD.precios || {})[lista] || {}; eorig[lista] = {}; for (const c in m) eorig[lista][c] = Object.fromEntries(CE.map(k => [k, v(m[c][k])])); eedit[lista] = JSON.parse(JSON.stringify(eorig[lista])); }
+function cambiar(nuevo) { lista = nuevo; prepararEsp(); const l = listaDe(lista), cs = clientesDe(lista);
+  $('#ayEsp').hidden = !lista; $('#ayGen').hidden = !!lista; $('#ayNom').textContent = l ? l.nombre + (cs.length ? ' · la usan: ' + cs.map(nomCE).join(', ') : ' · todavía ningún cliente la usa') : ''; $('#selLista').value = lista; pintar(); window.scrollTo(0, 0); }
+const v = x => (x === null || x === undefined) ? '' : String(x);
+const n2 = x => { if (x == null) return ''; const s = String(x).replace(/[Ll]\.?|\s|,/g, ''); return s === '' ? '' : (isFinite(+s) ? +s : NaN); };
+
+$('#lgo').onclick = async () => {
+  const k = $('#lk').value.trim(); if (!k && API !== 'demo') return toast('Escriba la clave');
+  try { const j = await apiGet({ a: 'login', k }); if (j.rol !== 'oficina') throw Error('Esa clave no es de oficina'); ses = { k, ts: Date.now() }; LS.set('sesP', ses); entrar(); }
+  catch (e) { toast(e.message || 'No se pudo entrar'); }
+};
+$('#salir').onclick = () => { LS.set('sesP', null); location.reload(); };
+
+async function entrar() {
+  $('#login').hidden = true; $('#app').hidden = false; $('#salir').hidden = false; $('#busq').hidden = false;
+  $('#lista').innerHTML = '<p style="text-align:center;color:#777">Cargando precios…</p>';
+  try {
+    const j = await apiGet({ a: 'datos', k: ses.k, t: Date.now() });
+    orig = {}; for (const r of j.precios) orig[String(r.codigo).toUpperCase()] = Object.fromEntries(CAMPOS.map(c => [c, v(r[c])]));
+    edit = JSON.parse(JSON.stringify(orig)); pintar(); cargarEsp();
+  } catch (e) { $('#lista').innerHTML = `<p style="color:var(--rojo2)">No se pudieron cargar los precios: ${esc(e.message)}</p>`; }
+}
+function filaDe(c) { return edit[c] || (edit[c] = Object.fromEntries(CAMPOS.map(k => [k, '']))); }
+function filaE(c) { const m = eedit[lista]; return m[c] || (m[c] = Object.fromEntries(CE.map(k => [k, '']))); }
+const fila = c => lista ? filaE(c) : filaDe(c);
+function cambiado(c) { if (lista) { const a = (eorig[lista] || {})[c] || {}, b = (eedit[lista] || {})[c] || {}; return CE.some(k => v(a[k]) !== v(b[k])); } const a = orig[c] || {}, b = edit[c] || {}; return CAMPOS.some(k => v(a[k]) !== v(b[k])); }
+function errores(r) {
+  const e = []; const p = [1, 2, 3, 4].map(i => n2(r['precio_' + i])), d = [1, n2(r.desde_2), n2(r.desde_3), n2(r.desde_4)];
+  if ([n2(r.precio_detalle), n2(r.precio_especial), n2(r.precio_autorizado), n2(r.desde_autorizado), ...p, ...d.slice(1)].some(x => Number.isNaN(x))) e.push('Use solo números (ej. 125.50)');
+  let ult = 1, up = p[0];
+  for (let i = 1; i < 4; i++) { if (p[i] === '') continue;   // sin precio = nivel no se usa
+    if (d[i] === '') { e.push(`Precio ${i + 1}: escriba desde cuántos aplica`); continue; }
+    if (d[i] <= ult) e.push(`Precio ${i + 1}: "desde" debe ser mayor que ${ult}`); ult = d[i];
+    if (up !== '' && p[i] > up) e.push(`Precio ${i + 1} es más caro que el anterior`); up = p[i]; }
+  return e;
+}
+function resumen(c, r) {
+  const um = r.unidad_mayoreo || 'unid.', u = r.grupo ? (r.unidad || 'fardos') : plural(um, 2) || 'unid.';
+  const esc2 = []; for (let i = 1; i <= 4; i++) { const pr = n2(r['precio_' + i]); if (pr === '' || Number.isNaN(pr)) continue; esc2.push({ d: i == 1 ? 1 : n2(r['desde_' + i]), pr }); }
+  esc2.sort((a, b) => a.d - b.d);
+  const m = esc2.map((x, i) => `${esc2[i + 1] ? x.d + ' a ' + (esc2[i + 1].d - 1) : x.d + ' o más'} ${u}: <b>${fmt(x.pr)}</b>`).join(' · ');
+  const de = n2(r.precio_detalle);
+  const pe = n2(r.precio_especial), pa = n2(r.precio_autorizado), ex = (pe !== '' && !Number.isNaN(pe) ? ` · ★ Especial: <b>${fmt(pe)}</b>` : '') + (pa !== '' && !Number.isNaN(pa) ? ` · ★ Autorizado: <b>${fmt(pa)}</b>${n2(r.desde_autorizado) > 1 ? ' desde ' + n2(r.desde_autorizado) + ' ' + (r.grupo ? (r.unidad || 'fardos') : plural(r.unidad_mayoreo || 'unid.', 2)) : ''}` : '');
+  return (ex ? `<span style="color:#1f7a4d">${ex.slice(3)}</span><br>` : '') + (de !== '' && !Number.isNaN(de) ? `Detalle: <b>${fmt(de)}</b>${r.unidad_detalle ? ' por ' + esc(r.unidad_detalle) : ''}<br>` : '') + (m ? 'Mayoreo' + (r.unidad_mayoreo ? ' por ' + esc(r.unidad_mayoreo) : '') + ': ' + m : '<span style="color:#b26a00">Sin precio de mayoreo: el catálogo dirá "Consulte precio"</span>');
+}
+function tarjetaEsp(p) {
+  const c = p.c.toUpperCase(), r = filaE(c), g = filaDe(c), er = errores(r);
+  const inp = (k, ph, tip = 'decimal') => `<input data-k="${k}" value="${esc(r[k])}" inputmode="${tip}" placeholder="${ph}" aria-label="${k}">`;
+  return `<div class="p espc${cambiado(c) ? ' mod' : ''}${er.length ? ' bad' : ''}" data-c="${c}">
+   <div class="ph"><img src="img/${p.i}_s.jpg" alt=""><div><b>${esc(p.n)}</b><small>${esc(p.c)} · ${esc(p.d)}</small></div></div>
+   <div class="ref">Precio general: ${resumen(c, Object.assign({}, g, { precio_detalle: '' }))}</div>
+   <div class="g"><label class="f"><span>Su precio 1 (L)</span>${inp('precio_1', 'vacío = precio general')}</label><label class="f"><span>Se vende por</span><input value="${esc(g.unidad_mayoreo || '')}" readonly></label></div>
+   <div class="esc"><div class="eh"><span>Nivel</span><span>Desde (cantidad)</span><span>Precio (L)</span></div>
+    ${[2, 3, 4].map(i => `<div class="er"><b>P${i}</b>${inp('desde_' + i, 'opcional', 'numeric')}${inp('precio_' + i, 'vacío = no usa')}</div>`).join('')}
+   </div>
+   <div class="res">${r.precio_1 !== '' ? 'Su precio: ' + resumen(c, Object.assign({}, r, { unidad_mayoreo: g.unidad_mayoreo, grupo: g.grupo, unidad: g.unidad })) : '<span style="color:#777">Usa el precio general</span>'}</div>
+   ${er.length ? `<div class="err">${er.map(esc).join('<br>')}</div>` : ''}
+  </div>`;
+}
+function tarjeta(p) {
+  if (lista) return tarjetaEsp(p);
+  const c = p.c.toUpperCase(), r = filaDe(c), er = errores(r);
+  const inp = (k, ph, tip = 'decimal') => `<input data-k="${k}" value="${esc(r[k])}" inputmode="${tip}" placeholder="${ph}" aria-label="${k}">`;
+  const ag = /^(si|sí|x|1|true|agotado)$/i.test(String(r.agotado || ''));
+  return `<div class="p${cambiado(c) ? ' mod' : ''}${er.length ? ' bad' : ''}${ag ? ' agp' : ''}" data-c="${c}">
+   <div class="ph"><img src="img/${p.i}_s.jpg" alt=""><div><b>${esc(p.n)}</b><small>${esc(p.c)} · ${esc(p.d)}</small>${r.grupo ? `<br><span class="chip">Grupo ${esc(r.grupo)}</span>` : ''}</div></div>
+   <button class="stk${ag ? ' no' : ''}" data-stk="${c}">${ag ? '🚫 SIN STOCK · tocar cuando vuelva a haber' : '✅ Hay stock · tocar si se agotó'}</button>
+   <div class="g">
+    <label class="f det"><span>Precio detalle (L)</span>${inp('precio_detalle', 'vacío = sin detalle')}</label>
+    <label class="f"><span>Detalle se vende por</span>${inp('unidad_detalle', 'paquete, rollo…', 'text')}</label>
+    <label class="f"><span>Precio 1 · mayoreo (L)</span>${inp('precio_1', '0.00')}</label>
+    <label class="f"><span>Mayoreo se vende por</span>${inp('unidad_mayoreo', 'fardo, caja…', 'text')}</label>
+   </div>
+   <div class="esc"><div class="eh"><span>Nivel</span><span>Desde (cantidad)</span><span>Precio (L)</span></div>
+    <div class="er"><b>P1</b><input value="1" readonly aria-label="desde 1"><input value="${esc(r.precio_1)}" readonly aria-label="precio 1 (arriba)"></div>
+    ${[2, 3, 4].map(i => `<div class="er"><b>P${i}</b>${inp('desde_' + i, 'ej. ' + [0, 0, 5, 25, 100][i], 'numeric')}${inp('precio_' + i, 'vacío = no usa')}</div>`).join('')}
+   </div>
+   <div class="g espg">
+    <label class="f"><span>★ Precio Especial (L)</span>${inp('precio_especial', 'vacío = precio normal')}</label>
+    <label class="f"><span>★ Precio Autorizado (L)</span>${inp('precio_autorizado', 'vacío = precio normal')}</label>
+    <span></span>
+    <label class="f"><span>★ Autorizado desde (cantidad)</span>${inp('desde_autorizado', 'vacío = desde 1', 'numeric')}</label>
+   </div>
+   <div class="res">${resumen(c, r)}</div>
+   ${er.length ? `<div class="err">${er.map(esc).join('<br>')}</div>` : ''}
+   <details${r.grupo ? '' : ''}><summary>Grupo por volumen (opcional)</summary>
+    <div class="g" style="margin-top:8px">
+     <label class="f"><span>Grupo</span>${inp('grupo', 'ej. PAÑALES', 'text')}</label>
+     <label class="f"><span>Se cuenta en</span>${inp('unidad', 'fardos, cajas…', 'text')}</label>
+     <label class="f"><span>Equivale a (1 unidad = ? del grupo)</span>${inp('equiv', 'vacío = 1')}</label>
+    </div>
+    <p style="font-size:.78em;color:var(--tx);margin:6px 0 0">Los productos con el mismo grupo suman sus cantidades para escoger el precio. Ej.: paquete de pañal = 0.25 (4 paquetes = 1 fardo).</p>
+    ${r.grupo ? `<div class="btns"><button class="bs" data-act="grupo">Copiar estas escalas a todo el grupo ${esc(r.grupo)}</button></div>` : ''}
+   </details>
+  </div>`;
+}
+const quitarAc = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+function pintar() {
+  const q = quitarAc($('#q').value.trim()), secs = [...new Set(PRODUCTOS.map(p => p.s))];
+  vistos = PRODUCTOS.filter(p => !q || quitarAc(p.n + ' ' + p.c + ' ' + p.s).includes(q));
+  let h = ''; for (const s of secs) { const it = vistos.filter(p => p.s == s); if (!it.length) continue; h += `<h2 id="s-${secs.indexOf(s)}">${esc(s)}</h2>` + it.map(tarjeta).join(''); }
+  $('#lista').innerHTML = h || '<p style="text-align:center;color:#777">No hay productos con esa búsqueda.</p>';
+  $('#nav').innerHTML = q ? '' : secs.map((s, i) => `<a href="#s-${i}">${esc(s)}</a>`).join('');
+  barra();
+}
+function refrescar(card) { const c = card.dataset.c, r = fila(c), er = errores(r);
+  card.classList.toggle('mod', cambiado(c)); card.classList.toggle('bad', er.length > 0);
+  const g = filaDe(c); card.querySelector('.res').innerHTML = lista ? (r.precio_1 !== '' ? 'Su precio: ' + resumen(c, Object.assign({}, r, { unidad_mayoreo: g.unidad_mayoreo, grupo: g.grupo, unidad: g.unidad })) : '<span style="color:#777">Usa el precio general</span>') : resumen(c, r);
+  let e = card.querySelector('.err'); if (er.length) { if (!e) { e = document.createElement('div'); e.className = 'err'; card.querySelector('.res').after(e); } e.innerHTML = er.map(esc).join('<br>'); } else if (e) e.remove();
+  const ro = card.querySelectorAll('.er input[readonly]')[1]; if (ro) ro.value = r.precio_1; barra(); }
+$('#lista').addEventListener('input', e => { const i = e.target; if (!i.dataset.k) return; const card = i.closest('.p'); const k = i.dataset.k;
+  let val = i.value; if (k == 'grupo') val = val.toUpperCase(); if (['unidad', 'unidad_detalle', 'unidad_mayoreo'].includes(k)) val = val.toLowerCase();
+  fila(card.dataset.c)[k] = val.trim(); refrescar(card); });
+$('#lista').addEventListener('click', e => { if (e.target.dataset.act != 'grupo') return; const c = e.target.closest('.p').dataset.c, r = filaDe(c), g = r.grupo; let n = 0;
+  for (const k in edit) if (k != c && edit[k].grupo == g) { ['desde_2', 'desde_3', 'desde_4', 'unidad'].forEach(f => edit[k][f] = r[f]); n++; }
+  pintar(); toast(`Escalas copiadas a ${n} productos del grupo ${g}`); });
+function cambios() { return Object.keys(lista ? (eedit[lista] || {}) : edit).filter(cambiado); }
+function barra() { const c = cambios(), malos = c.filter(k => errores(fila(k)).length);
+  $('#save').classList.toggle('on', c.length > 0); $('#sn').textContent = c.length + (c.length == 1 ? ' producto cambiado' : ' productos cambiados');
+  $('#ss').textContent = malos.length ? malos.length + ' con errores (en rojo)' : 'Los cambios no se guardan hasta tocar Guardar'; $('#go').disabled = malos.length > 0; $('#go').style.opacity = malos.length ? .5 : 1; }
+$('#undo').onclick = () => confirmar('¿Deshacer todos los cambios sin guardar?', () => { if (lista) eedit[lista] = JSON.parse(JSON.stringify(eorig[lista])); else edit = JSON.parse(JSON.stringify(orig)); pintar(); });
+$('#go').onclick = async () => {
+  const c = cambios(); if (!c.length) return; const filas = c.map(k => Object.assign({ codigo: k }, fila(k)));
+  if (lista) { $('#go').disabled = true; $('#go').textContent = 'Guardando…';
+    try { await apiPost({ a: 'precios_especiales', k: ses.k, token: lista, filas }); c.forEach(k => eorig[lista][k] = JSON.parse(JSON.stringify(eedit[lista][k]))); ESPD.precios[lista] = Object.fromEntries(Object.entries(eedit[lista]).filter(([, r]) => r.precio_1 !== '')); pintar(); toast('Lista ' + (listaDe(lista) || {}).nombre + ' guardada ✓ La ven ' + clientesDe(lista).length + ' clientes'); }
+    catch (e) { toast('No se guardó: ' + e.message); }
+    $('#go').disabled = false; $('#go').textContent = 'Guardar'; return; }
+  $('#go').disabled = true; $('#go').textContent = 'Guardando…';
+  try { const j = await apiPost({ a: 'precios', k: ses.k, filas }); c.forEach(k => orig[k] = JSON.parse(JSON.stringify(edit[k]))); pintar(); toast((j.actualizados || c.length) + ' productos guardados ✓ Los vendedores ya ven los precios nuevos'); }
+  catch (e) { toast('No se guardó: ' + e.message); }
+  $('#go').disabled = false; $('#go').textContent = 'Guardar';
+};
+$('#q').addEventListener('input', pintar);
+// Un toque: marcar / quitar sin stock (se guarda al momento)
+$('#lista').addEventListener('click', async e => { const b = e.target.closest('[data-stk]'); if (!b) return; const c = b.dataset.stk, r = filaDe(c);
+  const nuevo = /^(si|sí|x|1|true|agotado)$/i.test(String(r.agotado || '')) ? '' : 'si'; b.disabled = true; b.textContent = 'Guardando…';
+  try { await apiPost({ a: 'precios', k: ses.k, filas: [{ codigo: c, agotado: nuevo }] }); r.agotado = nuevo; (orig[c] = orig[c] || {}).agotado = nuevo; pintar(); toast(nuevo ? 'Marcado SIN STOCK: ya sale en gris en el catálogo' : 'Disponible otra vez ✓'); }
+  catch (er) { toast('No se guardó: ' + er.message); b.disabled = false; } });
+$('#selLista').onchange = () => { const nv = $('#selLista').value; if (cambios().length) { $('#selLista').value = lista; return confirmar('Hay cambios sin guardar en esta lista. ¿Descartarlos y cambiar de lista?', () => { if (lista) eedit[lista] = JSON.parse(JSON.stringify(eorig[lista])); else edit = JSON.parse(JSON.stringify(orig)); cambiar(nv); }); } cambiar(nv); };
+function waLink(tel, msg) { const t = telWA(tel || ''); return 'https://wa.me/' + (t.length >= 11 ? t : '') + '?text=' + encodeURIComponent(msg); }
+function msgCliente(c) { return `Hola ${c.nombre}, le saludamos de Distribuidora San Jorge. Este es su catálogo con *sus precios especiales*. Desde aquí puede hacer sus pedidos cuando los necesite:\n\n${linkDe(c.token)}\n\nGuárdelo en su celular: en Chrome toque ⋮ → Instalar y crear acceso directo.`; }
+const chips = (tk, sel) => `<div class="chips">${ESPD.listas.map(l => `<button type="button" class="chipb${l.id == sel ? ' on' : ''}" data-tk="${esc(tk)}" data-l="${esc(l.id)}">${l.id == sel ? '✓ ' : ''}${esc(l.nombre)}</button>`).join('')}</div>`;
+const optListas = sel => ESPD.listas.map(l => `<option value="${esc(l.id)}"${l.id == sel ? ' selected' : ''}>${esc(l.nombre)}</option>`).join('');
+async function crearLista(nombre, copiarDe) {
+  const j = await apiPost({ a: 'lista_especial', k: ses.k, nombre }); ESPD.listas.push({ id: j.id, nombre }); ESPD.precios[j.id] = {};
+  if (copiarDe) { const filas = Object.entries((ESPD.precios || {})[copiarDe] || {}).map(([codigo, r]) => Object.assign({ codigo }, Object.fromEntries(CE.map(k => [k, v(r[k])]))));
+    if (filas.length) await apiPost({ a: 'precios_especiales', k: ses.k, token: j.id, filas }); ESPD.precios[j.id] = JSON.parse(JSON.stringify(ESPD.precios[copiarDe] || {})); }
+  return j.id;
+}
+function panelEsp() {
+  const ls = ESPD.listas.length ? ESPD.listas.map(l => `<div class="ce"><b>★ ${esc(l.nombre)}</b><small>${Object.keys((ESPD.precios || {})[l.id] || {}).length} productos con precio · ${clientesDe(l.id).length ? 'la usan: ' + clientesDe(l.id).map(c => esc(nomCE(c))).join(', ') : 'ningún cliente todavía'}</small>
+     <div class="btns"><button class="bs" data-ed="${esc(l.id)}">💲 Poner precios</button></div></div>`).join('') : '<p style="color:#777">Cargando listas…</p>';
+  const cs = ESPD.clientes.length ? ESPD.clientes.map(c => `<div class="ce${c.activo == 'no' ? ' off' : ''}"><b>${esc(nomCE(c))}</b><small>${esc(c.nombre)}${c.telefono ? ' · ' + esc(c.telefono) : ''}${c.activo == 'no' ? ' · DESACTIVADO' : ''}</small>
+     <div class="f"><span>Precio que recibe (toque para cambiar)</span>${chips(c.token, c.lista)}</div>
+     <div class="lk">${esc(linkDe(c.token))}</div>
+     <div class="btns"><a class="bs" href="${waLink(c.telefono, msgCliente(c))}" target="_blank" rel="noopener">📲 Enviar enlace</a><button class="bs" data-cp="${esc(c.token)}">Copiar enlace</button><button class="bs" data-act2="${esc(c.token)}">${c.activo == 'no' ? 'Activar' : 'Desactivar'}</button></div></div>`).join('')
+    : '<p style="color:#777">Todavía no hay clientes especiales.</p>';
+  const { o, cerrar } = abrirOv('Precios especiales', `
+    <p class="nota" style="margin:0 0 10px">Haga <b>listas de precios</b> con nombre y asígnele una a cada cliente. Cada cliente recibe un enlace privado. Los vendedores no ven estos precios y los pedidos llegan solo a la oficina.</p>
+    <h3 style="margin:6px 0">Listas de precios</h3>${ls}
+    <div class="ce"><b>+ Nueva lista</b>
+     <label class="f"><span>Nombre de la lista</span><input id="lsNom" placeholder="Ej. Precio Mayorista"></label>
+     <label class="f"><span>Empezar con</span><select id="lsCop"><option value="">Lista vacía</option>${ESPD.listas.map(l => `<option value="${esc(l.id)}">Copia de ${esc(l.nombre)}</option>`).join('')}</select></label>
+     <button class="si" id="lsAdd" style="width:100%">Crear lista</button></div>
+    <h3 style="margin:18px 0 6px">Clientes especiales</h3>${cs}
+    <div class="ce"><b>+ Nuevo cliente especial</b>
+     <label class="f"><span>Nombre del negocio</span><input id="ceNeg" placeholder="Ej. Súper El Rey"></label>
+     <label class="f"><span>Nombre del contacto</span><input id="ceNom" placeholder="Ej. Don Carlos"></label>
+     <label class="f"><span>WhatsApp del cliente</span><input id="ceTel" type="tel" inputmode="numeric" placeholder="8 números"></label>
+     <div class="f"><span>Precio que recibe</span>${chips('nuevo', '')}</div>
+     <label class="f"><span>Los productos que no estén en su lista…</span><select id="ceRes"><option value="si">Se muestran con el precio de mayoreo normal</option><option value="no">No se muestran</option></select></label>
+     <button class="si" id="ceAdd" style="width:100%">Crear cliente</button></div>
+    <h3 style="margin:18px 0 4px">WhatsApp de la oficina</h3>
+    <p class="nota" style="margin:0 0 6px">Ahí le llegan los pedidos de los clientes especiales.</p>
+    <div class="qo"><input id="ceWA" type="tel" inputmode="numeric" placeholder="8 números" value="${esc(ESPD.whatsapp || '')}"><button class="si" id="ceWAok">Guardar</button></div>`, '');
+  o.addEventListener('click', async e => { const b = e.target, tk = b.dataset.ed || b.dataset.cp || b.dataset.act2;
+    if (b.dataset.ed) { cerrar(); cambiar(tk); }
+    if (b.dataset.cp) { const l = linkDe(tk); navigator.clipboard.writeText(l).then(() => toast('Enlace copiado ✓')).catch(() => toast(l)); }
+    if (b.dataset.act2) { const c = ESPD.clientes.find(x => x.token == tk); try { await apiPost({ a: 'especial_cliente', k: ses.k, token: tk, activo: c.activo == 'no' ? 'si' : 'no' }); c.activo = c.activo == 'no' ? 'si' : 'no'; cerrar(); panelEsp(); toast(c.activo == 'no' ? 'Desactivado: su enlace ya no funciona' : 'Activado ✓'); } catch (er) { toast(er.message); } }
+  });
+  let nuevoLis = '';
+  o.addEventListener('click', async e => { const b = e.target.closest('.chipb'); if (!b) return; const tk = b.dataset.tk, lid = b.dataset.l;
+    const marcar = () => b.parentNode.querySelectorAll('.chipb').forEach(x => { const on = x == b; x.classList.toggle('on', on); x.textContent = (on ? '✓ ' : '') + listaDe(x.dataset.l).nombre; });
+    if (tk == 'nuevo') { nuevoLis = lid; marcar(); return; }
+    const c = ESPD.clientes.find(x => x.token == tk); if (c.lista == lid) return;
+    try { await apiPost({ a: 'especial_cliente', k: ses.k, token: tk, lista: lid }); c.lista = lid; marcar(); llenarLista(); toast(nomCE(c) + ' ahora recibe ' + listaDe(lid).nombre + ' ✓'); } catch (er) { toast(er.message); } });
+  o.querySelector('#lsAdd').onclick = async () => { const nom = o.querySelector('#lsNom').value.trim(); if (!nom) return toast('Escriba el nombre de la lista');
+    try { const id = await crearLista(nom, o.querySelector('#lsCop').value); llenarLista(); cerrar(); cambiar(id); toast('Lista "' + nom + '" creada ✓ Ponga sus precios'); } catch (er) { toast('No se pudo crear: ' + er.message); } };
+  o.querySelector('#ceAdd').onclick = async () => { const neg = o.querySelector('#ceNeg').value.trim(), nom = o.querySelector('#ceNom').value.trim() || neg, tel = o.querySelector('#ceTel').value.trim(), lis = nuevoLis;
+    if (!neg) return toast('Escriba el nombre del negocio'); if (!lis) return toast('Toque el precio que va a recibir');
+    try { const j = await apiPost({ a: 'especial_cliente', k: ses.k, nombre: nom, negocio: neg, telefono: tel, ver_resto: o.querySelector('#ceRes').value, activo: 'si', lista: lis });
+      ESPD.clientes.push({ token: j.token, nombre: nom, negocio: neg, telefono: tel, ver_resto: o.querySelector('#ceRes').value, activo: 'si', lista: lis });
+      llenarLista(); cerrar(); panelEsp(); toast(neg + ' creado con ' + listaDe(lis).nombre + ' ✓ Ya puede enviarle su enlace'); } catch (er) { toast('No se pudo crear: ' + er.message); } };
+  o.querySelector('#ceWAok').onclick = async () => { const w = o.querySelector('#ceWA').value.replace(/\D/g, ''); try { await apiPost({ a: 'config', k: ses.k, whatsapp_oficina: w }); ESPD.whatsapp = w; toast('WhatsApp de la oficina guardado ✓'); } catch (er) { toast(er.message); } };
+}
+$('#besp').onclick = panelEsp;
+window.addEventListener('beforeunload', e => { if (cambios().length) { e.preventDefault(); e.returnValue = ''; } });
+if (API === '' ) $('#lmsg').textContent = 'Falta pegar el enlace del servidor en config.js.';
+if (ses) entrar();
+</script>
+
+<script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});</script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+{"id": "dsj-precios", "name": "Precios DSJ", "short_name": "Precios DSJ", "start_url": "./precios.html", "scope": "./", "display": "standalone", "background_color": "#fbf7f2", "theme_color": "#0f3d5e", "icons": [{"src": "icon-precios-192.png", "sizes": "192x192", "type": "image/png"}, {"src": "icon-precios-512.png", "sizes": "512x512", "type": "image/png"}]}

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Autorizar Pedido DSJ</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0f3d5e">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{--neg:#0f3d5e;--rojo:#1a6fa8;--rojo2:#1592e6;--tx:#53606b;--verde:#1f7a4d}
+*{box-sizing:border-box}html,body{margin:0;overflow-x:hidden}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--neg);background:#f5f6f8;min-height:100vh}
+header{background:var(--neg);color:#fff;border-bottom:5px solid var(--rojo)}
+.top{display:flex;align-items:center;gap:10px;padding:12px max(16px,env(safe-area-inset-left));max-width:640px;margin:auto}
+.top img{width:44px;height:44px;border-radius:10px;background:#f6f5f1;object-fit:contain;padding:3px}
+.top b{display:block;font-size:1.05em}.top small{color:#bbb}
+main{max-width:640px;margin:auto;padding:16px max(16px,env(safe-area-inset-left)) 110px;display:grid;gap:12px}
+.card{background:#fff;border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+h1{font-size:1.25em;margin:0 0 4px}p{margin:0;color:var(--tx);line-height:1.45}
+.li{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0}.li:last-child{border:0}
+.li img{width:52px;height:52px;object-fit:contain;background:#f6f6f6;border-radius:8px;flex:none}
+.li div{flex:1;min-width:0}.li b{display:block;font-size:.95em}.li small{color:var(--tx)}
+.li .s{font-weight:800;color:var(--rojo);white-space:nowrap}
+.tot{display:flex;justify-content:space-between;font-weight:900;font-size:1.3em;padding-top:10px;border-top:2px dashed #ccc;margin-top:4px}
+label{display:block;font-weight:700;font-size:.9em;margin-bottom:6px}
+input{width:100%;border:1px solid #ccc;border-radius:10px;padding:13px;font:inherit}
+.firma{position:relative;background:#fff;border:2px dashed #bbb;border-radius:12px}.firma.ok{border-color:var(--verde);border-style:solid}
+.fpad{display:block;width:100%;height:190px;touch-action:none}
+.fline{position:absolute;left:14px;right:14px;bottom:34px;border-top:1px solid #ccc;color:#aaa;font-size:.75em;padding-top:2px;pointer-events:none}.firma.ok .fline{color:transparent}
+.fclr{position:absolute;right:8px;top:8px;border:0;border-radius:999px;background:#eee;color:var(--rojo);font:700 .8em system-ui,Arial;padding:6px 10px}
+.go{display:block;width:100%;border:0;border-radius:14px;background:var(--verde);color:#fff;font:900 1.15em system-ui,Arial;padding:17px;cursor:pointer}
+.go[disabled]{opacity:.6}
+a.wa{display:block;text-align:center;text-decoration:none;border-radius:14px;background:#25d366;color:#fff;font:900 1.05em system-ui,Arial;padding:15px}
+.ok{background:#e6f4ec;border-left:6px solid var(--verde);color:#14532d}.ok h1{color:#14532d}
+.fimg{max-width:260px;width:100%;border-bottom:1px solid #999;display:block;margin-top:8px}
+.err{background:#fdecec;color:#7f1d1d}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--neg);color:#fff;padding:10px 16px;border-radius:999px;font-size:.85em;opacity:0;transition:.3s;pointer-events:none;z-index:60}.toast.on{opacity:1}
+
+/* ===== Azul difuminado (estilo tarjeta OnePay) ===== */
+header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f 70%,#2a7aa8 100%)!important;border-bottom-color:#1fa3ff!important}
+</style>
+</head>
+<body>
+<header><div class="top"><img src="img/logo.jpg" alt="DSJ"><div><b>Distribuidora San Jorge</b><small>Autorización de pedido</small></div></div></header>
+<main id="m"><div class="card"><p>Cargando su pedido…</p></div></main>
+<div class="toast" id="toast"></div>
+<script src="config.js"></script>
+<script src="productos.js"></script>
+<script src="comun.js"></script>
+
+<script>
+const TK = location.hash.slice(1) || new URLSearchParams(location.search).get('t') || '';
+const PX = Object.fromEntries((window.PRODUCTOS || []).map(p => [p.c, p]));
+let P = null, WA = '';
+function lista(p) { return p.items.map(i => { const x = PX[i.c]; return `<div class="li">${x ? `<img src="img/${x.i}_s.jpg" alt="">` : ''}<div><b>${esc(i.n)}</b><small>${i.q} × ${i.precio ? fmt(i.precio) : 'consultar'}</small></div><span class="s">${i.sub ? fmt(i.sub) : ''}</span></div>`; }).join('') + `<div class="tot"><span>Total</span><span>${fmt(p.total)}</span></div>`; }
+function waLink(p) { const t = telWA(WA); const m = `✅ AUTORIZO el pedido #${p.numero} de ${p.negocio || p.cliente} por ${fmt(p.total)}. Lo firmé desde el enlace.`; return 'https://wa.me/' + (t.length >= 11 ? t : '') + '?text=' + encodeURIComponent(m); }
+function vistaFirmado(p) {
+  $('#m').innerHTML = `<div class="card ok"><h1>✅ Pedido #${esc(p.numero)} autorizado</h1><p>${p.firmado_en ? 'Firmado el ' + esc(p.firmado_en) + '. ' : ''}Gracias, ${esc(p.cliente)}. Su pedido ya está en Distribuidora San Jorge.</p>${firmaOK(p.firma) ? `<img class="fimg" src="${p.firma}" alt="Su firma">` : ''}</div>
+   <a class="wa" href="${waLink(p)}" target="_blank" rel="noopener">💬 Avisar por WhatsApp que ya lo autoricé</a>
+   <div class="card"><h1>Su pedido</h1>${lista(p)}</div>`;
+}
+async function iniciar() {
+  try { const j = await apiGet({ a: 'pedido_firma', t: TK }); P = j.pedido; WA = j.wa || ''; }
+  catch (e) { $('#m').innerHTML = `<div class="card err"><h1>No se encontró el pedido</h1><p>El enlace no es válido. Pídale a su vendedor que se lo envíe otra vez.</p></div>`; return; }
+  if (P.estado == 'firmado') return vistaFirmado(P);
+  $('#m').innerHTML = `<div class="card"><h1>Pedido #${esc(P.numero)}</h1><p><b>${esc(P.negocio || P.cliente)}</b> · preparado por ${esc(P.vendedor)}</p></div>
+   <div class="card">${lista(P)}</div>
+   <div class="card"><label for="tel">Su número de teléfono</label><input id="tel" type="tel" inputmode="numeric" value="${esc(P.telefono)}" placeholder="8 números"></div>
+   <div class="card"><label>Firme aquí para autorizar el pedido</label><div class="firma" id="fb"></div></div>
+   <button class="go" id="ok">✅ Autorizo este pedido</button>`;
+  const F = firmaPad($('#fb')); requestAnimationFrame(() => F.medir());
+  $('#ok').onclick = async () => {
+    const tel = $('#tel').value.replace(/\D/g, ''); if (tel.length < 8) { $('#tel').focus(); return toast('Escriba su número de teléfono'); }
+    if (F.vacia()) return toast('Firme con el dedo para autorizar');
+    $('#ok').disabled = true; $('#ok').textContent = 'Enviando…';
+    try { const r = await apiPost({ a: 'firmar', t: TK, firma: F.imagen(), telefono: tel }); P.estado = 'firmado'; P.firma = F.imagen(); P.firmado_en = r.firmado_en || ''; vistaFirmado(P); }
+    catch (e) { $('#ok').disabled = false; $('#ok').textContent = '✅ Autorizo este pedido'; toast('No se pudo enviar: ' + e.message); }
+  };
+}
+iniciar();
+</script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Imprimir catálogo · DSJ</title>
+<link rel="icon" href="icon-192.png">
+<style>
+:root{--az:#0f3d5e;--az2:#1f78b4;--line:#e3e8ee;--tx:#1d2733;--gr:#5b6775}
+*{box-sizing:border-box}
+html,body{margin:0;background:#eef2f6;color:var(--tx);font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+header{background:linear-gradient(120deg,#0b2f4a,#1f78b4);color:#fff;padding:14px 18px}
+header b{font-size:1.15em}header small{display:block;opacity:.85}
+.op{max-width:980px;margin:14px auto;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+.op h3{margin:0 0 8px;font-size:1em;color:var(--az)}
+.op .fila{margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-weight:700;font-size:.92em;cursor:pointer;background:#fff}
+.chips label:has(input:checked){background:#e8f2fb;border-color:var(--az2);color:var(--az)}
+.chips label.off{opacity:.45}
+.chips input{width:17px;height:17px;margin:0}
+.chips .sinp{border-color:#d9a0a0}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:640px){.dos{grid-template-columns:1fr}}
+.op .f span{display:block;font-size:.85em;font-weight:700;color:var(--gr);margin-bottom:4px}
+.op .f input,.op .f select{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;font-size:1em}
+.mini{font-size:.8em;color:var(--az2);background:none;border:0;font-weight:700;cursor:pointer;padding:0 0 0 8px}
+.bar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);padding:10px 18px}
+.bar span{color:var(--gr);font-size:.92em}
+.btn{border:0;border-radius:999px;padding:12px 20px;font-weight:800;font-size:1em;color:#fff;background:linear-gradient(120deg,#0b2f4a,#1f78b4);cursor:pointer}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:#0f3d5e;color:#fff;padding:10px 16px;border-radius:999px;font-size:.9em;z-index:90;opacity:0;transition:.3s;pointer-events:none;max-width:90vw;text-align:center}.toast.on{opacity:1}
+.msg{max-width:980px;margin:30px auto;text-align:center;color:var(--gr)}
+/* ---------- la hoja ---------- */
+#hojas{padding:10px 0 40px}
+.hoja{width:216mm;margin:0 auto 14px;background:#fff;box-shadow:0 2px 14px rgba(0,0,0,.12);padding:10mm 10mm 8mm;color:#111;font-family:Arial,Helvetica,sans-serif}
+.port{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--az);padding-bottom:8px;margin-bottom:8px}
+.port img{width:22mm;height:22mm;object-fit:contain}
+.port .t{flex:1}.port .t b{display:block;font-size:20px;color:var(--az)}.port .t span{font-size:12px;color:#444}
+.port .d{text-align:right;font-size:11px;color:#444;line-height:1.5}
+.port .d b{color:#111;font-size:12px}
+.sec{background:var(--az);color:#fff;font-weight:800;font-size:13px;padding:5px 10px;border-radius:6px;margin:10px 0 6px;break-after:avoid;page-break-after:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.grid{display:grid;grid-template-columns:repeat(var(--col,3),1fr);gap:6px}
+.pr{border:1px solid #d5dbe2;border-radius:8px;padding:6px;break-inside:avoid;page-break-inside:avoid;display:flex;flex-direction:column}
+.pr .im{height:var(--alto,34mm);display:flex;align-items:center;justify-content:center;margin-bottom:4px}
+.pr .im img{max-width:100%;max-height:100%;object-fit:contain}
+.pr .n{font-weight:800;font-size:11.5px;line-height:1.2}
+.pr .ds{font-size:9.5px;color:#555;margin:1px 0 3px}
+.pr .cd{font-size:9px;color:#777}
+.pr .ag{font-size:10px;font-weight:800;color:#a11}
+.pz{margin-top:auto;border-top:1px dashed #c8d0d8;padding-top:3px}
+.pz div{display:flex;justify-content:space-between;gap:4px;font-size:10px;line-height:1.45}
+.pz div span{color:#333}.pz div b{font-size:11px;white-space:nowrap}
+.pz .es b,.pz .es span{color:#7a4b00}
+.pz .au b,.pz .au span{color:#0d5b2a}
+.pz .no{color:#777;font-style:italic;justify-content:center}
+.pie{margin-top:8px;font-size:9.5px;color:#666;text-align:center;border-top:1px solid #ddd;padding-top:4px}
+@media (max-width:860px){.hoja{width:100%;padding:12px}}
+@page{size:letter;margin:9mm}
+@media print{
+  html,body{background:#fff}
+  header,.op,.bar,.msg{display:none!important}
+  #hojas{padding:0}
+  .hoja{width:auto;margin:0;box-shadow:none;padding:0}
+}
+</style>
+</head>
+<body>
+<header><b>🖨 Imprimir catálogo</b><small>Con fotos. Marque qué precios quiere que salgan en el papel.</small></header>
+
+<div id="msg" class="msg">Cargando precios…</div>
+
+<div id="ops" class="op" hidden>
+  <div class="fila">
+    <h3>¿Qué precios salen?</h3>
+    <div class="chips" id="cPre">
+      <label><input type="checkbox" value="det">Detalle</label>
+      <label><input type="checkbox" value="p1">Precio 1 (fardo)</label>
+      <label><input type="checkbox" value="p2">Precio 2</label>
+      <label><input type="checkbox" value="p3">Precio 3</label>
+      <label><input type="checkbox" value="p4">Precio 4</label>
+      <label class="sO"><input type="checkbox" value="esp">Especial</label>
+      <label class="sO"><input type="checkbox" value="aut">Autorizado</label>
+      <label class="sinp"><input type="checkbox" value="sin" id="sinP">🚫 Sin precios</label>
+    </div>
+  </div>
+  <div class="fila">
+    <h3>¿Qué productos? <button class="mini" id="tTodas">Todas</button><button class="mini" id="tNing">Ninguna</button></h3>
+    <div class="chips" id="cSec"></div>
+  </div>
+  <div class="fila dos">
+    <label class="f"><span>Para quién es (opcional)</span><input id="oPara" placeholder="Ej. Pulpería La Esquina"></label>
+    <label class="f"><span>Teléfono para pedidos</span><input id="oTel" placeholder="Ej. 9999-9999"></label>
+  </div>
+  <div class="fila dos">
+    <label class="f"><span>Tamaño de las fotos</span><select id="oCol"><option value="3">Grandes · 3 por fila</option><option value="4">Medianas · 4 por fila</option><option value="5">Pequeñas · 5 por fila</option></select></label>
+    <label class="f"><span>Productos agotados</span><select id="oAgo"><option value="no">No ponerlos</option><option value="si">Ponerlos con "Agotado"</option></select></label>
+  </div>
+</div>
+
+<div class="bar" id="bar" hidden><span id="cuenta"></span><button class="btn" id="bImp">🖨 Imprimir / Guardar PDF</button></div>
+<div id="hojas"></div>
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="productos.js"></script>
+<script src="comun.js"></script>
+
+<script>
+const ses = LS.get('ses', null) || {};
+const OFI = ses.rol == 'oficina';
+let FILAS = {}, OPC = Object.assign({ pre: ['det', 'p1', 'p2', 'p3', 'p4'], sec: null, para: '', tel: '', col: '3', ago: 'no' }, LS.get('impOpc', {}) || {});
+const SECS = [...new Set(PRODUCTOS.map(p => p.s))];
+const n2 = v => { const x = Number(String(v ?? '').replace(/[^\d.]/g, '')); return String(v ?? '').trim() === '' || !isFinite(x) || x <= 0 ? 0 : x; };
+const sing = u => { u = String(u || '').trim().toLowerCase(); return /[dnlr]es$/.test(u) ? u.slice(0, -2) : u.replace(/s$/, ''); };
+const plu = u => { u = sing(u); return !u ? '' : /[aeiou]$/.test(u) ? u + 's' : u + 'es'; };
+const L = v => 'L ' + Number(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+async function cargar() {
+  if (!ses.k) { $('#msg').innerHTML = 'Abra esta página desde el <b>Panel DSJ</b> (Inicio → Imprimir catálogo).'; return; }
+  try {
+    const j = await apiGet({ a: 'datos', k: ses.k, t: Date.now() });
+    (j.precios || []).forEach(r => FILAS[String(r.codigo || '').trim().toUpperCase()] = r);
+    if (!OPC.tel) OPC.tel = telBonito(j.whatsapp || '');
+  } catch (e) { $('#msg').textContent = 'No se pudieron cargar los precios: ' + e.message; return; }
+  $('#msg').hidden = true; $('#ops').hidden = false; $('#bar').hidden = false;
+  if (!OFI) { document.querySelectorAll('.sO').forEach(x => x.remove()); OPC.pre = OPC.pre.filter(x => x != 'esp' && x != 'aut'); }
+  $('#cSec').innerHTML = SECS.map(s => `<label><input type="checkbox" value="${esc(s)}">${esc(s)}</label>`).join('');
+  if (!OPC.sec) OPC.sec = SECS.slice();
+  document.querySelectorAll('#cPre input').forEach(i => i.checked = OPC.pre.includes(i.value));
+  document.querySelectorAll('#cSec input').forEach(i => i.checked = OPC.sec.includes(i.value));
+  $('#oPara').value = OPC.para || ''; $('#oTel').value = OPC.tel || ''; $('#oCol').value = OPC.col; $('#oAgo').value = OPC.ago;
+  pintar();
+}
+function telBonito(t) { t = String(t).replace(/\D/g, ''); if (t.startsWith('504') && t.length == 11) t = t.slice(3); return t.length == 8 ? t.slice(0, 4) + '-' + t.slice(4) : t; }
+
+function leer() {
+  OPC.pre = [...document.querySelectorAll('#cPre input:checked')].map(i => i.value);
+  OPC.sec = [...document.querySelectorAll('#cSec input:checked')].map(i => i.value);
+  OPC.para = $('#oPara').value.trim(); OPC.tel = $('#oTel').value.trim(); OPC.col = $('#oCol').value; OPC.ago = $('#oAgo').value;
+  LS.set('impOpc', OPC);
+}
+// Precios que se imprimen de un producto, según lo marcado
+function filasPrecio(r) {
+  const sin = OPC.pre.includes('sin'); if (sin) return null;
+  const out = [], g = String(r.grupo || '').trim(), um = sing(r.unidad_mayoreo || '') || sing(r.unidad || 'fardos'), ud = sing(r.unidad_detalle || '') || 'unidad';
+  const uDesde = g ? plu(r.unidad || 'fardos') : plu(r.unidad_mayoreo || 'unidad');
+  const ver = k => OPC.pre.includes(k);
+  if (ver('det') && n2(r.precio_detalle)) out.push(['', 'Detalle · ' + ud, n2(r.precio_detalle)]);
+  if (ver('p1') && n2(r.precio_1)) out.push(['', 'Precio 1 · ' + um, n2(r.precio_1)]);
+  for (const i of [2, 3, 4]) if (ver('p' + i) && n2(r['precio_' + i])) out.push(['', 'P' + i + (n2(r['desde_' + i]) > 1 ? ' · ' + n2(r['desde_' + i]) + '+ ' + uDesde : ''), n2(r['precio_' + i])]);
+  if (ver('esp') && n2(r.precio_especial)) out.push(['es', 'Especial · ' + um, n2(r.precio_especial)]);
+  if (ver('aut') && n2(r.precio_autorizado)) out.push(['au', 'Autorizado' + (n2(r.desde_autorizado) > 1 ? ' · ' + n2(r.desde_autorizado) + '+ ' + uDesde : ''), n2(r.precio_autorizado)]);
+  return out;
+}
+function pintar() {
+  leer();
+  const sin = OPC.pre.includes('sin');
+  document.querySelectorAll('#cPre input').forEach(i => { if (i.value != 'sin') { i.disabled = sin; i.parentNode.classList.toggle('off', sin); } });
+  const hoy = new Date().toLocaleDateString('es-HN', { day: 'numeric', month: 'long', year: 'numeric' });
+  let h = `<div class="hoja" style="--col:${OPC.col};--alto:${{ 3: 34, 4: 27, 5: 21 }[OPC.col]}mm"><div class="port"><img src="img/logo.jpg" alt=""><div class="t"><b>Catálogo de productos</b><span>Distribuidora San Jorge${OPC.para ? ' · Para: <strong>' + esc(OPC.para) + '</strong>' : ''}</span></div><div class="d">${hoy}${OPC.tel ? '<br>Pedidos: <b>' + esc(OPC.tel) + '</b>' : ''}</div></div>`;
+  let n = 0;
+  for (const s of SECS) {
+    if (!OPC.sec.includes(s)) continue;
+    const ps = PRODUCTOS.filter(p => p.s == s).filter(p => { const r = FILAS[p.c.toUpperCase()] || {}; return OPC.ago == 'si' || !/^(si|sí|x|1|true|agotado)$/i.test(String(r.agotado || '').trim()); });
+    if (!ps.length) continue;
+    h += `<div class="sec">${esc(s)}</div><div class="grid">`;
+    for (const p of ps) {
+      const r = FILAS[p.c.toUpperCase()] || {}, f = filasPrecio(r), ago = /^(si|sí|x|1|true|agotado)$/i.test(String(r.agotado || '').trim());
+      const pz = f == null ? '' : f.length ? f.map(([c, t, v]) => `<div class="${c}"><span>${esc(t)}</span><b>${L(v)}</b></div>`).join('') : '<div class="no">Consulte precio</div>';
+      h += `<div class="pr"><div class="im"><img src="img/${p.i}.jpg" alt=""></div><div class="n">${esc(p.n)}</div><div class="ds">${esc(p.d || '')}</div><div class="cd">Código ${esc(p.c)}${p.m ? ' · ' + esc(p.m) : ''}</div>${ago ? '<div class="ag">Agotado por ahora</div>' : ''}${pz ? '<div class="pz">' + pz + '</div>' : ''}</div>`;
+      n++;
+    }
+    h += '</div>';
+  }
+  h += `<div class="pie">Precios en lempiras, sujetos a cambio sin previo aviso · ${hoy}</div></div>`;
+  $('#hojas').innerHTML = n ? h : '<div class="msg">Marque al menos una sección de productos.</div>';
+  $('#cuenta').textContent = n + ' productos · ' + (sin ? 'sin precios' : OPC.pre.length ? OPC.pre.length + ' precio(s) marcados' : 'ningún precio marcado');
+  $('#bImp').disabled = !n;
+}
+$('#ops').addEventListener('change', e => {
+  if (e.target.id == 'sinP' && e.target.checked) toast('Va a salir sin ningún precio');
+  pintar();
+});
+$('#ops').addEventListener('input', e => { if (e.target.tagName == 'INPUT' && e.target.type != 'checkbox') pintar(); });
+$('#tTodas').onclick = () => { document.querySelectorAll('#cSec input').forEach(i => i.checked = true); pintar(); };
+$('#tNing').onclick = () => { document.querySelectorAll('#cSec input').forEach(i => i.checked = false); pintar(); };
+$('#bImp').onclick = async () => {
+  const b = $('#bImp'); b.disabled = true; b.textContent = 'Preparando fotos…';
+  await Promise.all([...document.querySelectorAll('#hojas img')].map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; })));
+  b.disabled = false; b.textContent = '🖨 Imprimir / Guardar PDF';
+  if (window.SIN_IMPRESORA) return toast('Aquí en Claude no abre la impresora. En Netlify sí: lo que ve abajo es como sale el papel.');
+  window.print();
+};
+cargar();
+</script>
+</body>
+</html>

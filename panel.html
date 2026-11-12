@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Panel DSJ</title>
+<meta name="theme-color" content="#0f3d5e">
+<link rel="manifest" href="manifest-panel.json">
+<link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<style>
+/* Panel del dueño: todo en un solo lugar. Negro + vino de la marca, tarjetas blancas con línea fina */
+:root{--nh:58px;--neg:#0f3d5e;--vino:#1a6fa8;--rojo:#1592e6;--verde:#1f7a4d;--ambar:#b26a00;--tx:#53606b;--line:#dde5ec;--bg:#f3f6f9;--card:#fff;--hh:62px;--nh:64px}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--neg);background:var(--bg);overflow-x:hidden}
+button{font:inherit;cursor:pointer}a{color:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--rojo);outline-offset:2px}
+header{position:fixed;inset:0 0 auto;height:calc(var(--hh) + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) max(14px,env(safe-area-inset-right,0px)) 0 max(14px,env(safe-area-inset-left,0px));background:var(--neg);color:#fff;border-bottom:4px solid var(--vino);display:flex;align-items:center;gap:10px;z-index:20}
+header img{width:40px;height:40px;border-radius:10px;background:#f6f5f1;object-fit:contain;padding:2px;flex:none}
+header .t{flex:1;min-width:0;line-height:1.15}header .t b{display:block;font-size:1.08em}header .t small{color:#c9c2b9;font-size:.78em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.hb{border:0;border-radius:999px;padding:9px 13px;font-weight:800;background:#fff;color:var(--neg);white-space:nowrap;font-size:.88em}
+.hb.g{background:#1d5580;color:#fff;padding:9px 11px}
+nav{position:fixed;left:0;right:0;top:calc(var(--hh) + env(safe-area-inset-top,0px) + 4px);height:var(--nh);background:#fff;border-bottom:1px solid var(--line);box-shadow:0 2px 6px rgba(0,0,0,.05);display:grid;grid-template-columns:repeat(6,1fr);z-index:20}
+nav.v4{grid-template-columns:repeat(4,1fr)}
+nav button{border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#6b635b;font-size:.7em;font-weight:700;position:relative;padding:4px 0}
+nav button .i{font-size:1.45em;line-height:1}
+nav button.on{color:var(--vino)}nav button.on::before{content:"";position:absolute;bottom:0;left:22%;right:22%;height:3px;border-radius:3px 3px 0 0;background:var(--vino)}
+nav .bd{position:absolute;top:5px;left:calc(50% + 6px);background:var(--rojo);color:#fff;border-radius:999px;font-size:.85em;min-width:17px;height:17px;padding:0 4px;display:grid;place-items:center}
+main{padding:calc(var(--hh) + var(--nh) + env(safe-area-inset-top,0px) + 18px) max(14px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 90px) max(14px,env(safe-area-inset-left,0px))}
+body.sin-nav main{padding-top:calc(var(--hh) + env(safe-area-inset-top,0px) + 14px)}
+.wrap{max-width:860px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+#frames{position:fixed;top:calc(var(--hh) + var(--nh) + env(safe-area-inset-top,0px) + 4px);bottom:0;left:0;right:0;display:none;background:var(--bg)}
+#frames iframe{border:0;width:100%;height:100%;display:none;background:var(--bg)}
+#frames .cargando{position:absolute;inset:0;display:grid;place-items:center;color:var(--tx);pointer-events:none}
+@media (min-width:900px){
+  nav{inset:calc(var(--hh) + 4px) auto 0 0;width:210px;height:auto;grid-template-columns:1fr;grid-auto-rows:min-content;border-bottom:0;box-shadow:none;border-right:1px solid var(--line);padding:12px 10px;gap:4px}
+  nav button{flex-direction:row;justify-content:flex-start;gap:12px;font-size:.95em;padding:12px 14px;border-radius:12px}
+  nav button .i{font-size:1.25em}nav button.on{background:#e6f2fc}nav button.on::before{display:none}
+  nav .bd{position:static;margin-left:auto}
+  main{padding-left:234px;padding-bottom:90px;padding-top:calc(var(--hh) + 18px)}#frames{left:210px;bottom:0;top:calc(var(--hh) + 4px)}
+}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.card h2{font-size:1em;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.card h2 small{margin-left:auto;font-weight:600;color:var(--tx);font-size:.82em}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-weight:700;font-size:.88em;color:var(--neg)}
+.chip.on{background:var(--neg);color:#fff;border-color:var(--neg)}
+.kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media (min-width:640px){.kpi{grid-template-columns:repeat(4,1fr)}}
+.k{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 14px;border-top:3px solid var(--c,var(--neg))}
+.k small{display:block;color:var(--tx);font-size:.8em;font-weight:600}.k b{display:block;font-size:1.45em;margin-top:3px;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+.al{display:grid;gap:8px}
+.ai{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-left:4px solid var(--c,var(--neg));border-radius:12px;padding:11px 12px;background:#fff}
+.ai .ic{font-size:1.25em;line-height:1.2}.ai .tx{flex:1;min-width:0;font-size:.92em;line-height:1.4}.ai .tx b{display:block}.ai .tx small{color:var(--tx)}
+.ai .go{border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 11px;font-weight:700;font-size:.85em;white-space:nowrap;align-self:center}
+.ok-b,.no-b{border-radius:9px;padding:6px 11px;font-weight:800;font-size:.85em;margin:6px 6px 0 0;background:#fff}
+.ok-b{border:1px solid var(--verde);color:var(--verde)}.no-b{border:1px solid #b3261e;color:#b3261e}
+.vacio{color:var(--tx);font-size:.92em;padding:6px 0}
+.rv{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 0;border-top:1px solid #e9eef3;font-size:.93em}.rv:first-child{border-top:0}
+.rv .bar{grid-column:1/-1;height:6px;border-radius:9px;background:#e8eef3;overflow:hidden}.rv .bar i{display:block;height:100%;background:var(--vino);border-radius:9px}
+.rv small{color:var(--tx)}.rv .m{font-weight:800;font-variant-numeric:tabular-nums;text-align:right}
+.agn{margin:0 0 10px;color:var(--gris,#5b6775);font-size:.92em}.agl{display:grid;gap:8px}
+.agi{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:8px;background:#fafafa}
+.agi img{width:54px;height:54px;object-fit:contain;filter:grayscale(1);opacity:.5;border-radius:8px;background:#fff}
+.agi>div{flex:1;min-width:0}.agi b{display:block;color:#6b7280}.agi small{display:block;color:#9aa1a9;font-size:.82em}
+.agt{display:inline-block;margin-top:3px;font-size:.72em;font-weight:800;color:#fff;background:#8a7f74;border-radius:6px;padding:1px 6px}
+.agb{border:1px solid #2b8a3e;color:#2b8a3e;background:#fff;border-radius:999px;padding:8px 12px;font-weight:800;white-space:nowrap}
+.qa{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media (min-width:640px){.qa{grid-template-columns:repeat(4,1fr)}}
+.qa button{border:1px solid var(--line);background:#fff;border-radius:14px;padding:14px 10px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.9em;color:var(--neg)}
+.qa button .i{font-size:1.5em}
+.up{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid #e9eef3;font-size:.92em;cursor:pointer}.up:first-child{border-top:0}
+.up .n{background:var(--neg);color:#fff;border-radius:8px;padding:3px 7px;font-weight:800;font-size:.82em}
+.up small{color:var(--tx);display:block}.up .m{font-weight:800;font-variant-numeric:tabular-nums}
+.vc{display:grid;gap:8px;border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}
+.vc .h{display:flex;gap:12px;align-items:center}
+.vc .av{width:42px;height:42px;border-radius:50%;background:var(--neg);color:#fff;display:grid;place-items:center;font-weight:800;flex:none}
+.vc .h b{display:block}.vc .h small{color:var(--tx)}
+.vc .st{display:flex;gap:14px;flex-wrap:wrap;font-size:.86em;color:var(--tx)}.vc .st b{color:var(--neg)}
+.vc .bs{display:flex;gap:6px;flex-wrap:wrap}
+.vc .bs button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 11px;font-weight:700;font-size:.86em}
+.vc .bs .wa{background:#1fa855;border-color:#1fa855;color:#fff}
+.cc{display:grid;gap:8px;border:1px solid var(--line);border-radius:14px;padding:13px 14px;background:#fff}
+.cc .h{display:flex;gap:10px;align-items:flex-start}.cc .h>div{flex:1;min-width:0}.cc .h b{display:block}.cc .h small{color:var(--tx);display:block}
+.cc .tg{font-size:.78em;font-weight:800;border-radius:999px;padding:4px 9px;white-space:nowrap;border:1px solid var(--line);color:#444;background:#f5f8fb}
+.cc .tg.aut{border-color:#1f7a4d;color:#1f7a4d;background:#eef7f1}
+.cc .bs{display:flex;gap:6px;flex-wrap:wrap}.cc .bs button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 11px;font-weight:700;font-size:.86em}
+.cc .bs .wa{background:#1fa855;border-color:#1fa855;color:#fff}
+.bus{width:100%;border:1px solid #c6d1dc;border-radius:12px;padding:12px 14px;font:inherit;background:#fff}
+.tps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.tps button{border:1px solid #c6d1dc;background:#fff;border-radius:11px;padding:11px 4px;font-weight:800;font-size:.88em}.tps button.on{background:var(--neg);color:#fff;border-color:var(--neg)}
+a.wab{display:block;text-align:center;text-decoration:none;background:#1fa855;color:#fff;border-radius:12px;padding:14px;font-weight:800;margin-top:10px}
+.mandar{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:0;border-radius:18px;padding:16px 18px;color:#fff;background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f 70%,#2a7aa8 100%);box-shadow:0 6px 18px rgba(15,61,94,.25);cursor:pointer;font:inherit}
+.mandar .avb{flex:none;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#1fa3ff,#1592e6);color:#fff;box-shadow:0 4px 12px rgba(21,146,230,.45)}.mandar .avb svg{transform:translate(-1px,1px)}.mandar:active .avb svg{transform:translate(4px,-4px);transition:transform .2s}.mandar b{display:block;font-size:1.12em}.mandar small{display:block;color:#cfe3f2;font-size:.85em;margin-top:2px}.mandar .go{margin-left:auto;font-size:1.6em;font-weight:800;color:#8fd0ff}
+.vp{grid-template-columns:1fr 1fr!important}.vp span{display:none}
+.perm{display:flex;gap:10px;align-items:flex-start;background:#eef6fd;border:1px solid #cfe3f2;border-radius:12px;padding:12px;margin:4px 0 6px;cursor:pointer}.ov .perm input{width:22px!important;height:22px;flex:none;padding:0;margin-top:2px}.perm b{display:block;font-size:.95em}.perm small{display:block;color:var(--tx);font-size:.82em;margin-top:2px}
+.dl{max-height:52vh;overflow-y:auto;border:1px solid var(--line);border-radius:12px;margin-top:10px}
+.dl label{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-top:1px solid #eef2f6;font-size:.92em;cursor:pointer}.dl label:first-child{border-top:0}
+.dl input{width:20px;height:20px;flex:none;margin-top:1px}.dl small{display:block;color:var(--tx)}
+.btn{border:0;border-radius:12px;padding:13px 16px;font-weight:800;background:var(--neg);color:#fff;width:100%}
+.btn.r{background:var(--vino)}.btn.l{background:#e6eef5;color:var(--neg)}
+.f{display:grid;gap:5px;margin-bottom:10px}.f span{font-size:.85em;font-weight:700;color:#444}
+.f input{width:100%;border:1px solid #c6d1dc;border-radius:11px;padding:12px;font:inherit;background:#fff}
+.f small{color:var(--tx);font-size:.8em}
+.row{display:flex;gap:8px}.row>*{flex:1}
+#login{max-width:400px;margin:8vh auto 0;display:grid;gap:12px;text-align:center}
+#login img{width:84px;height:84px;margin:auto;border-radius:18px;background:#fff;padding:4px;border:1px solid var(--line)}
+#login h1{margin:0;font-size:1.35em}#login p{margin:0;color:var(--tx)}
+#login input{width:100%;border:1px solid #c6d1dc;border-radius:12px;padding:14px;font:inherit;font-size:1.1em;text-align:center;letter-spacing:4px}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--neg);color:#fff;padding:10px 16px;border-radius:999px;font-size:.88em;z-index:90;opacity:0;transition:.3s;pointer-events:none;max-width:90vw;text-align:center}.toast.on{opacity:1}
+.salir{background:none;border:0;color:var(--tx);text-decoration:underline;font-weight:600;padding:10px;justify-self:center}
+.hide{display:none!important}
+
+/* ===== Azul difuminado (estilo tarjeta OnePay) ===== */
+header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f 70%,#2a7aa8 100%)!important;border-bottom-color:#1fa3ff!important}
+
+/* Formularios dentro de las ventanas: letra normal (la ventana de cantidades usa letra grande) */
+.ov .f input{font:500 1.05em system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;text-align:left;border:1px solid #c6d1dc;padding:12px}
+.ov .f input:focus{border-color:#1592e6;outline:2px solid #cfe7fb}
+.ov .dl input{width:20px!important;height:20px;flex:none;padding:0;border:0;font-size:1em}
+.ov .dl label{display:flex;align-items:flex-start;gap:10px}.ov .dl label>span{flex:1;min-width:0}
+.ov .chips{display:flex;flex-wrap:wrap;gap:6px}.ov .chips .chip{display:inline-block;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--neg);font-weight:700;font-size:.88em}
+.ov .chips .chip.on{background:var(--neg);color:#fff;border-color:var(--neg)}
+.ov .tps button{padding:11px 4px;border:1px solid #c6d1dc;background:#fff;color:#0f3d5e}.ov .tps button.on{background:#0f3d5e;color:#fff;border-color:#0f3d5e}
+</style>
+</head>
+<body>
+<header>
+ <img src="img/logo.jpg" alt="DSJ">
+ <div class="t"><b id="htit">Panel DSJ</b><small id="hsub">Dueño · Distribuidora San Jorge</small></div>
+ <button class="hb g hide" id="hRef" title="Actualizar" aria-label="Actualizar">⟳</button>
+ <button class="hb hide" id="hPed">🛒 Tomar pedido</button>
+</header>
+
+<main id="main">
+ <div id="login" class="hide">
+  <img src="img/logo.jpg" alt="">
+  <h1>Panel DSJ</h1>
+  <p>Dueño o vendedor: escriba su clave.</p>
+  <input id="lk" type="password" inputmode="numeric" placeholder="Su clave" autocomplete="current-password">
+  <button class="btn r" id="lgo">Entrar</button>
+  <p id="lmsg" style="font-size:.85em"></p>
+ </div>
+
+ <div id="v-inicio" class="wrap hide">
+  <button class="mandar sV" id="mRap"><span class="avb"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span><span><b>Mandar catálogo a un cliente</b><small>Nombre, negocio y celular, y se lo mandás por WhatsApp</small></span><span class="go">›</span></button>
+  <div class="chips" id="rango">
+   <button class="chip on" data-r="hoy">Hoy</button><button class="chip" data-r="ayer">Ayer</button><button class="chip" data-r="7">Últimos 7 días</button><button class="chip" data-r="mes">Este mes</button>
+  </div>
+  <div class="kpi">
+   <div class="k" style="--c:var(--vino)"><small>Vendido</small><b id="kTot">—</b></div>
+   <div class="k"><small>Pedidos</small><b id="kPed">—</b></div>
+   <div class="k" style="--c:var(--verde)"><small>Clientes atendidos</small><b id="kCli">—</b></div>
+   <div class="k" style="--c:#8a7f74"><small>Promedio por pedido</small><b id="kProm">—</b></div>
+  </div>
+  <div class="card"><h2>🔔 Para atender <small id="alN"></small></h2><div class="al" id="alertas"><div class="vacio">Cargando…</div></div></div>
+  <div class="card sO"><h2>🚚 Ventas por vendedor</h2><div id="porV"><div class="vacio">Cargando…</div></div></div>
+  <div class="card"><h2>⚡ Accesos rápidos</h2>
+   <div class="qa">
+    <button data-q="cliente"><span class="i">👤</span>Nuevo cliente</button>
+    <button data-q="vendedor" class="sO"><span class="i">🧑‍💼</span>Nuevo vendedor</button>
+    <button data-q="pedido"><span class="i">🛒</span>Tomar pedido</button>
+    <button data-q="precios" class="sO"><span class="i">💲</span>Cambiar precios</button>
+    <button data-q="depurar" class="sO"><span class="i">🧹</span>Depurar clientes</button>
+    <button data-q="imprimir" class="sO"><span class="i">🖨</span>Imprimir catálogo</button>
+    <button data-q="pedidos" class="sV"><span class="i">📋</span>Mis pedidos</button>
+    <button data-q="recarga" class="sV"><span class="i">🚚</span>Mi recarga</button>
+   </div>
+  </div>
+  <div class="card"><h2>🧾 Últimos pedidos <small><a href="#" id="verTodos">Ver todos</a></small></h2><div id="ult"><div class="vacio">Cargando…</div></div></div>
+  <button class="salir" id="salir">Cerrar sesión en este aparato</button>
+ </div>
+
+ <div id="v-cli" class="wrap hide">
+  <button class="btn r" id="cNew">+ Nuevo cliente</button>
+  <input class="bus" id="cBus" placeholder="🔍 Buscar negocio, dueño o celular…" autocomplete="off">
+  <div id="clist" style="display:grid;gap:10px"><div class="vacio">Cargando…</div></div>
+  <p class="vacio" style="text-align:center">Los clientes con ★ precio autorizado los agrega la oficina.<br>Su catálogo le pide los últimos 4 números del celular para cuidar sus precios.</p>
+ </div>
+
+ <div id="v-vend" class="wrap hide">
+  <button class="btn r" id="vNew">+ Agregar vendedor</button>
+  <div id="vlist" style="display:grid;gap:10px"><div class="vacio">Cargando…</div></div>
+  <div class="card"><h2>⚙ WhatsApp de la oficina</h2>
+   <p class="vacio" style="margin:0 0 8px">Aquí llegan los pedidos de los clientes que no tienen vendedor, y los avisos de firma.</p>
+   <div class="row"><input id="waOfi" type="tel" inputmode="numeric" placeholder="Ej. 9876 5432" style="border:1px solid #c6d1dc;border-radius:11px;padding:12px;font:inherit;min-width:0"><button class="btn" id="waSave" style="flex:none;width:auto">Guardar</button></div>
+  </div>
+ </div>
+</main>
+
+<div id="frames"><div class="cargando" id="fload">Cargando…</div></div>
+
+<nav id="nav" class="hide">
+ <button data-v="inicio" class="on"><span class="i">🏠</span>Inicio<span class="bd hide" id="bdIni"></span></button>
+ <button data-v="pedidos"><span class="i">📋</span>Pedidos</button>
+ <button data-v="recarga"><span class="i">🚚</span>Recarga</button>
+ <button data-v="clientes"><span class="i">👥</span>Clientes</button>
+ <button data-v="vend" class="sO"><span class="i">🧑‍💼</span>Vendedores</button>
+ <button data-v="precios" class="sO"><span class="i">💲</span>Precios</button>
+</nav>
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="productos.js"></script>
+<script src="comun.js"></script>
+
+<script>
+const CAT = 'index.html';                       // página del catálogo en este sitio
+const BASE = new URL('./', location.href).href;
+const QP = new URLSearchParams(location.search);
+if (QP.get('modo') == 'vendedor') {   // enlace del vendedor: solo nombre y teléfono; la clave la escribe él (los enlaces viejos con k aún funcionan)
+  LS.set('vend', { telefono: QP.get('v') || '', nombre: QP.get('n') || '' }); LS.set('vendHola', QP.get('n') || '');
+  if (QP.get('k')) LS.set('panel', { k: QP.get('k'), rol: 'vendedor', vend: QP.get('n') || '', ts: Date.now() });
+  history.replaceState(null, '', location.pathname); }
+if (QP.get('modo') == 'oficina') { LS.set('panel', null); history.replaceState(null, '', location.pathname); }
+if (!LS.get('panel', null)) { const m = LS.get('modo', null); if (m && m.modo == 'vendedor' && m.k) LS.set('panel', { k: m.k, rol: 'vendedor', vend: m.vend || '', ts: m.ts || Date.now() }); }
+const PS = LS.get('panel', null) || {};
+let ROL = PS.k ? (PS.rol || 'oficina') : '', VN = PS.vend || '', PERM_SINP = !!PS.sinp;
+let K = PS.k || '', VISTA = 'inicio', RANGO = 'hoy', VENDS = [], CLIS = [], PEDS = [];
+const NOMBRES = { inicio: ['Panel DSJ', 'Dueño · Distribuidora San Jorge'], pedidos: ['Pedidos', 'Todos los vendedores'], recarga: ['Recarga', 'Lo que hay que cargar al camión'], clientes: ['Clientes', 'Agregar, asignar vendedor y precios'], vend: ['Vendedores', 'Sus enlaces, claves y clientes'], precios: ['Precios', 'Escalas, stock, Especial y Autorizado'], pedido: ['Tomar pedido', 'Como oficina, para cualquier cliente'], imprimir: ['Imprimir catálogo', 'Con fotos y los precios que usted marque'] };
+const tel504 = t => { t = String(t || '').replace(/\D/g, ''); return t.length == 8 ? '504' + t : t; };
+const telVer = t => { t = String(t || '').replace(/\D/g, ''); if (t.startsWith('504') && t.length == 11) t = t.slice(3); return t.length == 8 ? t.slice(0, 4) + '-' + t.slice(4) : t; };
+const iniciales = s => String(s || '?').split(/[\s-]+/).filter(Boolean).slice(0, 2).map(x => x[0].toUpperCase()).join('');
+
+// ---------- Entrar una sola vez: deja la sesión lista para Pedidos, Precios y el Catálogo ----------
+function prepararSesiones() {
+  if (ROL == 'vendedor') {
+    LS.set('ses', { k: K, vend: VN, rol: 'vendedor', nombre: VN, ts: PS.ts || Date.now() }); LS.set('modo', { modo: 'vendedor', k: K, vend: VN, ts: PS.ts || Date.now() });
+    const v = LS.get('vend', null); if (!v || v.nombre != VN) LS.set('vend', { nombre: VN, telefono: (v && v.nombre == VN && v.telefono) || '' });
+    return;
+  }
+  LS.set('ses', { k: K, vend: '', rol: 'oficina', nombre: 'Oficina', ts: PS.ts || Date.now() });
+  LS.set('sesP', { k: K, ts: PS.ts || Date.now() });
+}
+async function login() {
+  const k = $('#lk').value.trim(); if (!k) return toast('Escriba la clave');
+  $('#lgo').disabled = true; $('#lgo').textContent = 'Entrando…';
+  try { const j = await apiGet({ a: 'login', k }); K = k; ROL = j.rol; VN = j.rol == 'vendedor' ? j.nombre : ''; LS.set('panel', { k, rol: ROL, vend: VN, ts: Date.now() }); try { localStorage.removeItem('vendHola'); } catch (e) {} entrar(); }
+  catch (e) { $('#lmsg').textContent = e.message || 'No se pudo entrar'; }
+  $('#lgo').disabled = false; $('#lgo').textContent = 'Entrar';
+}
+function entrar() {
+  if (ROL == 'vendedor') apiGet({ a: 'login', k: K, vend: VN }).then(j => { PERM_SINP = !!j.sin_precio; const s = LS.get('panel', {}) || {}; s.sinp = PERM_SINP ? 1 : 0; LS.set('panel', s); }).catch(() => {});
+  prepararSesiones(); document.body.classList.remove('sin-nav');
+  const V = ROL == 'vendedor';
+  document.querySelectorAll('.sO').forEach(e => e.classList.toggle('hide', V)); document.querySelectorAll('.sV').forEach(e => e.classList.toggle('hide', !V));
+  $('#nav').classList.toggle('v4', V);
+  if (V) { NOMBRES.inicio = ['Mi panel', 'Vendedor · ' + VN]; NOMBRES.pedidos = ['Mis pedidos', VN]; NOMBRES.recarga = ['Mi recarga', 'Todo junto para cargar el camión']; NOMBRES.clientes = ['Mis clientes', 'Agregar y mandarles su catálogo']; NOMBRES.pedido[1] = 'Para sus clientes'; document.title = 'Panel ' + VN; }
+  $('#login').classList.add('hide'); $('#nav').classList.remove('hide'); $('#hPed').classList.remove('hide'); $('#hRef').classList.remove('hide');
+  ver('inicio');
+}
+$('#lgo').onclick = login; $('#lk').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+$('#salir').onclick = () => confirmar('¿Cerrar la sesión del panel en este aparato?', () => { ['panel', 'ses', 'sesP', 'modo', 'vend'].forEach(k => { try { localStorage.removeItem(k); } catch (e) {} }); location.reload(); });
+
+// ---------- Navegación ----------
+const FR = {};   // iframes ya abiertos
+function ver(v) {
+  VISTA = v; const [t, s] = NOMBRES[v]; $('#htit').textContent = t; $('#hsub').textContent = s;
+  document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.v == v));
+  const cliN = v == 'clientes' && ROL == 'vendedor', nativo = v == 'inicio' || v == 'vend' || cliN;
+  $('#main').style.display = nativo ? '' : 'none'; $('#frames').style.display = nativo ? 'none' : 'block';
+  $('#v-inicio').classList.toggle('hide', v != 'inicio'); $('#v-vend').classList.toggle('hide', v != 'vend'); $('#v-cli').classList.toggle('hide', !cliN);
+  if (cliN) cargarClientesV();
+  if (v == 'inicio') cargarInicio();
+  if (v == 'vend') cargarVendedores();
+  if (v == 'pedidos' || v == 'recarga' || (v == 'clientes' && !cliN)) abrirFrame('pedidos.html', w => { const t = { pedidos: 'p', recarga: 'r', clientes: 'c' }[v]; const b = w.document.querySelector('.tabs button[data-t="' + t + '"]'); if (b) b.click(); if (v == 'pedidos' && w.buscar) w.buscar(); });
+  if (v == 'precios') abrirFrame('precios.html');
+  if (v == 'imprimir') abrirFrame('imprimir.html');
+  if (v == 'pedido') { if (ROL == 'vendedor') prepararSesiones(); else { LS.set('modo', { modo: 'oficina', k: K }); try { localStorage.removeItem('vend'); } catch (e) {} } ['tlock', 'esp', 'espInfo'].forEach(k => { try { localStorage.removeItem(k); } catch (e) {} }); abrirFrame(CAT); }
+  $('#hPed').classList.toggle('hide', v == 'pedido');
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll('#nav button').forEach(b => b.onclick = () => ver(b.dataset.v));
+$('#hPed').onclick = () => ver('pedido');
+$('#hRef').onclick = () => { if (VISTA == 'inicio') cargarInicio(); else if (VISTA == 'vend') cargarVendedores(); else if (VISTA == 'clientes' && ROL == 'vendedor') cargarClientesV(); else { const f = FR[VISTA == 'precios' ? 'precios.html' : VISTA == 'imprimir' ? 'imprimir.html' : VISTA == 'pedido' ? CAT : 'pedidos.html']; if (f) { f.ready = false; f.el.contentWindow.location.reload(); ver(VISTA); } } };
+
+// Mete la página dentro del panel y le quita su encabezado (el panel ya tiene uno)
+function abrirFrame(pag, listo) {
+  Object.values(FR).forEach(f => f.el.style.display = 'none');
+  let f = FR[pag];
+  if (!f) {
+    prepararSesiones();
+    const el = document.createElement('iframe'); el.title = pag; el.src = pag; $('#frames').appendChild(el);
+    f = FR[pag] = { el, ready: false, cola: [] };
+    $('#fload').style.display = '';
+    el.addEventListener('load', () => {
+      const d = el.contentDocument; if (!d) return;
+      const st = d.createElement('style');
+      st.textContent = pag == CAT ? '' : 'header{display:none!important}.tabs{display:none!important}#alCat,#salir{display:none!important}main{padding-top:12px!important}';
+      d.head.appendChild(st);
+      setTimeout(() => d.querySelectorAll('a').forEach(a => { if (/DEMO · menú/.test(a.textContent)) a.remove(); }), 50);
+      $('#fload').style.display = 'none'; f.ready = true; f.cola.splice(0).forEach(fn => { try { fn(el.contentWindow); } catch (e) {} });
+    });
+  }
+  f.el.style.display = 'block';
+  if (listo) { if (f.ready) { try { listo(f.el.contentWindow); } catch (e) {} } else f.cola.push(w => setTimeout(() => listo(w), 250)); }
+}
+
+// ---------- INICIO: resumen ----------
+function rangoFechas() {
+  const h = new Date(), d = n => { const x = new Date(); x.setDate(x.getDate() + n); return hoyISO(x); };
+  if (RANGO == 'ayer') return [d(-1), d(-1)];
+  if (RANGO == '7') return [d(-6), hoyISO()];
+  if (RANGO == 'mes') return [hoyISO(new Date(h.getFullYear(), h.getMonth(), 1)), hoyISO()];
+  return [hoyISO(), hoyISO()];
+}
+document.querySelectorAll('#rango .chip').forEach(c => c.onclick = () => { RANGO = c.dataset.r; document.querySelectorAll('#rango .chip').forEach(x => x.classList.toggle('on', x == c)); cargarInicio(); });
+let cargando = false;
+async function cargarInicio() {
+  if (cargando) return; cargando = true;
+  const [desde, hasta] = rangoFechas();
+  try {
+    const [pj, cj, dj, vj] = await Promise.all([
+      apiGet({ a: 'pedidos', k: K, desde, hasta }),
+      apiGet({ a: 'clientes', k: K }).catch(() => ({ clientes: [] })),
+      apiGet({ a: 'datos', k: K }).catch(() => ({ precios: [] })),
+      ROL == 'oficina' ? apiGet({ a: 'vendedores_admin', k: K }).catch(() => ({ vendedores: [] })) : Promise.resolve({ vendedores: [] })]);
+    PEDS = pj.pedidos || []; CLIS = cj.clientes || []; VENDS = vj.vendedores || [];
+    if (ROL == 'oficina') LS.set('vendedores', VENDS.map(v => ({ nombre: v.nombre, telefono: v.telefono })));
+    pintarInicio(dj.precios || []);
+  } catch (e) {
+    $('#alertas').innerHTML = `<div class="vacio">No se pudo cargar: ${esc(e.message)}</div>`;
+    if (/clave incorrecta/i.test(e.message)) { LS.set('panel', null); setTimeout(() => location.reload(), 1500); }
+  }
+  cargando = false;
+}
+function pintarInicio(precios) {
+  const tot = PEDS.reduce((s, p) => s + (Number(p.total) || 0), 0), cl = new Set(PEDS.map(p => (p.negocio || p.cliente || '').toLowerCase().trim()).filter(Boolean));
+  $('#kTot').textContent = fmt(tot); $('#kPed').textContent = PEDS.length; $('#kCli').textContent = cl.size; $('#kProm').textContent = PEDS.length ? fmt(tot / PEDS.length) : '—';
+  // Para atender
+  const sol = PEDS.filter(p => p.solicitud == 'pendiente'), fir = PEDS.filter(p => p.estado == 'por_firmar'),
+    ago = precios.filter(x => /^(si|sí|x|1|true|agotado)$/i.test(String(x.agotado || '').trim()) && PRODUCTOS.some(p => p.c.toUpperCase() == String(x.codigo).trim().toUpperCase())), sinV = CLIS.filter(c => !String(c.vendedor || '').trim());
+  let h = sol.map(p => `<div class="ai" style="--c:var(--ambar)"><span class="ic">🙋</span><div class="tx"><b>#${esc(p.numero)} · ${esc(p.negocio || p.cliente)} pide ★ Precio Autorizado con menos cantidad</b><small>${esc(p.vendedor)} · ahora ${fmt(p.total)} → si ${ROL == 'oficina' ? 'aprobás' : 'la oficina aprueba'} ${fmt(p.total_sol)}</small>${ROL == 'oficina' ? `<div><button class="ok-b" data-sa="${esc(p.numero)}">✅ Aprobar</button><button class="no-b" data-sr="${esc(p.numero)}">❌ No</button></div>` : '<div><small><b>Esperando a la oficina</b></small></div>'}</div></div>`).join('');
+  if (ROL == 'vendedor') h += PEDS.filter(p => p.solicitud == 'aprobada' || p.solicitud == 'rechazada').slice(0, 3).map(p => `<div class="ai" style="--c:${p.solicitud == 'aprobada' ? 'var(--verde)' : 'var(--rojo)'}"><span class="ic">${p.solicitud == 'aprobada' ? '✅' : '❌'}</span><div class="tx"><b>#${esc(p.numero)} · ${esc(p.negocio || p.cliente)}</b><small>${p.solicitud == 'aprobada' ? 'La oficina aprobó el ★ precio autorizado · ' + fmt(p.total) : 'La oficina no aprobó: va a precio normal'}</small></div></div>`).join('');
+  if (fir.length) h += `<div class="ai" style="--c:var(--ambar)"><span class="ic">⏳</span><div class="tx"><b>${fir.length} ${fir.length == 1 ? 'pedido espera' : 'pedidos esperan'} la firma del cliente</b><small>${fir.slice(0, 4).map(p => '#' + esc(p.numero) + ' ' + esc(p.negocio || p.cliente)).join(' · ')}</small></div><button class="go" data-ir="pedidos">Ver</button></div>`;
+  if (sinV.length && ROL == 'oficina') h += `<div class="ai" style="--c:#b3261e"><span class="ic">👤</span><div class="tx"><b>${sinV.length} ${sinV.length == 1 ? 'cliente no tiene' : 'clientes no tienen'} vendedor</b><small>${sinV.slice(0, 4).map(c => esc(c.negocio || c.nombre)).join(' · ')}</small></div><button class="go" data-ir="clientes">Asignar</button></div>`;
+  if (ago.length) h += `<div class="ai" style="--c:#8a7f74"><span class="ic">🚫</span><div class="tx"><b>${ago.length} ${ago.length == 1 ? 'producto sin stock' : 'productos sin stock'}</b><small>${ago.slice(0, 4).map(x => esc(nomProd(x.codigo))).join(' · ')}${ago.length > 4 ? ' · y ' + (ago.length - 4) + ' más' : ''}</small></div><button class="go" data-ago="1">Ver</button></div>`;
+  AGO = ago.map(x => String(x.codigo).trim().toUpperCase());
+  const n = sol.length + fir.length;
+  $('#alertas').innerHTML = h || '<div class="vacio">✅ Todo al día. No hay nada pendiente.</div>';
+  $('#alN').textContent = (sol.length + fir.length + (sinV.length ? 1 : 0) + (ago.length ? 1 : 0)) ? '' : '';
+  $('#bdIni').textContent = n; $('#bdIni').classList.toggle('hide', !n);
+  // Por vendedor
+  const g = {}; PEDS.forEach(p => { const v = p.vendedor || 'Sin vendedor'; g[v] = g[v] || { n: 0, t: 0 }; g[v].n++; g[v].t += Number(p.total) || 0; });
+  VENDS.forEach(v => { if (!g[v.nombre]) g[v.nombre] = { n: 0, t: 0 }; });
+  const fil = Object.entries(g).sort((a, b) => b[1].t - a[1].t), max = Math.max(1, ...fil.map(x => x[1].t));
+  $('#porV').innerHTML = fil.length ? fil.map(([v, x]) => `<div class="rv"><div><b>${esc(v)}</b><br><small>${x.n} ${x.n == 1 ? 'pedido' : 'pedidos'}</small></div><div class="m">${fmt(x.t)}</div><div class="bar"><i style="width:${Math.max(x.t ? 3 : 0, x.t / max * 100)}%"></i></div></div>`).join('') : '<div class="vacio">Sin pedidos en estas fechas.</div>';
+  // Últimos
+  $('#ult').innerHTML = PEDS.length ? PEDS.slice(0, 6).map(p => `<div class="up" data-ir="pedidos"><span class="n">#${esc(p.numero)}</span><div><b>${esc(p.negocio || p.cliente)}</b><small>${esc(p.vendedor)} · ${esc(p.hora || p.dia || '')}${p.estado == 'firmado' ? ' · ✅ firmado' : p.estado == 'por_firmar' ? ' · ⏳ por firmar' : ''}</small></div><span class="m">${fmt(p.total)}</span></div>`).join('') : '<div class="vacio">Sin pedidos en estas fechas.</div>';
+}
+$('#v-inicio').addEventListener('click', e => {
+  const t = e.target.closest('[data-ir],[data-sa],[data-sr],[data-q],[data-ago]'); if (!t) return;
+  if (t.dataset.ago) return verAgotados();
+  if (t.dataset.ir) return ver(t.dataset.ir);
+  if (t.dataset.q == 'cliente' && ROL == 'vendedor') { ver('clientes'); return editarCliente(null); }
+  if (t.dataset.q == 'cliente') return ver('clientes'), abrirFrame('pedidos.html', w => { const b = w.document.querySelector('#cnew'); if (b) setTimeout(() => b.click(), 300); });
+  if (t.dataset.q == 'vendedor') { ver('vend'); return editarVendedor(null); }
+  if (t.dataset.q == 'pedido') return ver('pedido');
+  if (t.dataset.q == 'pedidos') return ver('pedidos');
+  if (t.dataset.q == 'depurar') return depurarClientes();
+  if (t.dataset.q == 'imprimir') return ver('imprimir');
+  if (t.dataset.q == 'recarga') return ver('recarga');
+  if (t.dataset.q == 'precios') return ver('precios');
+  const num = t.dataset.sa || t.dataset.sr, ok = !!t.dataset.sa;
+  confirmar(ok ? '¿Aprobar el ★ Precio Autorizado al pedido #' + num + '?' : '¿No aprobar? El pedido #' + num + ' queda a precio normal.', async () => {
+    try { await apiPost({ a: 'solicitud', k: K, numero: num, valor: ok ? 'aprobada' : 'rechazada' }); toast(ok ? 'Aprobado ✓' : 'Queda a precio normal ✓'); cargarInicio(); } catch (er) { toast('No se pudo: ' + er.message); }
+  });
+});
+$('#verTodos').onclick = e => { e.preventDefault(); ver('pedidos'); };
+setInterval(() => { if (K && VISTA == 'inicio' && !document.hidden) cargarInicio(); }, 60000);
+
+// ---------- VENDEDORES ----------
+function enlaceVend(v) { return BASE + 'panel.html?modo=vendedor&n=' + encodeURIComponent(v.nombre) + '&v=' + tel504(v.telefono); }   // sin clave: se la da el dueño aparte
+function mensajeVend(v) { return `Hola ${v.nombre} 👋\nEste es tu catálogo de Distribuidora San Jorge para tomar pedidos:\n${enlaceVend(v)}\n\nGuardalo en la pantalla de inicio de tu celular (en Chrome: ⋮ → Agregar a pantalla principal).\nLa primera vez te pide tu clave (te la doy aparte, no la compartás). Ahí tenés tus clientes, tomar pedidos, tus pedidos y tu recarga. Para agregar un cliente: 👥 Clientes → + Nuevo cliente, y le mandás su catálogo.`; }
+async function cargarVendedores() {
+  try {
+    const [vj, cj, pj] = await Promise.all([apiGet({ a: 'vendedores_admin', k: K }), apiGet({ a: 'clientes', k: K }).catch(() => ({ clientes: [] })), apiGet({ a: 'pedidos', k: K, desde: hoyISO(), hasta: hoyISO() }).catch(() => ({ pedidos: [] }))]);
+    VENDS = vj.vendedores || []; CLIS = cj.clientes || []; $('#waOfi').value = telVer(vj.whatsapp_oficina || '');
+    LS.set('vendedores', VENDS.map(v => ({ nombre: v.nombre, telefono: v.telefono })));
+    const hoy = pj.pedidos || [], nn = s => String(s || '').toLowerCase().trim();
+    $('#vlist').innerHTML = VENDS.length ? VENDS.map((v, i) => { const nc = CLIS.filter(c => nn(c.vendedor) == nn(v.nombre)).length, hp = hoy.filter(p => nn(p.vendedor) == nn(v.nombre)), ht = hp.reduce((s, p) => s + (Number(p.total) || 0), 0);
+      return `<div class="vc"><div class="h"><span class="av">${esc(iniciales(v.nombre))}</span><div><b>${esc(v.nombre)}</b><small>📱 ${esc(telVer(v.telefono)) || 'sin WhatsApp'} · 🔑 clave ${esc(v.clave)}${v.sin_precio ? ' · 🙈 puede mandar sin precios' : ''}${String(v.clave).length < 6 ? ' · <b style="color:#b26a00">⚠ clave débil, cámbiela</b>' : ''}</small></div></div>
+       <div class="st"><span>👥 <b>${nc}</b> ${nc == 1 ? 'cliente' : 'clientes'}</span><span>📋 Hoy: <b>${hp.length}</b> ${hp.length == 1 ? 'pedido' : 'pedidos'} · <b>${fmt(ht)}</b></span></div>
+       <div class="bs"><button class="wa" data-wa="${i}"><svg class="avion" viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.18em;margin-right:.3em"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>Mandarle su enlace</button><button data-cp="${i}">📋 Copiar enlace</button><button data-ed="${i}">✏ Editar</button><button data-cl="${i}">👥 Sus clientes</button></div></div>`; }).join('') : '<div class="card vacio">Todavía no hay vendedores. Toque <b>+ Agregar vendedor</b>.</div>';
+  } catch (e) { $('#vlist').innerHTML = `<div class="card vacio">No se pudo cargar: ${esc(e.message)}</div>`; }
+}
+async function copiar(t) {
+  try { await navigator.clipboard.writeText(t); return true; } catch (e) {
+    const a = document.createElement('textarea'); a.value = t; a.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(a); a.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (er) {} a.remove(); return ok; }
+}
+$('#vlist').addEventListener('click', async e => {
+  const d = e.target.closest('button'); if (!d) return; const ds = d.dataset;
+  if (ds.wa) { const v = VENDS[+ds.wa]; window.open('https://wa.me/' + tel504(v.telefono) + '?text=' + encodeURIComponent(mensajeVend(v)), '_blank', 'noopener'); }
+  if (ds.cp) { const v = VENDS[+ds.cp]; toast(await copiar(enlaceVend(v)) ? 'Enlace de ' + v.nombre + ' copiado ✓' : 'No se pudo copiar'); }
+  if (ds.ed) editarVendedor(VENDS[+ds.ed]);
+  if (ds.cl) { const v = VENDS[+ds.cl]; ver('clientes'); abrirFrame('pedidos.html', w => { const s = w.document.querySelector('#cfv'); if (s) { if (![...s.options].some(o => o.value == v.nombre)) s.add(new Option(v.nombre, v.nombre)); s.value = v.nombre; s.dispatchEvent(new Event('change')); } }); }
+});
+$('#vNew').onclick = () => editarVendedor(null);
+function editarVendedor(v) {
+  const { o, cerrar } = abrirOv(v ? 'Editar vendedor' : 'Nuevo vendedor', `
+    <label class="f"><span>Nombre (como lo van a ver)</span><input id="vn" value="${esc(v ? v.nombre : '')}" placeholder="Ej. Oscar Montiel"></label>
+    <label class="f"><span>WhatsApp del vendedor</span><input id="vt" type="tel" inputmode="numeric" value="${esc(v ? telVer(v.telefono) : '')}" placeholder="Ej. 9450 0047"><small>Aquí le llegan los pedidos de sus clientes.</small></label>
+    <label class="f"><span>Clave del vendedor</span><input id="vk" value="${esc(v ? v.clave : '')}" autocapitalize="off" placeholder="Ej. ruta3x7k" maxlength="20"><small>Mínimo 6 letras o números. Si la deja vacía se crea una segura y se la muestro una sola vez.</small></label>
+    <label class="perm"><input type="checkbox" id="vsp" ${v && v.sin_precio ? 'checked' : ''}><span><b>Puede mandar catálogo sin precios</b><small>El cliente pide sin ver precios y el vendedor le manda el precio después.</small></span></label>
+    ${v ? '<button class="btn l" id="vdel" style="margin-top:4px">🗑 Quitar este vendedor</button>' : ''}`,
+    `<button class="no">Cancelar</button><button class="si" id="vok">${v ? 'Guardar cambios' : 'Agregar'}</button>`);
+  o.querySelector('.no').onclick = cerrar;
+  o.querySelector('#vok').onclick = async () => {
+    const nombre = o.querySelector('#vn').value.trim(), t = o.querySelector('#vt').value.replace(/\D/g, ''); let clave = o.querySelector('#vk').value.trim();
+    if (!nombre) return toast('Escriba el nombre'); if (t.length < 8) return toast('Escriba el WhatsApp (8 números)');
+    let nueva = false;
+    if (!clave) { clave = claveSegura(); nueva = true; }
+    else if ((!v || clave !== v.clave) && !/^[A-Za-z0-9]{6,20}$/.test(clave)) return toast('La clave debe tener mínimo 6 letras o números, sin espacios');
+    if (clave.toLowerCase() == String(K).toLowerCase()) return toast('Esa es su clave de dueño: ponga otra clave para el vendedor');
+    if (/^oficina$/i.test(nombre)) return toast('"Oficina" ya lo usa el sistema: ponga el nombre de la persona');
+    const b = o.querySelector('#vok'); b.disabled = true; b.textContent = 'Guardando…';
+    try { await apiPost({ a: 'vendedor', k: K, antes_nombre: v ? v.nombre : '', nombre, telefono: tel504(t), clave, sin_precio: o.querySelector('#vsp').checked ? 1 : 0 }); cerrar(); toast(v ? 'Cambios guardados ✓' : nombre + ' agregado ✓ Ya le puede mandar su enlace'); cargarVendedores(); recargarFrames(); if (nueva) mostrarClave(nombre, clave); }
+    catch (er) { toast(er.message); b.disabled = false; b.textContent = v ? 'Guardar cambios' : 'Agregar'; }
+  };
+  const del = o.querySelector('#vdel'); if (del) del.onclick = () => { cerrar(); confirmar('¿Quitar a ' + v.nombre + '? Ya no va a poder entrar con su enlace. Sus clientes quedan guardados.', async () => {
+    try { await apiPost({ a: 'vendedor', k: K, antes_nombre: v.nombre, borrar: 1 }); toast(v.nombre + ' quitado ✓'); cargarVendedores(); recargarFrames(); } catch (er) { toast(er.message); } }); };
+  setTimeout(() => o.querySelector('#vn').focus(), 50);
+}
+// Clave aleatoria segura (8 caracteres, sin letras que se confunden)
+function claveSegura() { const a = 'abcdefghjkmnpqrstuvwxyz23456789', r = new Uint32Array(8); crypto.getRandomValues(r); return Array.from(r, x => a[x % a.length]).join(''); }
+function mostrarClave(nombre, clave) {
+  const { o, cerrar } = abrirOv('Clave de ' + nombre, `<p class="vacio" style="margin:0 0 10px">Anótela o mándesela al vendedor <b>por aparte</b>. Por seguridad se muestra solo esta vez (después la ve en ✏ Editar).</p><div style="font:900 2em ui-monospace,Menlo,Consolas,monospace;letter-spacing:3px;text-align:center;background:#eef6fd;border-radius:12px;padding:14px;color:#0f3d5e">${esc(clave)}</div>`, '<button class="si full" id="mcOk">Ya la anoté</button>');
+  o.querySelector('#mcOk').onclick = cerrar;
+}
+function recargarFrames() { const f = FR['pedidos.html']; if (f) { f.ready = false; f.el.contentWindow.location.reload(); } }
+$('#waSave').onclick = async () => {
+  const t = $('#waOfi').value.replace(/\D/g, ''); if (t && t.length < 8) return toast('Escriba los 8 números');
+  try { await apiPost({ a: 'config', k: K, whatsapp_oficina: tel504(t) }); toast('WhatsApp de la oficina guardado ✓'); } catch (e) { toast(e.message); }
+};
+
+// ---------- MIS CLIENTES (vendedor) ----------
+const VP = on => !PERM_SINP ? '' : `<div class="f"><span>¿El cliente ve los precios?</span><div class="tps vp"><button type="button" data-vp="si" class="${on ? 'on' : ''}">💲 Con precios</button><button type="button" data-vp="no" class="${on ? '' : 'on'}">🙈 Sin precios</button></div></div>`;
+const TIPOS = { detalle: 'Detalle', mayoreo: 'Mayoreo', ambas: 'Detalle y mayoreo' };
+const catLink = tk => CAT == 'catalogo.html' ? BASE + 'catalogo.html#c-' + tk : BASE + '?c=' + tk;
+async function cargarClientesV() {
+  try { const j = await apiGet({ a: 'clientes', k: K, vend: VN }); CLIS = j.clientes || []; pintarClientesV(); }
+  catch (e) { $('#clist').innerHTML = `<div class="card vacio">No se pudo cargar: ${esc(e.message)}</div>`; }
+}
+function pintarClientesV() {
+  const q = $('#cBus').value.toLowerCase().trim(), r = CLIS.map((c, i) => [c, i]).filter(([c]) => !q || [c.nombre, c.negocio, c.telefono].join(' ').toLowerCase().includes(q))
+    .sort((a, b) => String(a[0].negocio || a[0].nombre).localeCompare(String(b[0].negocio || b[0].nombre)));
+  $('#clist').innerHTML = r.length ? r.map(([c, i]) => { const aut = /especial|autorizado/i.test(c.precio || '');
+    return `<div class="cc"><div class="h"><span class="av" style="width:40px;height:40px;border-radius:50%;background:${aut ? '#1f7a4d' : 'var(--neg)'};color:#fff;display:grid;place-items:center;font-weight:800;flex:none">${esc(iniciales(c.negocio || c.nombre))}</span><div><b>${esc(c.negocio || c.nombre)}</b><small>${esc(c.nombre)}${c.telefono ? ' · 📞 ' + esc(telVer(c.telefono)) : ''}</small></div><span class="tg${aut ? ' aut' : ''}">${aut ? '★ Precio autorizado' : c.ver_precio == 'no' ? '🙈 Sin precios' : TIPOS[c.tipo_precio] || TIPOS.ambas}</span></div>
+      <div class="bs"><button class="wa" data-en="${i}"><svg class="avion" viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.18em;margin-right:.3em"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>Mandarle su catálogo</button><button data-tp="${i}">🛒 Tomarle pedido</button>${aut ? '' : `<button data-ed="${i}">✏ Editar</button>`}${c.amarrado ? `<button data-lib="${i}" title="Si el cliente cambió de celular">🔓 Liberar enlace</button>` : ''}</div>${c.amarrado ? '<small style="color:var(--tx);font-size:.78em">🔒 Su catálogo ya está amarrado a su celular</small>' : ''}</div>`; }).join('')
+    : `<div class="card vacio">${q ? 'No hay clientes con ese nombre.' : 'Todavía no tiene clientes. Toque <b>+ Nuevo cliente</b>.'}</div>`;
+}
+$('#cBus').addEventListener('input', pintarClientesV);
+$('#cNew').onclick = () => editarCliente(null);
+$('#clist').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return; const ds = b.dataset;
+  if (ds.en) enviarCatalogo(CLIS[+ds.en]);
+  if (ds.ed) editarCliente(CLIS[+ds.ed]);
+  if (ds.lib) { const c = CLIS[+ds.lib]; confirmar('¿Liberar el catálogo de ' + (c.negocio || c.nombre) + '? Úselo si el cliente cambió de celular. Después mándele su catálogo otra vez.', async () => {
+    try { await apiPost({ a: 'liberar_enlace', k: K, nombre: c.nombre, negocio: c.negocio }); toast('Enlace liberado ✓ Mándele su catálogo de nuevo'); await cargarClientesV(); enviarCatalogo(c); } catch (er) { toast(er.message); } }); }
+  if (ds.tp) { const c = CLIS[+ds.tp]; ver('pedido'); abrirFrame(CAT, w => { if (w.usarCliente) w.usarCliente(c); }); }
+});
+// Pide el enlace del cliente y abre WhatsApp SOLO al celular de ese cliente
+async function enviarCatalogo(c) {
+  if (String(c.telefono || '').replace(/\D/g, '').length < 8) return toast('Este cliente no tiene celular guardado');
+  let tk; try { tk = (await apiPost({ a: 'cliente_enlace', k: K, nombre: c.nombre, negocio: c.negocio })).token; } catch (e) { return toast(e.message); }
+  const link = catLink(tk), aut = /especial|autorizado/i.test(c.precio || '');
+  const msg = `Hola ${c.nombre} 👋\nEste es su catálogo de Distribuidora San Jorge${aut ? ' con sus ★ precios autorizados' : ''}:\n${link}\n\nEscoja sus productos y toque "Enviar pedido": me llega directo a mí (${VN}).${aut ? '\n\n🔒 Para cuidar sus precios, al abrirlo le va a pedir los últimos 4 números de su celular.' : ''}`;
+  const { o } = abrirOv('Mandar catálogo', `<div class="msg">Se va a abrir el WhatsApp de <b>${esc(c.negocio || c.nombre)}</b> (📞 ${esc(telVer(c.telefono))}) con su enlace.<br><br><small>${aut ? 'Tiene ★ precio autorizado: al abrirlo le pide los últimos 4 números de su celular, así nadie más ve sus precios.' : 'Sus pedidos le llegan a usted con el nombre de este cliente.'}</small></div><a class="wab" target="_blank" rel="noopener" href="https://wa.me/${tel504(c.telefono)}?text=${encodeURIComponent(msg)}"><svg class="avion" viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.18em;margin-right:.3em"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>Abrir WhatsApp de ${esc(c.negocio || c.nombre)}</a>`, '');
+  o.querySelector('a.wab').addEventListener('click', () => setTimeout(() => o.remove(), 300));
+}
+function editarCliente(c) {
+  let tp = (c && c.tipo_precio) || 'ambas', vp = (c && c.ver_precio) || '';
+  const { o, cerrar } = abrirOv(c ? 'Editar cliente' : 'Nuevo cliente', `
+    <label class="f"><span>Nombre del dueño</span><input id="cn" value="${esc(c ? c.nombre : '')}" placeholder="Ej. Rosa Pérez"></label>
+    <label class="f"><span>Nombre del negocio</span><input id="cg" value="${esc(c ? c.negocio : '')}" placeholder="Ej. Pulpería La Bendición"></label>
+    <label class="f"><span>Celular (WhatsApp)</span><input id="ct" type="tel" inputmode="numeric" value="${esc(c ? telVer(c.telefono) : '')}" placeholder="8 números"><small>Aquí le llega el enlace de su catálogo.</small></label>
+    ${VP(!vp)}
+    <div class="f" id="etp" style="${vp ? 'display:none' : ''}"><span>¿Qué precios ve?</span><div class="tps">${Object.entries(TIPOS).map(([k, l]) => `<button type="button" data-t="${k}" class="${k == tp ? 'on' : ''}">${k == 'ambas' ? 'Ambos' : l}</button>`).join('')}</div></div>`,
+    `<button class="no">Cancelar</button><button class="si" id="cok">${c ? 'Guardar' : 'Guardar cliente'}</button>`);
+  o.querySelector('.no').onclick = cerrar;
+  o.querySelector('#etp .tps').onclick = e => { const b = e.target.closest('button'); if (!b) return; tp = b.dataset.t; o.querySelectorAll('#etp .tps button').forEach(x => x.classList.toggle('on', x == b)); };
+  const vpb = o.querySelector('.vp'); if (vpb) vpb.onclick = e => { const b = e.target.closest('[data-vp]'); if (!b) return; vp = b.dataset.vp == 'no' ? 'no' : ''; o.querySelectorAll('.vp button').forEach(x => x.classList.toggle('on', x == b)); o.querySelector('#etp').style.display = vp ? 'none' : ''; };
+  o.querySelector('#cok').onclick = async () => {
+    const nombre = o.querySelector('#cn').value.trim(), negocio = o.querySelector('#cg').value.trim(), t = o.querySelector('#ct').value.replace(/\D/g, '');
+    if (!nombre) return toast('Escriba el nombre del dueño'); if (!negocio) return toast('Escriba el nombre del negocio'); if (t.length < 8) return toast('Escriba el celular (8 números)');
+    const b = o.querySelector('#cok'); b.disabled = true; b.textContent = 'Guardando…';
+    const d = { a: 'cliente', k: K, nombre, negocio, telefono: t, tipo_precio: tp, ver_precio: vp }; if (c) { d.antes_nombre = c.nombre; d.antes_negocio = c.negocio; }
+    try { await apiPost(d); cerrar(); await cargarClientesV(); toast(c ? 'Cambios guardados ✓' : negocio + ' guardado ✓');
+      if (!c) { const nc = CLIS.find(x => x.nombre == nombre && x.negocio == negocio) || { nombre, negocio, telefono: t, tipo_precio: tp, ver_precio: vp }; enviarCatalogo(nc); } }
+    catch (er) { toast(er.message); b.disabled = false; b.textContent = c ? 'Guardar' : 'Guardar cliente'; }
+  };
+  setTimeout(() => o.querySelector('#cn').focus(), 50);
+}
+
+// ---------- VENDEDOR: mandar catálogo rápido ----------
+$('#mRap').onclick = async () => {
+  try { CLIS = (await apiGet({ a: 'clientes', k: K, vend: VN })).clientes || []; } catch (e) {}
+  let tp = 'ambas', ya = null, vp = '';
+  const { o, cerrar } = abrirOv('Mandar catálogo', `
+    <label class="f"><span>Celular del cliente (WhatsApp)</span><input id="rt" type="tel" inputmode="numeric" placeholder="8 números"><small id="rya"></small></label>
+    <label class="f"><span>Nombre del dueño</span><input id="rn" placeholder="Ej. Juan Pérez"></label>
+    <label class="f"><span>Nombre del negocio</span><input id="rg" placeholder="Ej. Pulpería La Esquina"></label>
+    ${VP(true)}
+    <div class="f" id="rtp"><span>¿Qué precios ve?</span><div class="tps">${Object.entries(TIPOS).map(([k, l]) => `<button type="button" data-t="${k}" class="${k == tp ? 'on' : ''}">${k == 'ambas' ? 'Ambos' : l}</button>`).join('')}</div></div>
+    <p class="vacio" style="margin:4px 0 0;font-size:.85em">Queda guardado en sus clientes. El cliente solo ve su catálogo, hace su pedido, lo firma y le llega a usted.</p>`,
+    `<button class="no">Cancelar</button><button class="si" id="rok"><svg class="avion" viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.18em;margin-right:.3em"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>Mandar por WhatsApp</button>`);
+  o.querySelector('.no').onclick = cerrar;
+  o.querySelector('#rtp .tps').onclick = e => { const b = e.target.closest('button'); if (!b) return; tp = b.dataset.t; o.querySelectorAll('#rtp .tps button').forEach(x => x.classList.toggle('on', x == b)); };
+  const vpb = o.querySelector('.vp'); if (vpb) vpb.onclick = e => { const b = e.target.closest('[data-vp]'); if (!b) return; vp = b.dataset.vp == 'no' ? 'no' : ''; o.querySelectorAll('.vp button').forEach(x => x.classList.toggle('on', x == b)); o.querySelector('#rtp').style.display = vp ? 'none' : ''; };
+  o.querySelector('#rt').addEventListener('input', () => { const v = o.querySelector('#rt').value.replace(/\D/g, '').slice(-8);
+    ya = v.length == 8 ? CLIS.find(c => String(c.telefono || '').replace(/\D/g, '').slice(-8) == v) : null;
+    o.querySelector('#rya').innerHTML = ya ? `✅ Ya es su cliente: <b>${esc(ya.negocio || ya.nombre)}</b>. Se le manda su catálogo.` : '';
+    if (ya) { o.querySelector('#rn').value = ya.nombre; o.querySelector('#rg').value = ya.negocio; } });
+  o.querySelector('#rok').onclick = async () => {
+    const t = o.querySelector('#rt').value.replace(/\D/g, ''), nombre = o.querySelector('#rn').value.trim(), negocio = o.querySelector('#rg').value.trim();
+    if (t.length < 8) return toast('Escriba el celular (8 números)');
+    if (ya) { if ((ya.ver_precio || '') != vp && !ya.precio) { try { await apiPost({ a: 'cliente', k: K, antes_nombre: ya.nombre, antes_negocio: ya.negocio, nombre: ya.nombre, negocio: ya.negocio, telefono: ya.telefono, tipo_precio: ya.tipo_precio || 'ambas', ver_precio: vp }); ya.ver_precio = vp; } catch (e) {} } cerrar(); return enviarCatalogo(ya); }
+    if (!nombre) return toast('Escriba el nombre del dueño'); if (!negocio) return toast('Escriba el nombre del negocio');
+    const b = o.querySelector('#rok'); b.disabled = true; b.textContent = 'Guardando…';
+    try { await apiPost({ a: 'cliente', k: K, nombre, negocio, telefono: t, tipo_precio: tp, ver_precio: vp }); cerrar();
+      CLIS = (await apiGet({ a: 'clientes', k: K, vend: VN })).clientes || []; enviarCatalogo(CLIS.find(x => x.nombre == nombre && x.negocio == negocio) || { nombre, negocio, telefono: t, tipo_precio: tp, ver_precio: vp }); }
+    catch (er) { toast(er.message); b.disabled = false; b.textContent = '<svg class="avion" viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.18em;margin-right:.3em"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>Mandar por WhatsApp'; }
+  };
+  setTimeout(() => o.querySelector('#rt').focus(), 50);
+};
+
+// ---------- Productos sin stock: listado en gris (los clientes no los ven en su catálogo) ----------
+let AGO = [];
+const nomProd = c => { const p = PRODUCTOS.find(x => x.c.toUpperCase() == String(c).trim().toUpperCase()); return p ? p.n : String(c); };
+function verAgotados() {
+  const L = AGO.map(c => PRODUCTOS.find(x => x.c.toUpperCase() == c)).filter(Boolean);
+  const fila = p => `<div class="agi" data-c="${esc(p.c)}"><img src="img/${esc(p.i)}_s.jpg" alt=""><div><b>${esc(p.n)}</b><small>${esc(p.c)} · ${esc(p.s)}</small><span class="agt">SIN STOCK</span></div>${ROL == 'oficina' ? `<button class="agb" data-hay="${esc(p.c)}">✅ Ya hay</button>` : ''}</div>`;
+  const { o, cerrar } = abrirOv('🚫 Productos sin stock', `<p class="agn">Están en gris para usted y sus vendedores. <b>Los clientes no los ven</b> en su catálogo hasta que vuelva a haber.</p><div class="agl">${L.map(fila).join('') || '<div class="vacio">✅ Todo tiene stock.</div>'}</div>`, `<button class="btn l" id="agP">💲 Ir a Precios</button><button class="btn" id="agC">Listo</button>`);
+  o.querySelector('#agC').onclick = cerrar;
+  o.querySelector('#agP').onclick = () => { cerrar(); ver('precios'); };
+  o.addEventListener('click', async e => {
+    const b = e.target.closest('[data-hay]'); if (!b) return; b.disabled = true; b.textContent = 'Guardando…';
+    try { await apiPost({ a: 'precios', k: K, filas: [{ codigo: b.dataset.hay, agotado: '' }] });
+      AGO = AGO.filter(c => c != b.dataset.hay.toUpperCase()); b.closest('.agi').remove(); toast('Disponible otra vez ✓ Los clientes ya lo ven');
+      if (!o.querySelector('.agi')) o.querySelector('.agl').innerHTML = '<div class="vacio">✅ Todo tiene stock.</div>';
+      if (FR['precios.html']) { FR['precios.html'].ready = false; FR['precios.html'].el.contentWindow.location.reload(); }
+      cargarInicio();
+    } catch (er) { b.disabled = false; b.textContent = '✅ Ya hay'; toast(er.message); }
+  });
+}
+
+// ---------- GERENCIA: depurar clientes ----------
+async function depurarClientes() {
+  let cs; try { cs = (await apiGet({ a: 'clientes', k: K })).clientes || []; } catch (e) { return toast(e.message); }
+  let dias = 30;
+  const { o, cerrar } = abrirOv('🧹 Depurar clientes', `
+    <p class="vacio" style="margin:0 0 8px">Clientes que <b>nunca compraron o compraron una sola vez</b> y no han vuelto. Los pedidos viejos no se borran, solo el cliente de la lista.</p>
+    <div class="chips" id="ddias">${[0, 30, 60, 90, 180].map(x => `<button class="chip${x == dias ? ' on' : ''}" data-d="${x}">${x ? x + ' días' : 'Todos'}</button>`).join('')}</div>
+    <div class="dl" id="dlist"></div>`, `<button class="no">Cancelar</button><button class="si" id="dok">Borrar</button>`);
+  o.querySelector('.no').onclick = cerrar;
+  const hoy = new Date(), viejo = f => { if (!f) return true; const d = new Date(String(f).slice(0, 10) + 'T12:00:00'); return isNaN(d) || (hoy - d) / 864e5 >= dias; };
+  const contar = () => { const n = o.querySelectorAll('#dlist input:checked').length; const b = o.querySelector('#dok'); b.textContent = n ? `🗑 Borrar ${n} ${n == 1 ? 'cliente' : 'clientes'}` : 'Borrar'; b.disabled = !n; };
+  const pintarD = () => {
+    const L = cs.filter(c => (Number(c.pedidos) || 0) <= 1 && viejo(c.ultimo || c.creado));
+    o.querySelector('#dlist').innerHTML = L.length ? L.map(c => `<label><input type="checkbox" data-i="${cs.indexOf(c)}" ${/especial|autorizado/i.test(c.precio || '') ? '' : 'checked'}><span><b>${esc(c.negocio || c.nombre)}</b><small>${esc(c.nombre)} · ${esc(c.vendedor || 'sin vendedor')} · ${Number(c.pedidos) ? '1 pedido' + (c.ultimo ? ' (' + esc(c.ultimo) + ')' : '') : 'nunca compró'}${/especial|autorizado/i.test(c.precio || '') ? ' · ve precio especial/autorizado' : ''}</small></span></label>`).join('') : '<div class="vacio" style="padding:14px">✅ No hay clientes para depurar con ese tiempo.</div>';
+    contar(); };
+  o.querySelector('#ddias').onclick = e => { const b = e.target.closest('[data-d]'); if (!b) return; dias = +b.dataset.d; o.querySelectorAll('#ddias .chip').forEach(x => x.classList.toggle('on', x == b)); pintarD(); };
+  o.querySelector('#dlist').onchange = contar;
+  o.querySelector('#dok').onclick = () => { const sel = [...o.querySelectorAll('#dlist input:checked')].map(i => cs[+i.dataset.i]); if (!sel.length) return;
+    confirmar(`¿Borrar ${sel.length} ${sel.length == 1 ? 'cliente' : 'clientes'} de la lista? No se puede deshacer.`, async () => {
+      try { const r = await apiPost({ a: 'borrar_clientes', k: K, lista: sel.map(c => ({ nombre: c.nombre, negocio: c.negocio })) }); cerrar(); toast((r.borrados || 0) + ' clientes borrados ✓'); recargarFrames(); cargarInicio(); } catch (er) { toast(er.message); } }); };
+  pintarD();
+}
+
+// ---------- Arranque ----------
+if (window.DEMO) { const m = () => { const a = document.createElement('a'); a.href = './'; a.className = 'salir'; a.textContent = '← Volver al menú del demo'; a.style.textAlign = 'center'; a.style.display = 'block'; return a; }; $('#v-inicio').appendChild(m()); $('#login').appendChild(m()); }
+if (K) entrar(); else { document.body.classList.add('sin-nav'); { const h = LS.get('vendHola', ''); if (h) { $('#login h1').textContent = 'Hola, ' + h; $('#login p').textContent = 'Escriba su clave de vendedor. Solo se la pide la primera vez.'; } } $('#login').classList.remove('hide'); setTimeout(() => $('#lk').focus(), 50); }
+</script>
+<script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});</script>
+</body>
+</html>
