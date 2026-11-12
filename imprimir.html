@@ -157,7 +157,7 @@ function pintar() {
   const sin = OPC.pre.includes('sin');
   document.querySelectorAll('#cPre input').forEach(i => { if (i.value != 'sin') { i.disabled = sin; i.parentNode.classList.toggle('off', sin); } });
   const hoy = new Date().toLocaleDateString('es-HN', { day: 'numeric', month: 'long', year: 'numeric' });
-  let h = `<div class="hoja" style="--col:${OPC.col};--alto:${{ 3: 34, 4: 27, 5: 21 }[OPC.col]}mm"><div class="port"><img src="img/logo.jpg" alt=""><div class="t"><b>Catálogo de productos</b><span>Distribuidora San Jorge${OPC.para ? ' · Para: <strong>' + esc(OPC.para) + '</strong>' : ''}</span></div><div class="d">${hoy}${OPC.tel ? '<br>Pedidos: <b>' + esc(OPC.tel) + '</b>' : ''}</div></div>`;
+  let h = `<div class="hoja" style="--col:${OPC.col};--alto:${{ 3: 34, 4: 27, 5: 21 }[OPC.col]}mm"><div class="port"><img src="logo.jpg" alt=""><div class="t"><b>Catálogo de productos</b><span>Distribuidora San Jorge${OPC.para ? ' · Para: <strong>' + esc(OPC.para) + '</strong>' : ''}</span></div><div class="d">${hoy}${OPC.tel ? '<br>Pedidos: <b>' + esc(OPC.tel) + '</b>' : ''}</div></div>`;
   let n = 0;
   for (const s of SECS) {
     if (!OPC.sec.includes(s)) continue;
@@ -167,7 +167,7 @@ function pintar() {
     for (const p of ps) {
       const r = FILAS[p.c.toUpperCase()] || {}, f = filasPrecio(r), ago = /^(si|sí|x|1|true|agotado)$/i.test(String(r.agotado || '').trim());
       const pz = f == null ? '' : f.length ? f.map(([c, t, v]) => `<div class="${c}"><span>${esc(t)}</span><b>${L(v)}</b></div>`).join('') : '<div class="no">Consulte precio</div>';
-      h += `<div class="pr"><div class="im"><img src="img/${p.i}.jpg" alt=""></div><div class="n">${esc(p.n)}</div><div class="ds">${esc(p.d || '')}</div><div class="cd">Código ${esc(p.c)}${p.m ? ' · ' + esc(p.m) : ''}</div>${ago ? '<div class="ag">Agotado por ahora</div>' : ''}${pz ? '<div class="pz">' + pz + '</div>' : ''}</div>`;
+      h += `<div class="pr"><div class="im"><img src="${p.i}.jpg" alt=""></div><div class="n">${esc(p.n)}</div><div class="ds">${esc(p.d || '')}</div><div class="cd">Código ${esc(p.c)}${p.m ? ' · ' + esc(p.m) : ''}</div>${ago ? '<div class="ag">Agotado por ahora</div>' : ''}${pz ? '<div class="pz">' + pz + '</div>' : ''}</div>`;
       n++;
     }
     h += '</div>';

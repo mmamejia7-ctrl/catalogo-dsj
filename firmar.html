@@ -42,7 +42,7 @@ header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f
 </style>
 </head>
 <body>
-<header><div class="top"><img src="img/logo.jpg" alt="DSJ"><div><b>Distribuidora San Jorge</b><small>Autorización de pedido</small></div></div></header>
+<header><div class="top"><img src="logo.jpg" alt="DSJ"><div><b>Distribuidora San Jorge</b><small>Autorización de pedido</small></div></div></header>
 <main id="m"><div class="card"><p>Cargando su pedido…</p></div></main>
 <div class="toast" id="toast"></div>
 <script src="config.js"></script>
@@ -53,7 +53,7 @@ header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f
 const TK = location.hash.slice(1) || new URLSearchParams(location.search).get('t') || '';
 const PX = Object.fromEntries((window.PRODUCTOS || []).map(p => [p.c, p]));
 let P = null, WA = '';
-function lista(p) { return p.items.map(i => { const x = PX[i.c]; return `<div class="li">${x ? `<img src="img/${x.i}_s.jpg" alt="">` : ''}<div><b>${esc(i.n)}</b><small>${i.q} × ${i.precio ? fmt(i.precio) : 'consultar'}</small></div><span class="s">${i.sub ? fmt(i.sub) : ''}</span></div>`; }).join('') + `<div class="tot"><span>Total</span><span>${fmt(p.total)}</span></div>`; }
+function lista(p) { return p.items.map(i => { const x = PX[i.c]; return `<div class="li">${x ? `<img src="${x.i}_s.jpg" alt="">` : ''}<div><b>${esc(i.n)}</b><small>${i.q} × ${i.precio ? fmt(i.precio) : 'consultar'}</small></div><span class="s">${i.sub ? fmt(i.sub) : ''}</span></div>`; }).join('') + `<div class="tot"><span>Total</span><span>${fmt(p.total)}</span></div>`; }
 function waLink(p) { const t = telWA(WA); const m = `✅ AUTORIZO el pedido #${p.numero} de ${p.negocio || p.cliente} por ${fmt(p.total)}. Lo firmé desde el enlace.`; return 'https://wa.me/' + (t.length >= 11 ? t : '') + '?text=' + encodeURIComponent(m); }
 function vistaFirmado(p) {
   $('#m').innerHTML = `<div class="card ok"><h1>✅ Pedido #${esc(p.numero)} autorizado</h1><p>${p.firmado_en ? 'Firmado el ' + esc(p.firmado_en) + '. ' : ''}Gracias, ${esc(p.cliente)}. Su pedido ya está en Distribuidora San Jorge.</p>${firmaOK(p.firma) ? `<img class="fimg" src="${p.firma}" alt="Su firma">` : ''}</div>

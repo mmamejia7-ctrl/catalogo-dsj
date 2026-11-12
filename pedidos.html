@@ -90,7 +90,7 @@ header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f
 </style>
 </head>
 <body>
-<header><div class="top"><img src="img/logo.jpg" alt=""><div><b>Pedidos y Recarga</b><small id="who">Distribuidora San Jorge</small></div><a class="salir" id="alCat" href="./" style="display:none;text-decoration:none">🛒 Catálogo</a><button class="salir" id="salir" style="display:none">Salir</button></div></header>
+<header><div class="top"><img src="logo.jpg" alt=""><div><b>Pedidos y Recarga</b><small id="who">Distribuidora San Jorge</small></div><a class="salir" id="alCat" href="./" style="display:none;text-decoration:none">🛒 Catálogo</a><button class="salir" id="salir" style="display:none">Salir</button></div></header>
 <main>
  <div id="login" class="card">
   <h2 style="margin-top:0">Entrar</h2>
@@ -231,7 +231,7 @@ function elegirProductos(i) {
   const c = clientesO[i], sel = new Set(String(c.productos || '').split(',').map(s => s.trim()).filter(Boolean)), todos = !sel.size;
   const secs = [...new Set(PRODUCTOS.map(p => p.s))];
   const html = `<div class="pbar"><button class="no" id="pAll">✓ Seleccionar todos</button><button class="no" id="pNone">Quitar todos</button></div><div class="pcount" id="pCnt"></div>` +
-    secs.map(s => `<div class="psec"><label class="psh"><input type="checkbox" data-sec="${esc(s)}"> <b>${esc(s)}</b></label>${PRODUCTOS.filter(p => p.s == s).map(p => `<label class="pit"><input type="checkbox" data-pc="${esc(p.c)}"${todos || sel.has(p.c) ? ' checked' : ''}><img src="img/${p.i}_s.jpg" alt=""><span>${esc(p.n)}</span></label>`).join('')}</div>`).join('');
+    secs.map(s => `<div class="psec"><label class="psh"><input type="checkbox" data-sec="${esc(s)}"> <b>${esc(s)}</b></label>${PRODUCTOS.filter(p => p.s == s).map(p => `<label class="pit"><input type="checkbox" data-pc="${esc(p.c)}"${todos || sel.has(p.c) ? ' checked' : ''}><img src="${p.i}_s.jpg" alt=""><span>${esc(p.n)}</span></label>`).join('')}</div>`).join('');
   const { o, cerrar } = abrirOv('Productos de ' + (c.negocio || c.nombre), html, '<button class="no" id="pX">Cancelar</button><button class="si" id="pOk">Guardar</button>');
   const cajas = () => [...o.querySelectorAll('[data-pc]')];
   const sync = () => { o.querySelectorAll('[data-sec]').forEach(s => { const cs = [...o.querySelectorAll('.psec')].find(d => d.contains(s)).querySelectorAll('[data-pc]'); s.checked = [...cs].every(x => x.checked); s.indeterminate = !s.checked && [...cs].some(x => x.checked); });

@@ -90,7 +90,7 @@ function pedidoHTML(p, formato) {
   const t = formato == 'ticket';
   const filas = p.items.map(it => t
     ? `<div class="tl"><b>${esc(it.q)} ${esc(plural(it.u || uVenta(it.c, p.tipo), it.q))} · ${esc(it.n)}</b><div class="tr"><span>${esc(it.c)}${it.nivel ? ' · ' + esc(it.nivel) : ''} · ${it.precio ? fmt(it.precio) + ((it.u || uVenta(it.c, p.tipo)) ? '/' + esc(it.u || uVenta(it.c, p.tipo)) : '') : '—'}</span><span>${it.sub ? fmt(it.sub) : '—'}</span></div></div>`
-    : `<tr><td class="r">${esc(it.q)}<br><small>${esc(plural(it.u || uVenta(it.c, p.tipo), it.q))}</small></td><td><div class="pr">${(window.PRODUCTOS || []).find(p => p.c == it.c) ? `<img src="img/${window.PRODUCTOS.find(p => p.c == it.c).i}_s.jpg" alt="">` : ''}<span>${esc(it.n)}<br><small>${esc(it.c)}</small></span></div></td><td class="c">${esc(it.nivel)}</td><td class="r">${it.precio ? fmt(it.precio) : '—'}</td><td class="r">${it.sub ? fmt(it.sub) : '—'}</td></tr>`).join('');
+    : `<tr><td class="r">${esc(it.q)}<br><small>${esc(plural(it.u || uVenta(it.c, p.tipo), it.q))}</small></td><td><div class="pr">${(window.PRODUCTOS || []).find(p => p.c == it.c) ? `<img src="${window.PRODUCTOS.find(p => p.c == it.c).i}_s.jpg" alt="">` : ''}<span>${esc(it.n)}<br><small>${esc(it.c)}</small></span></div></td><td class="c">${esc(it.nivel)}</td><td class="r">${it.precio ? fmt(it.precio) : '—'}</td><td class="r">${it.sub ? fmt(it.sub) : '—'}</td></tr>`).join('');
   const unid = p.items.reduce((s, i) => s + i.q, 0);
   const fz = p.fardos || fardosDe(p.items);
   const fzH = fz.length ? `<div class="fz">${fz.map(x => `<div><span>Total ${esc(x.u || 'fardos')} ${esc(grupoNom(x.g))}</span><b>${(Math.round(x.n * 10) / 10)}</b></div>`).join('')}</div>` : '';
@@ -206,7 +206,7 @@ async function imagenPedido(d) {
   const F = (w, s) => `${w} ${s}px system-ui,-apple-system,Roboto,Arial,sans-serif`;
   x.fillStyle = '#f6f0e8'; x.fillRect(0, 0, W, H);
   x.fillStyle = '#0f3d5e'; x.fillRect(0, 0, W, HEAD - 20); x.fillStyle = '#1a6fa8'; x.fillRect(0, HEAD - 28, W, 10);
-  const logo = await cargarImg('img/logo.jpg');
+  const logo = await cargarImg('logo.jpg');
   if (logo) { x.fillStyle = '#f6f5f1'; _rr(x, 40, 36, 150, 150, 22); x.fill(); const s = Math.min(130 / logo.width, 130 / logo.height); x.drawImage(logo, 115 - logo.width * s / 2, 111 - logo.height * s / 2, logo.width * s, logo.height * s); }
   x.fillStyle = '#fff'; x.font = F(900, 54); x.fillText('PEDIDO' + (d.numero ? ' #' + d.numero : ''), 220, 92);
   x.font = F(600, 34); x.fillStyle = '#ddd'; x.fillText(_corta(x, (d.cliente || 'Cliente') + (d.negocio ? ' · ' + d.negocio : ''), 820)[0], 220, 145);
@@ -216,7 +216,7 @@ async function imagenPedido(d) {
   for (let k = 0; k < d.items.length; k++) {
     const it = d.items[k], p = MAP[it.c];
     x.fillStyle = '#fff'; _rr(x, 30, y + 10, W - 60, ROW - 20, 22); x.fill();
-    const im = p ? await cargarImg('img/' + p.i + '_s.jpg') : null;
+    const im = p ? await cargarImg('' + p.i + '_s.jpg') : null;
     x.fillStyle = '#f4f4f4'; _rr(x, 46, y + 24, 142, 142, 14); x.fill();
     if (im) { const s = Math.min(130 / im.width, 130 / im.height); x.drawImage(im, 117 - im.width * s / 2, y + 95 - im.height * s / 2, im.width * s, im.height * s); }
     x.fillStyle = '#1592e6'; _rr(x, 210, y + 30, 120, 64, 14); x.fill();
@@ -237,7 +237,7 @@ async function imagenPedido(d) {
 }
 
 // ---------- Íconos en computadoras viejas (Windows 7/8 no tienen emojis a color) ----------
-// Si el aparato no puede dibujar emojis, se cambian por dibujitos de img/emo (Twemoji, CC-BY 4.0)
+// Si el aparato no puede dibujar emojis, se cambian por dibujitos de emo (Twemoji, CC-BY 4.0)
 (function () {
   const HAY = new Set(["1f3e0", "1f3e2", "1f3ea", "1f44b", "1f464", "1f465", "1f4ac", "1f4b2", "1f4cb", "1f4de", "1f4f1", "1f4f2", "1f4f7", "1f504", "1f50d", "1f511", "1f512", "1f513", "1f514", "1f5a8", "1f5d1", "1f648", "1f64b", "1f69a", "1f6ab", "1f6d2", "1f9d1-200d-1f4bc", "1f9f9", "1f9fe", "23f3", "2699", "26a0", "26a1", "2705", "270d", "270f", "274c"]);
   function faltan() {
@@ -258,7 +258,7 @@ async function imagenPedido(d) {
     const fr = document.createDocumentFragment(); let i = 0, m, hubo = false;
     while ((m = RE.exec(s))) { const n = nom(m[0]); if (!HAY.has(n)) continue; hubo = true;
       if (m.index > i) fr.appendChild(document.createTextNode(s.slice(i, m.index)));
-      const im = document.createElement('img'); im.className = 'emo'; im.alt = m[0]; im.draggable = false; im.src = 'img/emo/' + n + '.svg';
+      const im = document.createElement('img'); im.className = 'emo'; im.alt = m[0]; im.draggable = false; im.src = '' + n + '.svg';
       fr.appendChild(im); i = m.index + m[0].length; }
     if (!hubo) return;
     if (i < s.length) fr.appendChild(document.createTextNode(s.slice(i)));

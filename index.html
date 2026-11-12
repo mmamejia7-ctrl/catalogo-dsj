@@ -303,7 +303,7 @@ header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f
 <header>
  <div class="modo" id="modoBar" style="display:none"></div>
  <div class="top">
-  <img src="img/logo.jpg" alt="DSJ">
+  <img src="logo.jpg" alt="DSJ">
   <div class="ttl"><b>Distribuidora San Jorge</b><small id="sub">Catálogo de productos</small></div>
   <button class="btn" id="mnu" title="Menú" hidden>☰</button>
   <button class="btn" id="aa" title="Letra grande">A+</button>
@@ -469,7 +469,7 @@ function pintar() {
     visibles = [];
     const nCar = s => PP.filter(p => p.s == s && carrito[p.c]).length;
     const nPro = s => PP.filter(p => p.s == s).length;
-    $('#lista').innerHTML = `<div class="hero"><div><small>Distribuidora San Jorge</small><b>Catálogo de productos</b><span>${secs.length} categorías · ${PP.length} productos</span></div><button class="vertodo" data-sec="-1">Ver todo ›</button></div><div class="cats">${secs.map((s, i) => `<button class="cat" data-sec="${i}" style="--cc:${PASTEL[i % PASTEL.length]}"><span class="cimg"><img loading="lazy" src="img/${SEC_IMG[s]}_s.jpg" alt="">${nCar(s) ? `<i>${nCar(s)}</i>` : ''}</span><span class="cn">${s}<small>${nPro(s)} productos</small></span></button>`).join('')}</div>`;
+    $('#lista').innerHTML = `<div class="hero"><div><small>Distribuidora San Jorge</small><b>Catálogo de productos</b><span>${secs.length} categorías · ${PP.length} productos</span></div><button class="vertodo" data-sec="-1">Ver todo ›</button></div><div class="cats">${secs.map((s, i) => `<button class="cat" data-sec="${i}" style="--cc:${PASTEL[i % PASTEL.length]}"><span class="cimg"><img loading="lazy" src="${SEC_IMG[s]}_s.jpg" alt="">${nCar(s) ? `<i>${nCar(s)}</i>` : ''}</span><span class="cn">${s}<small>${nPro(s)} productos</small></span></button>`).join('')}</div>`;
     $('#nav').innerHTML = ''; barra(); return;
   }
   visibles = PP.filter(p => (q ? quitarAc(p.n + ' ' + p.c + ' ' + p.m + ' ' + p.s + ' ' + p.d).includes(q) : seccion == -1 || p.s == secs[seccion]));
@@ -477,7 +477,7 @@ function pintar() {
   for (const s of secs) {
     const it = visibles.filter(p => p.s == s); if (!it.length) continue;
     h += `<h2 id="s-${secs.indexOf(s)}">${s}</h2><div class="marca">${it[0].m}</div><div class="grid">`;
-    for (const p of it) h += `<div class="card${carrito[p.c] ? ' sel' : ''}${agot(p.c) ? ' ago' : ''}" data-c="${p.c}" data-i="${visibles.indexOf(p)}"><div class="im"><img loading="lazy" src="img/${p.i}_s.jpg" alt="">${tagH(p)}</div><div class="b">${precioH(p)}<div class="n">${p.n}</div><div class="d">${p.d}</div>${tiersH(p)}</div><div class="add" data-c="${p.c}">${addH(p.c)}</div></div>`;
+    for (const p of it) h += `<div class="card${carrito[p.c] ? ' sel' : ''}${agot(p.c) ? ' ago' : ''}" data-c="${p.c}" data-i="${visibles.indexOf(p)}"><div class="im"><img loading="lazy" src="${p.i}_s.jpg" alt="">${tagH(p)}</div><div class="b">${precioH(p)}<div class="n">${p.n}</div><div class="d">${p.d}</div>${tiersH(p)}</div><div class="add" data-c="${p.c}">${addH(p.c)}</div></div>`;
     h += '</div>';
   }
   $('#lista').innerHTML = h + (visibles.length ? '' : '<div class="vacio">No se encontró ningún producto con esa búsqueda.</div>');
@@ -490,7 +490,7 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-sec]
 // ---------- VISTA GRANDE ----------
 function abrir(i) {
   idx = (i + visibles.length) % visibles.length; const p = visibles[idx]; const x = pr(p);
-  $('#mimg').src = 'img/' + p.i + '.jpg'; $('#mn').textContent = p.n; $('#md').textContent = p.d;
+  $('#mimg').src = '' + p.i + '.jpg'; $('#mn').textContent = p.n; $('#md').textContent = p.d;
   $('#mtag').innerHTML = tagH(p);
   $('#mp').innerHTML = x.precio ? fmt(x.precio) + '<small>Precio ' + tipo + (uVenta(p.c, tipo) ? ' por ' + uVenta(p.c, tipo) : '') + (tipo == 'mayoreo' && x.nivel ? ' · ' + x.nivel : '') + '</small>' : '<span style="font-size:.5em;color:#bbb">Consulte precio con su vendedor</span>';
   const e = tipo == 'mayoreo' ? escalones(precios[p.c.toUpperCase()]) : [];
@@ -578,7 +578,7 @@ function armarPedido() {
 function barra() { const s = armarPedido(); { const n = s.items.length, c = $('#cesta'), b = $('#cesN'); const ant = b.textContent; b.textContent = n; b.hidden = !n; $('#cesTot').textContent = SINP ? n + (n == 1 ? ' producto' : ' productos') : fmt(s.total); c.classList.toggle('lleno', n > 0); if (n && ant != String(n)) { c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); } } $('#cbar').classList.toggle('on', s.items.length > 0); $('#cbn').textContent = s.items.length + (s.items.length == 1 ? ' producto' : ' productos') + ' · ' + s.unid + ' unid.'; const fz = fardosDe(s.items); $('#cbt').textContent = 'Total aprox. ' + fmt(s.total) + (s.sin ? ' (+' + s.sin + ' sin precio)' : '') + (fz.length ? ' · ' + fz.map(x => fardoTxt(x.n, x.u) + ' ' + grupoNom(x.g)).join(' · ') : ''); }
 function lineas() {
   const s = armarPedido();
-  $('#plist').innerHTML = s.items.map(i => { const p = PX[i.c]; const gg = grupoDe(i.c); return `<div class="li"><img src="img/${p.i}_s.jpg" alt=""><div class="lt"><b>${p.n}</b><small>${i.u ? '<b style="color:#0f3d5e">' + esc(i.q) + ' ' + esc(plural(i.u, i.q)) + '</b><br>' : ''}${i.precio ? fmt(i.precio) + (i.u ? ' por ' + esc(i.u) : ' c/u') + (tipo == 'mayoreo' ? ' <span class="nivel">' + esc(i.nivel) + '</span>' : '') + (gg ? ' <span class="grp">' + nFardos(cantGrupo(i.c), i.c) + ' de ' + gg.toLowerCase() + ' juntos</span>' : '') + '<br>' + fmt(i.sub) : (SINP ? 'Precio con su vendedor' : 'Consulte precio')}</small></div><div class="add" data-c="${i.c}">${addH(i.c)}</div></div>`; }).join('') || '<div class="vacio">Su pedido está vacío.</div>';
+  $('#plist').innerHTML = s.items.map(i => { const p = PX[i.c]; const gg = grupoDe(i.c); return `<div class="li"><img src="${p.i}_s.jpg" alt=""><div class="lt"><b>${p.n}</b><small>${i.u ? '<b style="color:#0f3d5e">' + esc(i.q) + ' ' + esc(plural(i.u, i.q)) + '</b><br>' : ''}${i.precio ? fmt(i.precio) + (i.u ? ' por ' + esc(i.u) : ' c/u') + (tipo == 'mayoreo' ? ' <span class="nivel">' + esc(i.nivel) + '</span>' : '') + (gg ? ' <span class="grp">' + nFardos(cantGrupo(i.c), i.c) + ' de ' + gg.toLowerCase() + ' juntos</span>' : '') + '<br>' + fmt(i.sub) : (SINP ? 'Precio con su vendedor' : 'Consulte precio')}</small></div><div class="add" data-c="${i.c}">${addH(i.c)}</div></div>`; }).join('') || '<div class="vacio">Su pedido está vacío.</div>';
   $('#ptot').textContent = fmt(s.total);
   $('#solBox').hidden = !s.sol.length; if (!s.sol.length) $('#fsol').checked = false; $('#solTxt').innerHTML = s.sol.map(i => `${esc(i.n)}: lleva ${i.q}, el autorizado es desde ${i.pd} → ${fmt(i.ps)}`).join('<br>') + (s.sol.length ? `<br>Si la oficina aprueba, el total queda en <b>${fmt(s.total_sol)}</b> (ahora ${fmt(s.total)}). Si no, va al precio normal.` : '');
   const fz = fardosDe(s.items); $('#pfz').innerHTML = fz.map(x => `<div class="fzl"><span>Total de ${esc(x.u)} ${esc(grupoNom(x.g))}</span><b>${fardoTxt(x.n, x.u)}</b></div>`).join('');
@@ -787,7 +787,7 @@ function despuesDeEnviar(d) {
 
 // ---------- FOTO CON PRECIO ----------
 async function fotoConPrecio(p) {
-  const img = new Image(); img.src = 'img/' + p.i + '.jpg'; await img.decode();
+  const img = new Image(); img.src = '' + p.i + '.jpg'; await img.decode();
   const W = 1080, band = 300, cv = document.createElement('canvas'), s = Math.min((W - 60) / img.width, (W - 60) / img.height);
   cv.width = W; cv.height = W + band; const x = cv.getContext('2d');
   x.fillStyle = '#f7f7f7'; x.fillRect(0, 0, W, W); x.drawImage(img, (W - img.width * s) / 2, (W - img.height * s) / 2, img.width * s, img.height * s);

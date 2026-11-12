@@ -78,7 +78,7 @@ header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f
 </head>
 <body>
 <header>
- <div class="top"><img src="img/logo.jpg" alt=""><div><b>Editor de precios</b><small id="who">Distribuidora San Jorge · solo oficina</small></div><button class="salir" id="salir" hidden>Salir</button></div>
+ <div class="top"><img src="logo.jpg" alt=""><div><b>Editor de precios</b><small id="who">Distribuidora San Jorge · solo oficina</small></div><button class="salir" id="salir" hidden>Salir</button></div>
  <div class="bar" id="busq" hidden><input id="q" type="search" placeholder="Buscar producto o código…" autocomplete="off"></div>
 </header>
 <nav id="nav"></nav>
@@ -165,7 +165,7 @@ function tarjetaEsp(p) {
   const c = p.c.toUpperCase(), r = filaE(c), g = filaDe(c), er = errores(r);
   const inp = (k, ph, tip = 'decimal') => `<input data-k="${k}" value="${esc(r[k])}" inputmode="${tip}" placeholder="${ph}" aria-label="${k}">`;
   return `<div class="p espc${cambiado(c) ? ' mod' : ''}${er.length ? ' bad' : ''}" data-c="${c}">
-   <div class="ph"><img src="img/${p.i}_s.jpg" alt=""><div><b>${esc(p.n)}</b><small>${esc(p.c)} · ${esc(p.d)}</small></div></div>
+   <div class="ph"><img src="${p.i}_s.jpg" alt=""><div><b>${esc(p.n)}</b><small>${esc(p.c)} · ${esc(p.d)}</small></div></div>
    <div class="ref">Precio general: ${resumen(c, Object.assign({}, g, { precio_detalle: '' }))}</div>
    <div class="g"><label class="f"><span>Su precio 1 (L)</span>${inp('precio_1', 'vacío = precio general')}</label><label class="f"><span>Se vende por</span><input value="${esc(g.unidad_mayoreo || '')}" readonly></label></div>
    <div class="esc"><div class="eh"><span>Nivel</span><span>Desde (cantidad)</span><span>Precio (L)</span></div>
@@ -181,7 +181,7 @@ function tarjeta(p) {
   const inp = (k, ph, tip = 'decimal') => `<input data-k="${k}" value="${esc(r[k])}" inputmode="${tip}" placeholder="${ph}" aria-label="${k}">`;
   const ag = /^(si|sí|x|1|true|agotado)$/i.test(String(r.agotado || ''));
   return `<div class="p${cambiado(c) ? ' mod' : ''}${er.length ? ' bad' : ''}${ag ? ' agp' : ''}" data-c="${c}">
-   <div class="ph"><img src="img/${p.i}_s.jpg" alt=""><div><b>${esc(p.n)}</b><small>${esc(p.c)} · ${esc(p.d)}</small>${r.grupo ? `<br><span class="chip">Grupo ${esc(r.grupo)}</span>` : ''}</div></div>
+   <div class="ph"><img src="${p.i}_s.jpg" alt=""><div><b>${esc(p.n)}</b><small>${esc(p.c)} · ${esc(p.d)}</small>${r.grupo ? `<br><span class="chip">Grupo ${esc(r.grupo)}</span>` : ''}</div></div>
    <button class="stk${ag ? ' no' : ''}" data-stk="${c}">${ag ? '🚫 SIN STOCK · tocar cuando vuelva a haber' : '✅ Hay stock · tocar si se agotó'}</button>
    <div class="g">
     <label class="f det"><span>Precio detalle (L)</span>${inp('precio_detalle', 'vacío = sin detalle')}</label>

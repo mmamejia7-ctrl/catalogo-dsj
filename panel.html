@@ -124,7 +124,7 @@ header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f
 </head>
 <body>
 <header>
- <img src="img/logo.jpg" alt="DSJ">
+ <img src="logo.jpg" alt="DSJ">
  <div class="t"><b id="htit">Panel DSJ</b><small id="hsub">Dueño · Distribuidora San Jorge</small></div>
  <button class="hb g hide" id="hRef" title="Actualizar" aria-label="Actualizar">⟳</button>
  <button class="hb hide" id="hPed">🛒 Tomar pedido</button>
@@ -132,7 +132,7 @@ header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f
 
 <main id="main">
  <div id="login" class="hide">
-  <img src="img/logo.jpg" alt="">
+  <img src="logo.jpg" alt="">
   <h1>Panel DSJ</h1>
   <p>Dueño o vendedor: escriba su clave.</p>
   <input id="lk" type="password" inputmode="numeric" placeholder="Su clave" autocomplete="current-password">
@@ -527,7 +527,7 @@ let AGO = [];
 const nomProd = c => { const p = PRODUCTOS.find(x => x.c.toUpperCase() == String(c).trim().toUpperCase()); return p ? p.n : String(c); };
 function verAgotados() {
   const L = AGO.map(c => PRODUCTOS.find(x => x.c.toUpperCase() == c)).filter(Boolean);
-  const fila = p => `<div class="agi" data-c="${esc(p.c)}"><img src="img/${esc(p.i)}_s.jpg" alt=""><div><b>${esc(p.n)}</b><small>${esc(p.c)} · ${esc(p.s)}</small><span class="agt">SIN STOCK</span></div>${ROL == 'oficina' ? `<button class="agb" data-hay="${esc(p.c)}">✅ Ya hay</button>` : ''}</div>`;
+  const fila = p => `<div class="agi" data-c="${esc(p.c)}"><img src="${esc(p.i)}_s.jpg" alt=""><div><b>${esc(p.n)}</b><small>${esc(p.c)} · ${esc(p.s)}</small><span class="agt">SIN STOCK</span></div>${ROL == 'oficina' ? `<button class="agb" data-hay="${esc(p.c)}">✅ Ya hay</button>` : ''}</div>`;
   const { o, cerrar } = abrirOv('🚫 Productos sin stock', `<p class="agn">Están en gris para usted y sus vendedores. <b>Los clientes no los ven</b> en su catálogo hasta que vuelva a haber.</p><div class="agl">${L.map(fila).join('') || '<div class="vacio">✅ Todo tiene stock.</div>'}</div>`, `<button class="btn l" id="agP">💲 Ir a Precios</button><button class="btn" id="agC">Listo</button>`);
   o.querySelector('#agC').onclick = cerrar;
   o.querySelector('#agP').onclick = () => { cerrar(); ver('precios'); };
