@@ -229,6 +229,9 @@ h2{font-size:1.25em;margin:26px 2px 2px}h2:before{display:none}
 #m .x{background:#f1f1f3;color:#0f3d5e;width:44px;height:44px;padding:0;font-size:1.15em;font-weight:700;flex:none}
 #m .mhn{flex:1;text-align:center;color:#8a8a90;font-size:.85em;font-weight:600}
 #m .nav2{background:#f1f1f3;color:#0f3d5e;width:44px;height:44px;font-size:1.3em;flex:none}
+#m .x.vol{width:auto;padding:0 16px;border-radius:999px;background:#0f3d5e;color:#fff;font-size:.98em;font-weight:800}
+#m .nav2.sig{width:auto;padding:0 16px;border-radius:999px;background:#22a45d;color:#fff;font-size:.98em;font-weight:800}
+@media(max-width:380px){#m .mhn{display:none}}
 #m .mi{display:flex;justify-content:center;padding:18px 16px 6px;background:#fff;overflow:visible}
 #m .wrap img{max-height:46vh;border-radius:0;background:#fff}
 #m .mi .tag{display:none}
@@ -297,6 +300,16 @@ header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f
 /* Cliente sin precios */
 .sinp #ptot,.sinp .tot,.sinp #pfz .fzl b + b{display:none!important}
 .sinp .tot{display:none!important}
+.otro2{font-size:.82em;color:#4a5866;margin:-2px 0 4px}.otro2 b{color:#0f3d5e}
+#mesc tr.tt td{text-align:left!important;background:#eef4fa;color:#0f3d5e;font-weight:800;font-size:.85em;padding:7px 10px;text-transform:uppercase;letter-spacing:.02em}
+.tbig{display:block!important;width:100%;text-align:left!important;border:2px solid #cfdeec!important;background:#f7fbff!important;color:inherit!important;border-radius:14px;padding:14px 16px;margin:0 0 10px;cursor:pointer;font:inherit}
+.tbig b{display:block;font-size:1.15em;color:#0f3d5e}.tbig small{color:#5b6775}.tbig:active{border-color:#1f78b4;background:#eef6fd}
+.aqui[hidden]{display:none!important}
+.aqui{display:block;width:100%;margin-top:8px;border:2px solid #0f3d5e;background:#fff;color:#0f3d5e;border-radius:14px;padding:13px;font-weight:800;font-size:.98em}
+.ov .firma{height:170px}
+#m .mf{flex-wrap:wrap}
+.mces{flex:1 0 100%;display:flex;justify-content:space-between;align-items:center;gap:8px;border:0;border-radius:12px;background:#eef6fd;color:#0f3d5e;padding:9px 12px;font:inherit;font-size:.92em;cursor:pointer;margin-bottom:-4px}
+.mces[hidden]{display:none}.mces .vp{font-weight:800;color:#1f78b4;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -325,10 +338,10 @@ header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f
 </main>
 
 <div id="m">
- <div class="mh"><button class="x" id="cerrar" aria-label="Cerrar">✕</button><span class="mhn" id="mhn"></span><button class="nav2" id="prev" aria-label="Anterior">‹</button><button class="nav2" id="next" aria-label="Siguiente">›</button></div>
+ <div class="mh"><button class="x vol" id="cerrar" aria-label="Volver a la lista">‹ Volver</button><span class="mhn" id="mhn"></span><button class="nav2" id="prev" aria-label="Producto anterior">‹</button><button class="nav2 sig" id="next" aria-label="Siguiente producto">Siguiente ›</button></div>
  <div class="mi"><div class="wrap"><img id="mimg" alt=""><div id="mtag"></div></div></div>
  <div class="mb"><div class="mn" id="mn"></div><div class="md" id="md"></div><div class="mp" id="mp"></div><table class="esc" id="mesc"></table><div class="mc" id="mc"></div><button class="sh" id="share"><svg class="avion" viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.18em;margin-right:.3em"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>Enviar foto con precio</button></div>
- <div class="mf"><div class="mfp" id="mfp"></div><div id="madd" class="add"></div></div>
+ <div class="mf"><button class="mces" id="mcesta" hidden></button><div class="mfp" id="mfp"></div><div id="madd" class="add"></div></div>
 </div>
 
 <button id="cbar"><div class="ct"><b id="cbn"></b><small id="cbt"></small></div><span class="go">VER PEDIDO ›</span></button>
@@ -349,12 +362,14 @@ header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f
    <label class="fld"><span>Nombre del cliente</span><input id="fcli" autocomplete="off"></label>
    <label class="fld"><span>Negocio (pulpería, bodega…)</span><input id="fneg" autocomplete="off"></label>
    <label class="fld"><span id="ftelL">Teléfono del cliente *</span><input id="ftel" placeholder="8 números · obligatorio" type="tel" inputmode="numeric" autocomplete="off"></label>
-   <div class="solb" id="solBox" hidden><label><input type="checkbox" id="fsol"><span><b>🙋 Pedir a la oficina el ★ Precio Autorizado</b> aunque no llegue a la cantidad</span></label><small id="solTxt"></small></div>
-   <label class="fld"><span>Nota (opcional)</span><textarea id="fnota" rows="2" placeholder="Ej. entregar el jueves"></textarea></label>
+   <div class="solb" id="solBox" hidden><label><input type="checkbox" id="fsol"><span><b>🙋 Pedir a la oficina mi precio especial</b> aunque lleve menos de la cantidad</span></label><small id="solTxt"></small></div>
+   <label class="fld"><span>📅 Fecha de entrega (opcional)</span><input type="date" id="fent"></label>
+    <label class="fld"><span>Nota (opcional)</span><textarea id="fnota" rows="2" placeholder="Ej. dejarlo en la bodega de atrás"></textarea></label>
   </div>
   <div class="cbox" id="firmaCaja"><h3>Firma del cliente * <small style="font-weight:500;color:#777">(autoriza el pedido)</small></h3><div class="firma" id="firmaBox"></div></div>
   <div class="cbox" id="pvend"></div>
   <button class="wa2" id="pFirma" hidden><svg class="avion" viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.18em;margin-right:.3em"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>Enviar al cliente para que firme</button>
+  <button class="aqui" id="pAqui" hidden>✍ Que el cliente firme aquí (no tiene internet)</button>
   <div class="prt" id="prtBox"><button id="pTicket">🖨 Imprimir 3"</button><button id="pCarta">🖨 Imprimir carta</button></div>
  </div>
  <div class="pf"><button class="wa" id="enviar">Enviar pedido</button></div>
@@ -389,11 +404,31 @@ if (SINP) document.documentElement.classList.add('sinp');
 // Identificador de este celular (para amarrar el enlace del cliente)
 const DEV = (() => { let d = LS.get('dsjDev', ''); if (!d || String(d).length < 10) { d = 'D' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); LS.set('dsjDev', d); } return d; })();
 if (ESP) vend = { nombre: EI.vendedor || 'Distribuidora San Jorge', telefono: LS.get('espWA', '') };
-const tLock = ESP ? (EI.tipo == 'ambas' ? null : EI.tipo || 'mayoreo') : STAFF ? null : LS.get('tlock', null);
+const tLock = ESP ? (EI.tipo == 'ambas' ? null : EI.tipo || 'mayoreo') : null;
 
 let tipo = tLock || LS.get('tipo', 'mayoreo'), precios = {}, vendedores = LS.get('vendedores', []), clientes = LS.get('clientes', []), visibles = [], idx = 0;
 let carrito = LS.get('carrito', {}); for (const c in carrito) if (!PX[c]) delete carrito[c];
-if (tLock) document.querySelector('.seg').style.display = 'none';
+// Cliente normal: sin botones Detalle/Mayoreo arriba. En cada producto ve una sola lista (Detalle, Precio 1, 2, 3, 4) y escoge
+const DOS = !tLock;   // clientes y vendedores: una sola lista de precios por producto (Detalle, Precio 1-4)
+if (tLock || DOS) document.querySelector('.seg').style.display = 'none';
+let MOD = DOS ? (LS.get('cmodo', {}) || {}) : {};   // cliente: cada producto se pide por paquete (detalle) o por fardo (mayoreo)
+const tipoDe = c => DOS ? (MOD[c] || 'mayoreo') : tipo;
+const hayT = (c, t) => !!precioUnit(precios[String(c).toUpperCase()], t, 1).precio;
+function otroH(p) {
+  if (!DOS || agot(p.c)) return ''; const o = tipo == 'mayoreo' ? 'detalle' : 'mayoreo', x = precioUnit(precios[p.c.toUpperCase()], o, 1); if (!x.precio) return '';
+  const u = uVenta(p.c, o); return `<div class="otro2">${o == 'detalle' ? 'Detalle' : 'Mayoreo'}: <b>${fmt(x.precio)}</b>${u ? ' por ' + unidadSing(u) : ''}</div>`;
+}
+
+// Marca de agua con el nombre del cliente (precio especial/autorizado): si reenvía una captura, se sabe de quién salió
+function marcaAgua(info) {
+  let m = document.getElementById('marcaAgua'); if (!info || !info.autorizado) { if (m) m.remove(); return; }
+  const t = String(info.telefono || '').replace(/\D/g, '').slice(-8), txt = [info.negocio || info.nombre, t.length == 8 ? t.slice(0, 4) + '-' + t.slice(4) : t].filter(Boolean).join(' · ');
+  const x = txt.replace(/[<>&"']/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' }[c]));
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="170"><text x="150" y="95" text-anchor="middle" transform="rotate(-24 150 85)" font-family="Arial,sans-serif" font-size="17" font-weight="700" fill="#0f3d5e" fill-opacity=".11">${x}</text></svg>`;
+  if (!m) { m = document.createElement('div'); m.id = 'marcaAgua'; m.setAttribute('aria-hidden', 'true'); m.style.cssText = 'position:fixed;inset:0;z-index:2147483000;pointer-events:none;background-repeat:repeat'; document.body.appendChild(m); }
+  m.style.backgroundImage = 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")';
+}
+if (ESP) marcaAgua(EI);
 if (ESP) { $('#modoBar').style.display = 'block'; $('#modoBar').classList.add('esp'); $('#modoBar').textContent = (EI.autorizado ? 'PRECIOS ESPECIALES' : 'SU CATÁLOGO') + (EI.negocio || EI.nombre ? ' · ' + (EI.negocio || EI.nombre) : ''); }
 if (STAFF) { $('#modoBar').style.display = 'block'; $('#modoBar').textContent = MODO.modo == 'oficina' ? 'MODO OFICINA' : 'MODO VENDEDOR · ' + MODO.vend; $('#cliBuscar').style.display = 'block'; $('#enviar').textContent = 'Guardar pedido'; }
 $('#enviar').dataset.fotos = '1';
@@ -401,10 +436,10 @@ $('#enviar').dataset.fotos = '1';
 // Si el producto tiene "grupo" (ej. PAÑALES), el nivel de precio se calcula con la suma de todo el grupo
 function grupoDe(c) { const x = precios[String(c).toUpperCase()]; return x && x.g ? x.g : ''; }
 function equivDe(c) { const x = precios[String(c).toUpperCase()]; return x && x.e ? x.e : 1; }
-function cantGrupo(c) { const g = grupoDe(c); if (!g) return carrito[c] || 0; let s = 0; for (const k in carrito) if (grupoDe(k) == g) s += carrito[k] * equivDe(k); return Math.round(s * 100) / 100; }
+function cantGrupo(c) { const g = grupoDe(c); if (!g || (DOS && tipoDe(c) == 'detalle')) return carrito[c] || 0; let s = 0; for (const k in carrito) if (grupoDe(k) == g && !(DOS && tipoDe(k) == 'detalle')) s += carrito[k] * equivDe(k); return Math.round(s * 100) / 100; }
 function unidadDe(c) { const x = precios[String(c).toUpperCase()]; return x && x.u ? x.u : 'fardos'; }
 const nFardos = (n, c) => fardoTxt(n, unidadDe(c));
-const pr = (p, q) => precioUnit(precios[p.c.toUpperCase()], tipo, q || cantGrupo(p.c) || 1);
+const pr = (p, q) => precioUnit(precios[p.c.toUpperCase()], tipoDe(p.c), q || cantGrupo(p.c) || 1);
 const agot = c => !!(precios[String(c).toUpperCase()] || {}).a;
 function tagH(p) {
   if (agot(p.c)) return '<div class="tag ag">AGOTADO</div>';
@@ -432,7 +467,7 @@ async function cargar(manual) {
   try {
     let rows, vs = null;
     if (API) { const j = await apiGet(ESP ? { a: 'datos', c: ESP, tel: LS.get('espTel', '') || '', dev: DEV, t: Date.now() } : { a: 'datos', t: Date.now() }); rows = j.precios; vs = ESP ? null : j.vendedores;
-      if (ESP && j.especial) { const ant = JSON.stringify([EI.tipo, EI.autorizado, EI.sinprecio || 0]); LS.set('espInfo', j.especial); LS.set('espWA', j.whatsapp || ''); vend = { nombre: j.especial.vendedor || 'Distribuidora San Jorge', telefono: j.whatsapp || '' }; $('#modoBar').textContent = (j.especial.autorizado || j.especial.tipo === undefined ? 'PRECIOS ESPECIALES · ' : 'SU CATÁLOGO · ') + (j.especial.negocio || j.especial.nombre);
+      if (ESP && j.especial) { const ant = JSON.stringify([EI.tipo, EI.autorizado, EI.sinprecio || 0]); LS.set('espInfo', j.especial); marcaAgua(j.especial); LS.set('espWA', j.whatsapp || ''); vend = { nombre: j.especial.vendedor || 'Distribuidora San Jorge', telefono: j.whatsapp || '' }; $('#modoBar').textContent = (j.especial.autorizado || j.especial.tipo === undefined ? 'PRECIOS ESPECIALES · ' : 'SU CATÁLOGO · ') + (j.especial.negocio || j.especial.nombre);
         if (j.especial.tipo !== undefined && JSON.stringify([j.especial.tipo, j.especial.autorizado, j.especial.sinprecio || 0]) !== ant) { LS.set(PKEY, null); location.reload(); return; } } }
     else { const r = await fetch('precios.csv?t=' + Date.now(), { cache: 'no-store' }); rows = csvAObjs(await r.text()); }
     precios = mapaPrecios(rows); window._PRECIOS = precios; if (typeof LISTA_ACT !== 'undefined' && LISTA_ACT) { PRE_GEN = precios; precios = LISTA_ACT.p; window._PRECIOS = precios; } if (vs) { vendedores = vs; LS.set('vendedores', vs); }
@@ -477,7 +512,7 @@ function pintar() {
   for (const s of secs) {
     const it = visibles.filter(p => p.s == s); if (!it.length) continue;
     h += `<h2 id="s-${secs.indexOf(s)}">${s}</h2><div class="marca">${it[0].m}</div><div class="grid">`;
-    for (const p of it) h += `<div class="card${carrito[p.c] ? ' sel' : ''}${agot(p.c) ? ' ago' : ''}" data-c="${p.c}" data-i="${visibles.indexOf(p)}"><div class="im"><img loading="lazy" src="${p.i}_s.jpg" alt="">${tagH(p)}</div><div class="b">${precioH(p)}<div class="n">${p.n}</div><div class="d">${p.d}</div>${tiersH(p)}</div><div class="add" data-c="${p.c}">${addH(p.c)}</div></div>`;
+    for (const p of it) h += `<div class="card${carrito[p.c] ? ' sel' : ''}${agot(p.c) ? ' ago' : ''}" data-c="${p.c}" data-i="${visibles.indexOf(p)}"><div class="im"><img loading="lazy" src="${p.i}_s.jpg" alt="">${tagH(p)}</div><div class="b">${precioH(p)}${otroH(p)}<div class="n">${p.n}</div><div class="d">${p.d}</div>${tiersH(p)}</div><div class="add" data-c="${p.c}">${addH(p.c)}</div></div>`;
     h += '</div>';
   }
   $('#lista').innerHTML = h + (visibles.length ? '' : '<div class="vacio">No se encontró ningún producto con esa búsqueda.</div>');
@@ -492,17 +527,22 @@ function abrir(i) {
   idx = (i + visibles.length) % visibles.length; const p = visibles[idx]; const x = pr(p);
   $('#mimg').src = '' + p.i + '.jpg'; $('#mn').textContent = p.n; $('#md').textContent = p.d;
   $('#mtag').innerHTML = tagH(p);
-  $('#mp').innerHTML = x.precio ? fmt(x.precio) + '<small>Precio ' + tipo + (uVenta(p.c, tipo) ? ' por ' + uVenta(p.c, tipo) : '') + (tipo == 'mayoreo' && x.nivel ? ' · ' + x.nivel : '') + '</small>' : '<span style="font-size:.5em;color:#bbb">Consulte precio con su vendedor</span>';
+  const tq = tipoDe(p.c); $('#mp').innerHTML = x.precio ? fmt(x.precio) + '<small>Precio ' + tq + (uVenta(p.c, tq) ? ' por ' + uVenta(p.c, tq) : '') + (tq == 'mayoreo' && x.nivel ? ' · ' + x.nivel : '') + '</small>' : '<span style="font-size:.5em;color:#bbb">Consulte precio con su vendedor</span>';
   const e = tipo == 'mayoreo' ? escalones(precios[p.c.toUpperCase()]) : [];
   const gg = grupoDe(p.c), uni = gg ? unidadDe(p.c) : (plural(uVenta(p.c, 'mayoreo'), 2) || 'unid.');
   $('#mesc').innerHTML = e.length > 1 ? e.map(r => { const mq = r.nivel == 'P1' ? 1 : ((marcasEscala(p.c).find(m => m.nivel == r.nivel) || {}).q || r.desde), act = r.nivel == x.nivel && (carrito[p.c] || 0) > 0, ag = agot(p.c);
     return `<tr class="${r.nivel == x.nivel ? 'act' : ''}"><td>${r.hasta ? r.desde + ' a ' + r.hasta : r.desde + ' o más'} ${uni}</td><td>${fmt(r.precio)}</td><td class="qp">${ag ? '' : act ? '<span class="qok">✓ Llevando</span>' : `<button class="qbtn" data-qe="${mq}">Pedir ${mq}</button>`}</td></tr>`; }).join('') + (gg ? `<tr><td colspan="2" style="color:#bbb;font-size:.85em;text-align:center">Se suma todo ${gg.toLowerCase()} del pedido${equivDe(p.c) != 1 ? ' · ' + Math.round(1 / equivDe(p.c)) + ' paquetes = 1 ' + unidadSing(unidadDe(p.c)) : ''}${cantGrupo(p.c) ? ' · ahora lleva ' + nFardos(cantGrupo(p.c), p.c) : ''}</td></tr>` : '') : '';
+  if (DOS && !agot(p.c)) { const fila = (t, txt, pz, q, act) => `<tr class="${act ? 'act' : ''}"><td>${txt}</td><td>${fmt(pz)}</td><td class="qp">${act ? '<span class="qok">✓ Llevando</span>' : `<button class="qbtn" data-qe="${q}" data-qt="${t}">Pedir ${q}</button>`}</td></tr>`, lleva = (carrito[p.c] || 0) > 0, tc = tipoDe(p.c);
+    const xd = precioUnit(precios[p.c.toUpperCase()], 'detalle', 1), em = escalones(precios[p.c.toUpperCase()]), um = gg ? unidadDe(p.c) : (plural(uVenta(p.c, 'mayoreo'), 2) || 'unid.'), xm = precioUnit(precios[p.c.toUpperCase()], 'mayoreo', cantGrupo(p.c) || 1);
+    let h = `<tr class="tt"><td colspan="3">Escoja su precio</td></tr>` + (xd.precio ? fila('detalle', 'Detalle · por ' + esc(unidadSing(uVenta(p.c, 'detalle')) || 'unidad'), xd.precio, 1, lleva && tc == 'detalle') : '');
+    if (em.length) h += em.map(r => fila('mayoreo', 'Precio ' + r.nivel.replace('P', '') + ' · ' + (r.hasta ? r.desde + ' a ' + r.hasta : r.desde + ' o más') + ' ' + um, r.precio, r.nivel == 'P1' ? 1 : ((marcasEscala(p.c).find(m => m.nivel == r.nivel) || {}).q || r.desde), lleva && tc == 'mayoreo' && r.nivel == xm.nivel)).join('');
+    $('#mesc').innerHTML = h; }
   $('#mc').textContent = 'Código: ' + p.c; $('#madd').dataset.c = p.c; $('#madd').innerHTML = addH(p.c);
-  $('#mfp').innerHTML = x.precio ? `<b>${fmt(x.precio)}</b><small>${uVenta(p.c, tipo) ? 'por ' + unidadSing(uVenta(p.c, tipo)) : ''}</small>` : ''; $('#mhn').textContent = (idx + 1) + ' de ' + visibles.length; if (window._ultIdx !== idx) $('#m').scrollTop = 0; window._ultIdx = idx;
+  $('#mfp').innerHTML = x.precio ? `<b>${fmt(x.precio)}</b><small>${uVenta(p.c, tq) ? 'por ' + unidadSing(uVenta(p.c, tq)) : ''}</small>` : ''; $('#mhn').textContent = (idx + 1) + ' de ' + visibles.length; if (window._ultIdx !== idx) $('#m').scrollTop = 0; window._ultIdx = idx;
   $('#m').classList.add('on'); if (location.hash != '#ver') history.pushState(null, '', '#ver');
 }
 $('#lista').addEventListener('click', e => { const c = e.target.closest('.card'); if (c) abrir(+c.dataset.i); });
-$('#mesc').addEventListener('click', e => { const b = e.target.closest('[data-qe]'); if (!b) return; const p = visibles[idx]; if (!p) return; setQ(p.c, +b.dataset.qe); if (navigator.vibrate) navigator.vibrate(15); toast('Listo: ' + b.dataset.qe + ' en su pedido'); });
+$('#mesc').addEventListener('click', e => { const b = e.target.closest('[data-qe]'); if (!b) return; const p = visibles[idx]; if (!p) return; if (DOS && b.dataset.qt) { MOD[p.c] = b.dataset.qt; LS.set('cmodo', MOD); } setQ(p.c, +b.dataset.qe); if (navigator.vibrate) navigator.vibrate(15); toast('Listo: ' + b.dataset.qe + ' en su pedido'); });
 $('#cerrar').onclick = () => { window._ultIdx = -1; history.back(); }; $('#prev').onclick = () => abrir(idx - 1); $('#next').onclick = () => abrir(idx + 1);
 window.addEventListener('popstate', () => { const abierto = $('#m').classList.contains('on') || $('#ped').classList.contains('on'); $('#m').classList.remove('on'); $('#ped').classList.remove('on'); if (!abierto && seccion !== null && location.hash != '#cat') { seccion = null; pintar(); window.scrollTo(0, 0); } });
 let sx = 0; $('#m').addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
@@ -510,7 +550,7 @@ $('#m').addEventListener('touchend', e => { if (e.touches.length) return; const 
 
 // ---------- CARRITO ----------
 function setQ(c, q) {
-  q = Math.max(0, Math.min(99999, Math.round(q))); if (q) carrito[c] = q; else delete carrito[c]; LS.set('carrito', carrito);
+  q = Math.max(0, Math.min(99999, Math.round(q))); if (q) carrito[c] = q; else { delete carrito[c]; if (DOS && MOD[c]) { delete MOD[c]; LS.set('cmodo', MOD); } } LS.set('carrito', carrito);
   document.querySelectorAll(`.add[data-c="${CSS.escape(c)}"]`).forEach(e => e.innerHTML = addH(c));
   document.querySelectorAll(`.card[data-c="${CSS.escape(c)}"]`).forEach(e => e.classList.toggle('sel', !!q));
   if ($('#m').classList.contains('on') && visibles[idx] && visibles[idx].c == c) abrir(idx);
@@ -520,7 +560,7 @@ function setQ(c, q) {
 document.addEventListener('click', e => {
   const b = e.target.closest('.add [data-a]'); if (!b) return; e.stopPropagation();
   const c = b.closest('.add').dataset.c, a = b.dataset.a;
-  if (a == 'pick') { if (!STAFF) { const i = visibles.findIndex(p => p.c == c); if (i >= 0) return abrir(i); } setQ(c, 1); if (navigator.vibrate) navigator.vibrate(15); return; }   // el cliente ve el detalle y escoge su precio
+  if (a == 'pick') { if (!STAFF && !$('#m').classList.contains('on')) { const i = visibles.findIndex(p => p.c == c); if (i >= 0) return abrir(i); } setQ(c, 1); if (navigator.vibrate) navigator.vibrate(15); return; }   // el cliente ve el detalle y escoge su precio
   if (a == 'q') { listaCantidad(b, c); return; }
   setQ(c, (carrito[c] || 0) + (a == '+' ? 1 : -1)); if (a == '+' && navigator.vibrate) navigator.vibrate(15);
 }, true);
@@ -528,7 +568,7 @@ document.addEventListener('click', e => {
 function listaCantidad(ancla, c) {
   document.querySelectorAll('.qdd,.qdd-f').forEach(x => x.remove());
   const cur = carrito[c] || 0, M = {}; marcasEscala(c).forEach(m => { M[m.q] = m; });
-  const u = plural(uVenta(c, tipo), 2) || '';
+  const u = plural(uVenta(c, tipoDe(c)), 2) || '';
   const fondo = document.createElement('div'); fondo.className = 'qdd-f';
   const box = document.createElement('div'); box.className = 'qdd'; box.setAttribute('role', 'listbox');
   const cerrar = () => { fondo.remove(); box.remove(); };
@@ -571,16 +611,16 @@ function marcasEscala(c) {
   return out;
 }
 function armarPedido() {
-  const items = Object.keys(carrito).map(c => { const p = PX[c], q = carrito[c], x = pr(p, cantGrupo(c)); const au = (precios[c.toUpperCase()] || {}).au, ps = au && cantGrupo(c) < au[0] && au[1] ? au[1] : 0; return { c, n: p.n, q, u: uVenta(c, tipo), nivel: x.nivel, precio: x.precio || 0, sub: x.precio ? Math.round(x.precio * q * 100) / 100 : 0, ps, pd: ps ? au[0] : 0 }; });
+  const items = Object.keys(carrito).map(c => { const p = PX[c], q = carrito[c], x = pr(p, cantGrupo(c)); const au = (precios[c.toUpperCase()] || {}).au, ps = au && cantGrupo(c) < au[0] && au[1] ? au[1] : 0; return { c, n: p.n, q, u: uVenta(c, tipoDe(c)), nivel: DOS && tipoDe(c) == 'detalle' ? 'Detalle' : x.nivel, precio: x.precio || 0, sub: x.precio ? Math.round(x.precio * q * 100) / 100 : 0, ps, pd: ps ? au[0] : 0 }; });
   const sol = items.filter(i => i.ps), total_sol = Math.round(items.reduce((s, i) => s + (i.ps ? i.ps * i.q : i.sub), 0) * 100) / 100;
   return { sol, total_sol, items, total: Math.round(items.reduce((s, i) => s + i.sub, 0) * 100) / 100, sin: items.filter(i => !i.precio).length, unid: items.reduce((s, i) => s + i.q, 0) };
 }
-function barra() { const s = armarPedido(); { const n = s.items.length, c = $('#cesta'), b = $('#cesN'); const ant = b.textContent; b.textContent = n; b.hidden = !n; $('#cesTot').textContent = SINP ? n + (n == 1 ? ' producto' : ' productos') : fmt(s.total); c.classList.toggle('lleno', n > 0); if (n && ant != String(n)) { c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); } } $('#cbar').classList.toggle('on', s.items.length > 0); $('#cbn').textContent = s.items.length + (s.items.length == 1 ? ' producto' : ' productos') + ' · ' + s.unid + ' unid.'; const fz = fardosDe(s.items); $('#cbt').textContent = 'Total aprox. ' + fmt(s.total) + (s.sin ? ' (+' + s.sin + ' sin precio)' : '') + (fz.length ? ' · ' + fz.map(x => fardoTxt(x.n, x.u) + ' ' + grupoNom(x.g)).join(' · ') : ''); }
+function barra() { const s = armarPedido(); { const m = $('#mcesta'), n = s.items.length; m.hidden = !n; if (n) m.innerHTML = `<span>🧺 Su pedido: <b>${n} ${n == 1 ? 'producto' : 'productos'}</b>${SINP ? '' : ' · <b>' + fmt(s.total) + '</b>'}</span><span class="vp">Ver pedido ›</span>`; } { const n = s.items.length, c = $('#cesta'), b = $('#cesN'); const ant = b.textContent; b.textContent = n; b.hidden = !n; $('#cesTot').textContent = SINP ? n + (n == 1 ? ' producto' : ' productos') : fmt(s.total); c.classList.toggle('lleno', n > 0); if (n && ant != String(n)) { c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); } } $('#cbar').classList.toggle('on', s.items.length > 0); $('#cbn').textContent = s.items.length + (s.items.length == 1 ? ' producto' : ' productos') + ' · ' + s.unid + ' unid.'; const fz = fardosDe(s.items); $('#cbt').textContent = 'Total aprox. ' + fmt(s.total) + (s.sin ? ' (+' + s.sin + ' sin precio)' : '') + (fz.length ? ' · ' + fz.map(x => fardoTxt(x.n, x.u) + ' ' + grupoNom(x.g)).join(' · ') : ''); }
 function lineas() {
   const s = armarPedido();
   $('#plist').innerHTML = s.items.map(i => { const p = PX[i.c]; const gg = grupoDe(i.c); return `<div class="li"><img src="${p.i}_s.jpg" alt=""><div class="lt"><b>${p.n}</b><small>${i.u ? '<b style="color:#0f3d5e">' + esc(i.q) + ' ' + esc(plural(i.u, i.q)) + '</b><br>' : ''}${i.precio ? fmt(i.precio) + (i.u ? ' por ' + esc(i.u) : ' c/u') + (tipo == 'mayoreo' ? ' <span class="nivel">' + esc(i.nivel) + '</span>' : '') + (gg ? ' <span class="grp">' + nFardos(cantGrupo(i.c), i.c) + ' de ' + gg.toLowerCase() + ' juntos</span>' : '') + '<br>' + fmt(i.sub) : (SINP ? 'Precio con su vendedor' : 'Consulte precio')}</small></div><div class="add" data-c="${i.c}">${addH(i.c)}</div></div>`; }).join('') || '<div class="vacio">Su pedido está vacío.</div>';
   $('#ptot').textContent = fmt(s.total);
-  $('#solBox').hidden = !s.sol.length; if (!s.sol.length) $('#fsol').checked = false; $('#solTxt').innerHTML = s.sol.map(i => `${esc(i.n)}: lleva ${i.q}, el autorizado es desde ${i.pd} → ${fmt(i.ps)}`).join('<br>') + (s.sol.length ? `<br>Si la oficina aprueba, el total queda en <b>${fmt(s.total_sol)}</b> (ahora ${fmt(s.total)}). Si no, va al precio normal.` : '');
+  $('#solBox').hidden = !s.sol.length || !STAFF;   // el cliente no pide nada: la oficina decide sola if (!s.sol.length) $('#fsol').checked = false; $('#solTxt').innerHTML = s.sol.map(i => `${esc(i.n)}: lleva ${i.q}, su precio especial es desde ${i.pd} → ${fmt(i.ps)}`).join('<br>') + (s.sol.length ? `<br>Si la oficina aprueba, el total queda en <b>${fmt(s.total_sol)}</b> (ahora ${fmt(s.total)}). Si no, va al precio normal.` : '');
   const fz = fardosDe(s.items); $('#pfz').innerHTML = fz.map(x => `<div class="fzl"><span>Total de ${esc(x.u)} ${esc(grupoNom(x.g))}</span><b>${fardoTxt(x.n, x.u)}</b></div>`).join('');
 }
 // El catálogo del cliente solo abre con SU celular (así no se puede pasar a otro cliente)
@@ -610,7 +650,7 @@ function pedirCelular(malo, sal) {
 function vendBox() {
   if (ESP) return `<h3>Su pedido llega a</h3><div><b>${esc((LS.get('espInfo', {}) || {}).vendedor || 'Distribuidora San Jorge')}</b></div>`;
   if (MODO.modo == 'vendedor') return `<h3>Vendedor</h3><div>${esc(MODO.vend)}</div>`;
-  if (vend && MODO.modo != 'oficina') return `<h3>Se enviará a</h3><div><b>${esc(vend.nombre)}</b></div><button class="lnk" id="cambv">Cambiar vendedor</button>`;
+  if (vend && MODO.modo != 'oficina') return `<h3>Su pedido llega a</h3><div><b>${esc(vend.nombre)}</b></div>`;   // el cliente no puede cambiar de vendedor
   const ops = vendedores.map((v, i) => `<option value="${i}" ${vend && v.nombre == vend.nombre ? 'selected' : ''}>${esc(v.nombre)}</option>`).join('');
   return `<h3>Vendedor</h3>${vendedores.length ? `<select id="vsel" style="width:100%;border:1px solid #ccc;border-radius:10px;padding:12px;font:inherit"><option value="">— Escoja el vendedor —</option>${ops}</select>` : '<input id="vtel" type="tel" inputmode="numeric" placeholder="WhatsApp del vendedor" style="width:100%;border:1px solid #ccc;border-radius:10px;padding:12px;font:inherit">'}`;
 }
@@ -630,6 +670,7 @@ if (STAFF) $('#firmaCaja').hidden = true;
 $('#cbar').onclick = abrirPed; // La canastita queda flotando arriba a la derecha al bajar
 (() => { const c = $('#cesta'), ph = document.createElement('span'); ph.className = 'cesta-ph'; c.after(ph); const top = c.closest('header') || c.parentElement;
   if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => c.classList.toggle('flota', !e.isIntersecting), { threshold: 0 }).observe(top); })();
+$('#mcesta').onclick = () => { history.back(); setTimeout(() => $('#cesta').click(), 150); };
 $('#cesta').onclick = () => { if (!armarPedido().items.length) return toast('Todavía no ha agregado productos'); abrirPed(); }; $('#pback').onclick = () => history.back();
 $('#pvaciar').onclick = () => confirmar('¿Vaciar todo el pedido?', () => { carrito = {}; LS.set('carrito', carrito); pintar(); lineas(); });
 
@@ -654,7 +695,7 @@ function avisoCliente(c) {
 async function aplicarLista(c) {
   const antes = FILTRO; FILTRO = c && c.productos ? new Set(String(c.productos).split(',').map(s => s.trim()).filter(Boolean)) : null;
   if (FILTRO) { const fuera = Object.keys(carrito).filter(k => !FILTRO.has(k)); if (fuera.length) { fuera.forEach(k => delete carrito[k]); LS.set('carrito', carrito); toast(fuera.length + ' producto(s) que este cliente no compra se quitaron del pedido'); } }
-  const volver = () => { if (LISTA_ACT) { precios = PRE_GEN || precios; window._PRECIOS = precios; LISTA_ACT = null; if (TIPO_ANT) tipo = TIPO_ANT; document.querySelector('.seg').style.display = tLock ? 'none' : ''; } };
+  const volver = () => { if (LISTA_ACT) { precios = PRE_GEN || precios; window._PRECIOS = precios; LISTA_ACT = null; if (TIPO_ANT) tipo = TIPO_ANT; document.querySelector('.seg').style.display = 'none'; } };
   if (!c) { volver(); seccion = null; pintar(); lineas(); $('#listaAviso').hidden = true; return; }
   let j = { cambia: false };
   if (API && STAFF) { try { j = await apiGet({ a: 'precios_cliente', k: MODO.k, vend: MODO.modo == 'vendedor' ? MODO.vend : '', nombre: c.nombre, negocio: c.negocio }); } catch (e) { toast('No se pudieron cargar los precios del cliente: ' + e.message); } }
@@ -697,9 +738,9 @@ $('#csug').addEventListener('click', e => {
 function datosPedido() {
   const s = armarPedido();
   if (!vend) { const sel = $('#vsel'), tel = $('#vtel'); if (sel && sel.value !== '') vend = vendedores[+sel.value]; else if (tel && tel.value.replace(/\D/g, '').length >= 8) vend = { telefono: tel.value, nombre: 'Vendedor ' + tel.value }; }
-  const _s = armarPedido(); return Object.assign({ fardos: fardosDe(_s.items), a: 'pedido', id: 'P' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), vendedor: vend ? vend.nombre : '', cliente: $('#fcli').value.trim(), negocio: $('#fneg').value.trim(), telefono: $('#ftel').dataset.c4 ? String((LS.get('espInfo', {}) || {}).telefono || '') : $('#ftel').value.trim(), nota: $('#fnota').value.trim(), firma: FIRMA.imagen(), tipo: (ESP && (LS.get('espInfo', {}) || {}).autorizado !== 0) || LISTA_ACT ? 'especial' : tipo, lista: LISTA_ACT ? LISTA_ACT.nombre : undefined, origen: ESP ? 'especial' : MODO.modo, c: ESP || undefined, dev: ESP ? DEV : undefined, sinp: SINP ? 1 : undefined }, s, $('#fsol').checked && _s.sol.length ? { solicitud: 1, total_sol: _s.total_sol } : { solicitud: 0, total_sol: 0 });
+  const _s = armarPedido(); return Object.assign({ fardos: fardosDe(_s.items), a: 'pedido', id: 'P' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), vendedor: vend ? vend.nombre : '', cliente: $('#fcli').value.trim(), negocio: $('#fneg').value.trim(), telefono: $('#ftel').dataset.c4 ? String((LS.get('espInfo', {}) || {}).telefono || '') : $('#ftel').value.trim(), nota: [$('#fent').value ? 'Entregar: ' + new Date($('#fent').value + 'T12:00').toLocaleDateString('es-HN', { weekday: 'long', day: 'numeric', month: 'long' }) : '', $('#fnota').value.trim()].filter(Boolean).join(' · '), firma: FIRMA.imagen(), tipo: (ESP && (LS.get('espInfo', {}) || {}).autorizado !== 0) || LISTA_ACT ? 'especial' : DOS ? (() => { const ts = [...new Set(Object.keys(carrito).map(tipoDe))]; return ts.length == 1 ? ts[0] : 'detalle y mayoreo'; })() : tipo, lista: LISTA_ACT ? LISTA_ACT.nombre : undefined, origen: ESP ? 'especial' : MODO.modo, c: ESP || undefined, dev: ESP ? DEV : undefined, sinp: SINP ? 1 : undefined }, s, ($('#fsol').checked || !STAFF) && _s.sol.length ? { solicitud: 1, total_sol: _s.total_sol } : { solicitud: 0, total_sol: 0 });
 }
-if (STAFF && API) $('#pFirma').hidden = false;
+if (STAFF && API) { $('#pFirma').hidden = false; $('#pAqui').hidden = false; }
 if (!STAFF) $('#prtBox').hidden = true;
 $('#pFirma').onclick = async () => {
   const d = datosPedido();
@@ -713,12 +754,34 @@ $('#pFirma').onclick = async () => {
   b.disabled = false; b.innerHTML = '<svg class="avion" viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.18em;margin-right:.3em"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>Enviar al cliente para que firme';
   const link = new URL('firmar.html#' + j.token, location.href).toString();
   const msg = `Hola ${d.cliente}, le saluda ${MODO.vend || 'Distribuidora San Jorge'}. Le preparé su *pedido #${j.numero}* por ${fmt(d.total)}.\n\nRevíselo y fírmelo para autorizarlo aquí:\n${link}`;
-  carrito = {}; LS.set('carrito', carrito); $('#fnota').value = ''; $('#fsol').checked = false; FIRMA.limpiar(); $('#fcli').value = ''; $('#fneg').value = ''; $('#ftel').value = ''; cargarClientes(); aplicarLista(null); CLI_ACT = null; barraCliente(); pintar(); history.back();
+  carrito = {}; LS.set('carrito', carrito); $('#fnota').value = ''; $('#fent').value = ''; $('#fsol').checked = false; FIRMA.limpiar(); $('#fcli').value = ''; $('#fneg').value = ''; $('#ftel').value = ''; cargarClientes(); aplicarLista(null); CLI_ACT = null; barraCliente(); pintar(); history.back();
   setTimeout(() => {
     const { o } = abrirOv('Pedido #' + j.numero + ' listo para firmar', `<p class="ok">${esc(d.cliente)}</p><p style="margin:0 0 10px;color:#555">Envíele el enlace por WhatsApp. Cuando lo firme, en la oficina va a salir <b>✅ Firmado por el cliente</b>.</p><div style="word-break:break-all;background:#f1f4f7;border-radius:10px;padding:10px;font-size:.85em">${esc(link)}</div>`,
       `<a class="btn wa full" href="https://wa.me/${tel}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">💬 Enviar por WhatsApp a ${esc(d.cliente)}</a>${window.DEMO ? `<a class="btn no full" href="${esc(link)}">Abrir como el cliente (prueba)</a>` : ''}`);
   }, 150);
 };
+// El cliente no tiene internet: firma en el celular del vendedor. En la oficina sale "firmado en el celular del vendedor".
+$('#pAqui').onclick = () => {
+  const d = datosPedido();
+  if (!d.items.length) return toast('Agregue productos primero');
+  if (!d.cliente) { $('#fcli').focus(); return toast('Escoja o escriba el cliente'); }
+  if (MODO.modo == 'oficina' && !vend) return toast('Escoja el vendedor de este cliente');
+  const { o, cerrar } = abrirOv('Pase el celular al cliente', `<div class="msg" style="line-height:1.45"><b style="font-size:1.1em">${esc(d.negocio || d.cliente)}</b><br>Pedido de <b>${d.items.length} productos</b> por <b style="font-size:1.15em">${fmt(d.total)}</b><br><small style="color:#666">${d.items.slice(0, 6).map(i => esc(i.q + ' ' + i.n)).join(' · ')}${d.items.length > 6 ? ' · …' : ''}</small></div>
+    <div style="font-weight:800;margin:12px 0 6px;color:#0f3d5e">✍ Firma del cliente: autorizo este pedido</div><div class="firma" id="fAqui"></div>`,
+    `<button class="btn no" id="aqX">Cancelar</button><button class="btn" id="aqG">✅ Autorizo</button>`);
+  const pad = firmaPad(o.querySelector('#fAqui')); setTimeout(pad.medir, 60);
+  o.querySelector('#aqX').onclick = cerrar;
+  o.querySelector('#aqG').onclick = async () => {
+    if (pad.vacia()) return toast('El cliente tiene que firmar con el dedo');
+    d.firma = pad.imagen(); d.firma_modo = 'presencial'; d.tel_firma = d.telefono || '';
+    const b = o.querySelector('#aqG'); b.disabled = true; b.textContent = 'Guardando…';
+    try { const j = await apiPost(d); cerrar();
+      carrito = {}; LS.set('carrito', carrito); $('#fnota').value = ''; $('#fent').value = ''; $('#fsol').checked = false; FIRMA.limpiar(); $('#fcli').value = ''; $('#fneg').value = ''; $('#ftel').value = ''; cargarClientes(); aplicarLista(null); CLI_ACT = null; barraCliente(); pintar(); history.back();
+      setTimeout(() => toast('Pedido #' + j.numero + ' guardado y firmado ✓'), 200);
+    } catch (e) { b.disabled = false; b.textContent = '✅ Autorizo'; toast('No se guardó: ' + e.message); }
+  };
+};
+{ const h = new Date(); $('#fent').min = h.getFullYear() + '-' + String(h.getMonth() + 1).padStart(2, '0') + '-' + String(h.getDate()).padStart(2, '0'); }
 $('#pTicket').onclick = () => { const d = datosPedido(); if (!d.items.length) return toast('Agregue productos primero'); imprimir(pedidoHTML(d, 'ticket'), 'ticket'); };
 $('#pCarta').onclick = () => { const d = datosPedido(); if (!d.items.length) return toast('Agregue productos primero'); imprimir(pedidoHTML(d, 'carta'), 'carta'); };
 
@@ -759,7 +822,7 @@ $('#enviar').onclick = async () => {
   catch (e) { if (/otro celular|solo para el celular|inválido|no válido/i.test(e.message || '')) { if (/otro celular/i.test(e.message)) enlaceOcupado(); else toast(e.message); return; } const p = pendientes(); p.push(d); LS.set('pend', p); verPend(); toast('Sin internet: el pedido queda guardado y se sube después'); }
   btn.disabled = false; btn.textContent = STAFF ? 'Guardar pedido' : 'Enviar pedido';
   const ultimo = d;
-  carrito = {}; LS.set('carrito', carrito); $('#fnota').value = ''; $('#fsol').checked = false; FIRMA.limpiar();
+  carrito = {}; LS.set('carrito', carrito); $('#fnota').value = ''; $('#fent').value = ''; $('#fsol').checked = false; FIRMA.limpiar();
   if (STAFF) { $('#fcli').value = ''; $('#fneg').value = ''; $('#ftel').value = ''; cargarClientes(); aplicarLista(null); CLI_ACT = null; barraCliente(); }
   pintar(); history.back();
   setTimeout(() => despuesDeEnviar(ultimo), 120);
@@ -802,7 +865,7 @@ async function fotoConPrecio(p) {
   x.fillStyle = '#ffd35c'; x.font = '700 34px system-ui,Arial'; x.fillText(e.length ? e.map(z => z.desde + '+ ' + fmt(z.precio)).join('   ') : 'Distribuidora San Jorge', 40, W + 250);
   return new Promise(res => cv.toBlob(res, 'image/jpeg', .9));
 }
-if (!STAFF) $('#share').style.display = 'none';   // al cliente no le sale "Enviar foto con precio"
+$('#share').style.display = 'none';   // ya no se manda foto de un solo producto   // al cliente no le sale "Enviar foto con precio"
 $('#share').onclick = async () => { const p = visibles[idx]; try { const b = await fotoConPrecio(p); const f = new File([b], p.i + '.jpg', { type: 'image/jpeg' });
   await compartirImagen(b, p.i + '.jpg', p.n); } catch (e) { if (e.name != 'AbortError') toast('No se pudo crear la foto'); } };
 

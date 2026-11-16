@@ -86,8 +86,32 @@ header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f
 .sw.on{border-color:#1f78b4;background:#eef6fd;color:#0f3d5e}.sw.on b{color:#1f78b4}.sw.on .sk{background:#1f78b4}.sw.on .sk::after{left:16px}
 .cli .meta{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .borrar{border:0;background:none;color:#b3261e;font-weight:700;font-size:.85em;padding:6px 0;cursor:pointer}
-.ck{display:flex!important;align-items:center;gap:8px;font-weight:700;margin:6px 0}.ck input{width:20px;height:20px;margin:0}
+.ck{display:flex!important;flex-direction:row!important;align-items:center;justify-content:flex-start;gap:10px;font-weight:700;margin:8px 0;text-align:left}.ck input{width:22px!important;height:22px;margin:0!important;flex:none;padding:0!important}
 .otro{display:flex;align-items:center;gap:8px;margin-top:8px;background:#f1f6fb;border:1px solid #d5e3f0;border-radius:12px;padding:6px 6px 6px 12px;font-size:.88em}.otro span{flex:1;min-width:0}.otro span b{display:inline!important}.otro .b{width:auto;margin:0;padding:8px 12px;font-size:.9em}
+.lq{display:flex;flex-wrap:wrap;gap:6px}.lqb,.lqf{flex:1 1 auto;border:1px solid #c6d1dc;background:#fff;border-radius:11px;padding:11px 10px;font-weight:800;font-size:.9em;color:#0f3d5e;cursor:pointer}
+.lqd{flex:1 1 auto;border:1px solid #c6d1dc;background:#fff;border-radius:11px;padding:11px 10px;font-weight:800;font-size:.9em;color:#0f3d5e;cursor:pointer}
+.venc{color:#b3261e;font-weight:800}
+.fija{background:#fff7e8;border:1px solid #f0d9a8;border-radius:12px;padding:10px 12px;margin-bottom:10px;line-height:1.45}.fija small{color:#7a6a4a}
+.cq input[readonly]{background:#f1f3f5;color:#555;border-color:#e1e5ea}.hoyp{color:#b26a00;font-weight:800}
+.lqb.on,.lqf.on,.lqd.on{background:#0f3d5e;color:#fff;border-color:#0f3d5e}
+.b.liq{background:#0f3d5e}
+.est{display:inline-flex;align-items:center;gap:5px;font-size:.78em;font-weight:800;border-radius:999px;padding:1px 8px 1px 6px}.est.ab{background:#e6f7ec;color:#1a7f43}
+.luz{width:9px;height:9px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px #22c55e;animation:luz 1.1s ease-in-out infinite}
+@keyframes luz{0%,100%{opacity:1}50%{opacity:.15;box-shadow:none}}
+.ptel{color:#1d5fa8;font-weight:800;text-decoration:none;font-size:1.05em}
+.firmaP{margin-top:10px;border:1px dashed #b9c6d3;border-radius:12px;padding:10px;background:#fafcff}.firmaP .fl{font-weight:800;color:#1f7a4d;font-size:.9em;margin-bottom:4px}.firmaP .fl.no{color:#8a94a0;margin:0}
+.firmaP .pres{color:#9a5b00;font-weight:700}
+.firmaP img{display:block;max-width:260px;width:100%;background:#fff;border-bottom:1px solid #999}.firmaP small{color:#6b7684}
+.firmaP .b.fa{margin-top:8px;width:100%;background:#fff;color:#0f3d5e;border:2px solid #0f3d5e;font-weight:800}
+.ov .firma{height:170px;border:2px dashed #b9c6d3;border-radius:12px;position:relative}
+.qacc{display:flex;gap:8px;padding:0 12px 12px;flex-wrap:wrap}.qacc button{flex:1 1 auto;border-radius:12px;padding:11px 12px;font-weight:800;font-size:.92em;cursor:pointer}
+.qacc .vped{background:#fff;border:1px solid #c6d1dc;color:#0f3d5e}.qacc .lqk{background:#0f3d5e;border:0;color:#fff}.qacc .cerr{flex:1;text-align:center;align-self:center;color:#1f7a4d;font-weight:800}
+.ftog{display:flex;width:100%;justify-content:space-between;align-items:center;gap:8px;background:none;border:0;padding:2px 0;font:inherit;font-weight:700;color:#0f3d5e;cursor:pointer;text-align:left}
+.ftog b{flex:none;background:#eef4fa;border-radius:999px;padding:6px 12px;font-size:.88em}
+#fbody{margin-top:10px}
+#app.solo #filtros,#app.solo .tabs,#app.solo #res,#app.solo .bar,#app.solo .mt,#app.solo .ped:not(.open){display:none!important}
+.b.volv{width:100%;margin:0 0 10px;background:#0f3d5e}
+#app.solo .ped.open .vped{display:none}
 </style>
 </head>
 <body>
@@ -101,20 +125,22 @@ header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f
   <p id="lmsg" style="color:var(--tx);font-size:.85em"></p>
  </div>
  <div id="app" style="display:none">
-  <div class="card">
+  <div class="card" id="filtros"><button class="ftog" id="ftog"><span>🔎 <span id="fres">Pedidos de hoy</span></span><b id="fflecha">Filtros ▾</b></button><div id="fbody" hidden>
    <div class="g">
     <label><span>Desde</span><input type="date" id="fd"></label>
     <label><span>Hasta</span><input type="date" id="fh"></label>
     <label id="fvw"><span>Vendedor</span><select id="fv"><option value="">Todos los vendedores</option></select></label>
     <label><span>Hecho por</span><select id="fo"><option value="">Todos</option><option value="cli">📱 Solo hechos por el cliente</option><option value="ven">🚚 Solo hechos por vendedor/oficina</option></select></label>
+    <label><span>Cobro</span><select id="fe"><option value="">Todos</option><option value="pend">🔓 Abiertos (sin liquidar)</option><option value="dejado">📦 Por cobrar: al crédito (todos)</option><option value="pagado">🔒 Cerrados (pagados)</option><option value="no_recibio">↩ No los recibieron</option></select></label>
    </div>
    <div class="g" style="margin-top:6px"><button class="b l" id="hoy">Hoy</button><button class="b l" id="man">Mañana</button><button class="b" id="buscar">🔄 Cargar pedidos</button></div>
-  </div>
+  </div></div>
   <div class="tabs"><button data-t="p" class="on">📋 Pedidos</button><button data-t="r">🚚 Recarga</button><button data-t="c" id="tabC">👥 Clientes</button></div>
   <div class="res" id="res"></div>
   <div id="tp">
    <div class="bar"><button class="b" id="pT">🖨 Imprimir marcados 3"</button><button class="b" id="pC">🖨 Imprimir marcados carta</button></div>
-   <label style="display:flex;gap:8px;align-items:center;margin:0 2px 10px"><input type="checkbox" class="chk" id="todos" checked><span style="margin:0">Marcar todos</span></label>
+   <button class="b volv" id="volver" hidden>‹ Volver a la lista</button>
+   <label class="mt" style="display:flex;gap:8px;align-items:center;margin:0 2px 10px"><input type="checkbox" class="chk" id="todos" checked><span style="margin:0">Marcar todos</span></label>
    <div id="lista"></div>
   </div>
   <div id="tc" style="display:none">
@@ -168,31 +194,93 @@ async function buscar() {
   $('#lista').innerHTML = '<div class="vacio">Cargando…</div>';
   try {
     if (demo) pedidos = ejemplo();
-    else pedidos = (await apiGet({ a: 'pedidos', k: ses.k, vend: ses.vend, desde: $('#fd').value, hasta: $('#fh').value, vendedor: $('#fv').value })).pedidos;
+    else pedidos = (await apiGet({ a: 'pedidos', k: ses.k, vend: ses.vend, desde: $('#fe').value == 'dejado' ? new Date(Date.now() - 90 * 864e5).toISOString().slice(0, 10) : $('#fd').value, hasta: $('#fe').value == 'dejado' ? new Date().toISOString().slice(0, 10) : $('#fh').value, vendedor: $('#fv').value })).pedidos;
     const fo = $('#fo').value; if (fo) pedidos = pedidos.filter(p => fo == 'cli' ? hechoCliente(p) : !hechoCliente(p));
-    marcados = new Set(pedidos.map(p => p.numero)); $('#todos').checked = true; pintar();
+    const fe = $('#fe').value; if (fe) pedidos = pedidos.filter(p => fe == 'pend' ? !p.entrega : p.entrega == fe);
+    marcados = new Set(pedidos.map(p => p.numero)); $('#todos').checked = true; $('#app').classList.remove('solo'); $('#volver').hidden = true; $('#fres').textContent = fTxt(); pintar();
   } catch (e) { $('#lista').innerHTML = `<div class="vacio">No se pudo cargar: ${esc(e.message)}</div>`; if (/clave/i.test(e.message)) { LS.set('ses', null); setTimeout(() => location.reload(), 1500); } }
 }
-$('#buscar').onclick = buscar; $('#fv').onchange = buscar; $('#fo').onchange = buscar;
+const fTxt = () => { const fd = $('#fd').value, fh = $('#fh').value, h = new Date(), hoy = h.getFullYear() + '-' + String(h.getMonth() + 1).padStart(2, '0') + '-' + String(h.getDate()).padStart(2, '0'), d = s => s.split('-').reverse().slice(0, 2).join('/');
+  const fe = $('#fe').selectedOptions[0], fv = $('#fv').value;
+  return (($('#fe').value == 'dejado') ? 'Por cobrar (todos)' : (fd == fh ? (fd == hoy ? 'Hoy' : d(fd)) : d(fd) + ' al ' + d(fh)) + ($('#fe').value ? ' · ' + fe.textContent.replace(/^\S+\s/, '').replace(/\s*\(.*\)/, '') : '')) + (fv ? ' · ' + fv : '') + ($('#fo').value ? ' · ' + ($('#fo').value == 'cli' ? 'del cliente' : 'del vendedor') : ''); };
+$('#ftog').onclick = () => { const b = $('#fbody'); b.hidden = !b.hidden; $('#fflecha').textContent = b.hidden ? 'Filtros ▾' : 'Cerrar ▴'; };
+$('#buscar').addEventListener('click', () => { $('#fbody').hidden = true; $('#fflecha').textContent = 'Filtros ▾'; });
+// Ver un solo pedido: se esconden los demás y los filtros
+function verUno(card, abrir) {
+  document.querySelectorAll('.ped.open').forEach(c => { if (c != card) c.classList.remove('open'); });
+  card.classList.toggle('open', abrir); $('#app').classList.toggle('solo', abrir); $('#volver').hidden = !abrir;
+  card.querySelectorAll('[data-tg]').forEach(b => b.textContent = abrir ? '▴ Volver a la lista' : '▾ Ver pedido');
+  window.scrollTo(0, 0);
+}
+$('#volver').onclick = () => { const c = document.querySelector('.ped.open'); if (c) verUno(c, false); else { $('#app').classList.remove('solo'); $('#volver').hidden = true; } };
+$('#buscar').onclick = buscar; $('#fv').onchange = buscar; $('#fo').onchange = buscar; $('#fe').onchange = buscar;
 const hechoCliente = p => p.origen == 'cliente' || p.origen == 'especial';
 const quienHizo = p => p.origen ? (hechoCliente(p) ? '<b style="color:#1d5fa8">📱 Hecho por el cliente</b>' : '🚚 Hecho por ' + (p.origen == 'oficina' ? 'la oficina' : 'el vendedor')) : '';
+// Teléfono del cliente: el del pedido, o el que tiene guardado en Clientes
+const telDe = p => String(p.telefono || p.tel_firma || ((() => { try { return clientesO; } catch (e) { return []; } })().find(c => c.nombre == p.cliente && (c.negocio || '') == (p.negocio || '')) || {}).telefono || '').trim();
+// ---------- LIQUIDAR (cobro del pedido) ----------
+const isoL = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+const enDias = n => isoL(new Date(Date.now() + n * 864e5));
+const pagaTxt = iso => { if (!iso) return ''; const d = new Date(iso + 'T12:00'), hoy = enDias(0); const dd = d.toLocaleDateString('es-HN', { weekday: 'short', day: 'numeric', month: 'numeric' }); const mora = Math.round((new Date(hoy + 'T12:00') - d) / 864e5); return iso < hoy ? `<span class="venc">⚠ Mora: ${mora} ${mora == 1 ? 'día' : 'días'} (debía pagar el ${dd})</span>` : iso == hoy ? '<span class="hoyp">💵 Paga hoy</span>' : 'Paga el ' + dd; };
+const COBRO = { pagado: ['✅', 'Pagado', '#1f7a4d'], dejado: ['📦', 'Al crédito', '#b26a00'], no_recibio: ['↩', 'No lo recibió', '#b3261e'] };
+const cobroTxt = p => { const ab = !p.entrega || p.entrega == 'dejado', est = ab ? '<span class="est ab"><i class="luz"></i>Abierto</span> ' : ''; /* abierto: lucecita verde que parpadea; cerrado: nada */ const c = COBRO[p.entrega]; if (!c) return est ? est + '<br>' : ''; return est + `<b style="color:${c[2]}">${c[0]} ${c[1]}${p.entrega == 'dejado' && p.paga_el ? ' · ' + pagaTxt(p.paga_el) : ''}${p.factura ? ' · Fact. ' + esc(p.factura) : ''}${p.entrega == 'pagado' && p.forma_pago ? ' · ' + esc(p.forma_pago) : ''}${p.liquidado_en ? ' · ' + esc(p.liquidado_en) : ''}${p.liquidado_por ? ' · ' + esc(p.liquidado_por) : ''}</b>${p.nota_liq ? (p.entrega == 'pagado' ? ' · Ref. ' + esc(p.nota_liq) : ' <i>(' + esc(p.nota_liq) + ')</i>') : ''}<br>`; };
+// El cliente firma un pedido ya guardado en el celular del vendedor (no tiene internet)
+function firmarAqui(p, luego) {
+  if (!p) return;
+  const { o, cerrar } = abrirOv('Pase el celular al cliente', `<div style="line-height:1.45"><b style="font-size:1.1em">${esc(p.negocio || p.cliente)}</b><br>Pedido <b>#${esc(p.numero)}</b> de <b>${p.items.length} productos</b> por <b style="font-size:1.15em">${fmt(p.total)}</b><br><small style="color:#666">${p.items.slice(0, 6).map(i => esc(i.q + ' ' + i.n)).join(' · ')}</small></div>
+    <div style="font-weight:800;margin:12px 0 6px;color:#0f3d5e">✍ Firma del cliente: autorizo este pedido</div><div class="firma" id="fAq"></div>`, `<button class="btn no" id="faX">Cancelar</button><button class="btn" id="faG">✅ Autorizo</button>`);
+  const pad = firmaPad(o.querySelector('#fAq')); setTimeout(pad.medir, 60);
+  o.querySelector('#faX').onclick = cerrar;
+  o.querySelector('#faG').onclick = async () => {
+    if (pad.vacia()) return toast('El cliente tiene que firmar con el dedo');
+    const b = o.querySelector('#faG'); b.disabled = true; b.textContent = 'Guardando…';
+    try { await apiPost({ a: 'firma_pedido', k: ses.k, numero: p.numero, firma: pad.imagen() }); cerrar(); toast('Firmado ✓'); await buscar(); if (luego) luego(); }
+    catch (er) { b.disabled = false; b.textContent = '✅ Autorizo'; toast('No se guardó: ' + er.message); }
+  };
+}
+function liquidar(p) {
+  if (!p) return; let forma = 'Efectivo';
+  const VEN = ses.rol != 'oficina';
+  if (VEN && p.entrega == 'pagado') return toast('Este pedido ya está pagado y cerrado');
+  const ya = COBRO[p.entrega];
+  const { o, cerrar } = abrirOv('Liquidar pedido #' + p.numero, `<p class="nota" style="margin:0 0 10px"><b>${esc(p.negocio || p.cliente)}</b> · ${fmt(p.total)}${ya ? '<br>Ahora: <b>' + ya[0] + ' ' + ya[1] + '</b>' + (p.liquidado_en ? ' · ' + esc(p.liquidado_en) : '') : ''}</p>
+    ${VEN && p.entrega == 'dejado' ? `<div class="fija">📅 Fecha de pago acordada: <b>${p.paga_el ? new Date(p.paga_el + 'T12:00').toLocaleDateString('es-HN', { weekday: 'long', day: 'numeric', month: 'long' }) : '—'}</b>${p.paga_el ? '<br>' + pagaTxt(p.paga_el) : ''}<br><small>No se puede cambiar. Solo falta marcar el pago.</small></div><div class="lq"><button class="lqb on" data-ac="pagado">✅ Pagó</button></div>` : `<div class="lq"><button class="lqb on" data-ac="pagado">✅ Pagó</button><button class="lqb" data-ac="dejado">📦 Lo dejé al crédito</button><button class="lqb" data-ac="no_recibio">↩ No lo recibió</button></div>`}
+    <div id="lqP" hidden><div style="font-size:.85em;font-weight:700;margin:10px 0 6px">¿Cuándo va a pagar?</div><input type="date" id="lqD" min="${enDias(0)}" value="${p.paga_el || ''}" style="width:100%;font-size:1.1em;padding:12px;border:1px solid #c6d1dc;border-radius:12px"></div>
+    <div id="lqF"><div style="font-size:.85em;font-weight:700;margin:10px 0 6px">¿Cómo pagó?</div><div class="lq">${['Efectivo', 'Transferencia', 'Depósito', 'Cheque'].map((x, i) => `<button class="lqf${i ? '' : ' on'}" data-f="${x}">${x}</button>`).join('')}</div><label style="margin-top:10px"><span>N° de factura (opcional)</span><input id="lqFa" inputmode="numeric" value="${esc(p.factura || '')}" placeholder="El número con que lo facturó en el sistema"></label></div>
+    <label style="margin-top:10px"><span id="lqNl">Referencia (opcional)</span><input id="lqN" placeholder="N° de depósito o transferencia"></label>
+    <p class="nota" style="margin:8px 0 0">Se guarda con la fecha y hora de ahora y su nombre.</p>`,
+    `${ya && !VEN ? '<button class="btn no" id="lqR">Volver a pendiente</button>' : '<button class="btn no" id="lqX">Cancelar</button>'}<button class="btn" id="lqG">Guardar</button>`);
+  let ac = 'pagado';
+  o.addEventListener('click', e => { const b = e.target.closest('[data-ac]'); if (b) { ac = b.dataset.ac; o.querySelectorAll('.lqb').forEach(x => x.classList.toggle('on', x == b)); o.querySelector('#lqF').hidden = ac != 'pagado'; o.querySelector('#lqP').hidden = ac != 'dejado'; o.querySelector('#lqNl').textContent = ac == 'pagado' ? 'Referencia (opcional)' : 'Nota (opcional)'; o.querySelector('#lqN').placeholder = ac == 'pagado' ? 'N° de depósito o transferencia' : ac == 'dejado' ? 'Ej. no estaba el dueño' : 'Ej. negocio cerrado'; }
+    const db = e.target.closest('[data-d]'); if (db) { o.querySelector('#lqD').value = db.dataset.d; o.querySelectorAll('.lqd').forEach(x => x.classList.toggle('on', x == db)); }
+    const fb = e.target.closest('[data-f]'); if (fb) { forma = fb.dataset.f; o.querySelectorAll('.lqf').forEach(x => x.classList.toggle('on', x == fb)); } });
+  const guardar = async a => { if (a == 'dejado' && !o.querySelector('#lqD').value) return toast('Escoja la fecha en que va a pagar el crédito');
+    if (a == 'dejado' && !(String(p.firma || '').length > 50 || p.estado == 'firmado')) { cerrar(); toast('Para dejarlo al crédito, el cliente tiene que firmar primero'); return firmarAqui(p, () => liquidar(pedidos.find(x => x.numero == p.numero))); } try { const r = await apiPost({ a: 'liquidar', k: ses.k, numero: p.numero, accion: a, forma, nota: o.querySelector('#lqN').value.trim(), factura: a == 'pagado' ? o.querySelector('#lqFa').value.trim() : '', paga_el: o.querySelector('#lqD').value }); cerrar(); toast(a == 'reabrir' ? 'Quedó pendiente otra vez' : 'Guardado ✓ ' + (r.liquidado_en || '')); buscar(); } catch (er) { toast('No se guardó: ' + er.message); } };
+  o.querySelector('#lqG').onclick = () => guardar(ac);
+  const x = o.querySelector('#lqX'); if (x) x.onclick = cerrar;
+  const rr = o.querySelector('#lqR'); if (rr) rr.onclick = () => guardar('reabrir');
+}
 function pintar() {
   const tot = pedidos.reduce((s, p) => s + p.total, 0), un = pedidos.reduce((s, p) => s + p.items.reduce((a, i) => a + i.q, 0), 0);
-  $('#res').innerHTML = `<span><b>${pedidos.length}</b> pedidos</span><span><b>${new Set(pedidos.map(p => p.cliente)).size}</b> clientes</span><span><b>${un}</b> unidades</span><span>Total <b>${fmt(tot)}</b></span>`;
-  $('#lista').innerHTML = pedidos.length ? pedidos.map(p => `<div class="ped" data-n="${p.numero}"><div class="h"><input type="checkbox" class="chk" data-n="${p.numero}" ${marcados.has(p.numero) ? 'checked' : ''}><span class="n">#${esc(p.numero)}</span><div class="i"><b>${esc(p.cliente)}${p.negocio ? ' · ' + esc(p.negocio) : ''}</b><small>${fechaTxt(p)} · ${esc(p.vendedor)} · ${p.items.length} prod.${p.firma ? ' · ✍ firmado' : ''}${p.tipo == 'especial' ? ' · <b style="color:#1f7a4d">★ especial</b>' : ''}<br>${p.estado == 'por_firmar' ? '<b style="color:#b26a00">⏳ Esperando firma del cliente</b> · ' : p.estado == 'firmado' ? '<b style="color:#1f7a4d">✅ Firmado por el cliente' + (p.firmado_en ? ' · ' + esc(p.firmado_en) : '') + (p.tel_firma ? ' · 📱 ' + esc(p.tel_firma) : '') + '</b> · ' : ''}${p.solicitud == 'pendiente' ? '<b style="color:#b26a00">🙋 Pide ★ Precio Autorizado con menos cantidad · si se aprueba: ' + fmt(p.total_sol) + '</b>' + (ses.rol == 'oficina' ? ` <button class="solok" data-sa="${p.numero}">✅ Aprobar</button><button class="solno" data-sr="${p.numero}">❌ No</button>` : ' (esperando a la oficina)') + '<br>' : p.solicitud == 'aprobada' ? '<b style="color:#1f7a4d">✅ Precio autorizado aprobado</b><br>' : p.solicitud == 'rechazada' ? '<b style="color:#b3261e">❌ Precio autorizado no aprobado: va a precio normal</b><br>' : ''}${quienHizo(p)}${p.telefono ? ' · 📞 <a href="tel:' + esc(p.telefono) + '">' + esc(p.telefono) + '</a>' : ''}</small></div><span class="t">${fmt(p.total)}</span></div>
-   <div class="det"><table>${p.items.map(i => `<tr><td class="r"><b>${esc(i.q)}</b></td><td>${esc(i.n)}</td><td>${esc(i.nivel)}</td><td class="r">${i.sub ? fmt(i.sub) : '—'}</td></tr>`).join('')}</table>${fardosDe(p.items).map(z => `<div style="display:flex;justify-content:space-between;background:#e8f1fb;color:#1d5fa8;border-radius:10px;padding:8px 10px;margin-top:8px;font-weight:700"><span>Total ${esc(z.u || 'fardos')} ${esc(grupoNom(z.g))}</span><b>${Math.round(z.n * 10) / 10}</b></div>`).join('')}${p.nota ? `<p><b>Nota:</b> ${esc(p.nota)}</p>` : ''}${p.firma ? `<div style="margin-top:8px"><img src="${p.firma}" alt="Firma del cliente" style="max-width:220px;width:100%;border-bottom:1px solid #999;display:block"><small style="color:#777">Firma del cliente</small></div>` : ''}
+  $('#res').innerHTML = `<span><b>${pedidos.length}</b> pedidos</span><span><b>${new Set(pedidos.map(p => p.cliente)).size}</b> clientes</span><span><b>${un}</b> unidades</span><span>Total <b>${fmt(tot)}</b></span>${pedidos.some(p => p.entrega == 'dejado') ? `<span style="color:#b26a00">📦 Por cobrar <b>${fmt(pedidos.filter(p => p.entrega == 'dejado').reduce((s, p) => s + p.total, 0))}</b></span>` : ''}`;
+  $('#lista').innerHTML = pedidos.length ? pedidos.map(p => `<div class="ped" data-n="${p.numero}"><div class="h"><input type="checkbox" class="chk" data-n="${p.numero}" ${marcados.has(p.numero) ? 'checked' : ''}><span class="n">#${esc(p.numero)}</span><div class="i"><b>${esc(p.cliente)}${p.negocio ? ' · ' + esc(p.negocio) : ''}</b><small>${telDe(p) ? `<a class="ptel" href="tel:${esc(telDe(p))}" onclick="event.stopPropagation()">📞 ${esc(telDe(p))}</a><br>` : ''}${fechaTxt(p)} · ${esc(p.vendedor)} · ${p.items.length} prod.${p.firma ? ' · ✍ firmado' : ''}${p.tipo == 'especial' ? ' · <b style="color:#1f7a4d">★ especial</b>' : ''}<br>${p.estado == 'por_firmar' ? '<b style="color:#b26a00">⏳ Esperando firma del cliente</b> · ' : p.estado == 'firmado' ? (p.firma_modo == 'presencial' ? '<b style="color:#1f7a4d">✍ Firmado en el celular del vendedor' : '<b style="color:#1f7a4d">✅ Firmado por el cliente') + (p.firmado_en ? ' · ' + esc(p.firmado_en) : '') + (p.tel_firma ? ' · 📱 ' + esc(p.tel_firma) : '') + '</b> · ' : ''}${cobroTxt(p)}${p.solicitud == 'pendiente' ? '<b style="color:#b26a00">🙋 Llevó menos de la cantidad de su precio especial · con su precio especial: ' + fmt(p.total_sol) + '</b>' + (ses.rol == 'oficina' ? ` <button class="solok" data-sa="${p.numero}">✅ Darle precio especial</button><button class="solno" data-sr="${p.numero}">Dejar normal</button>` : ' (esperando a la oficina)') + '<br>' : p.solicitud == 'aprobada' ? '<b style="color:#1f7a4d">✅ Precio autorizado aprobado</b><br>' : p.solicitud == 'rechazada' ? '<b style="color:#b3261e">❌ Se dejó a precio normal</b><br>' : ''}${quienHizo(p)}</small></div><span class="t">${fmt(p.total)}</span></div>
+   <div class="qacc"><button class="vped" data-tg="${p.numero}">▾ Ver pedido</button>${p.entrega == 'pagado' ? '<span class="cerr">✅ Cerrado</span>' : `<button class="lqk" data-liq="${p.numero}">✏ ${p.entrega == 'dejado' ? 'Marcar pagado' : 'Liquidar o dejar al crédito'}</button>`}</div>
+   <div class="det"><table>${p.items.map(i => `<tr><td class="r"><b>${esc(i.q)}</b></td><td>${esc(i.n)}</td><td>${esc(i.nivel)}</td><td class="r">${i.sub ? fmt(i.sub) : '—'}</td></tr>`).join('')}</table>${fardosDe(p.items).map(z => `<div style="display:flex;justify-content:space-between;background:#e8f1fb;color:#1d5fa8;border-radius:10px;padding:8px 10px;margin-top:8px;font-weight:700"><span>Total ${esc(z.u || 'fardos')} ${esc(grupoNom(z.g))}</span><b>${Math.round(z.n * 10) / 10}</b></div>`).join('')}${p.nota ? `<p><b>Nota:</b> ${esc(p.nota)}</p>` : ''}<div class="firmaP">${p.firma ? `<div class="fl">✍ Autorizado por el cliente${p.firma_modo == 'presencial' ? ' <span class="pres">en el celular del vendedor</span>' : ''}${p.firmado_en ? ' · ' + esc(p.firmado_en) : ''}</div><img src="${p.firma}" alt="Firma del cliente"><small>Firma de ${esc(p.cliente)}${telDe(p) ? ' · 📞 ' + esc(telDe(p)) : ''}</small>` : `<div class="fl no">⚠ Sin firma del cliente</div><button class="b fa" data-fa="${p.numero}">✍ Que el cliente firme aquí</button>`}</div>
    <div class="acts"><button class="b" style="background:#25d366" data-pf="${p.numero}">📷 Foto</button><button class="b" data-pt="${p.numero}">🖨 3"</button><button class="b" data-pc="${p.numero}">🖨 Carta</button>${p.telefono ? `<button class="b cot" data-cot="${p.numero}">💲 Ver precios</button>` : ''}</div></div></div>`).join('') : '<div class="vacio">No hay pedidos en esas fechas.</div>';
   recarga();
 }
 $('#lista').addEventListener('click', e => {
   const n = e.target.dataset;
-  if (n.sa || n.sr) { const num = n.sa || n.sr, ok = !!n.sa; confirmar(ok ? '¿Aprobar el ★ Precio Autorizado al pedido #' + num + '?' : '¿No aprobar? El pedido #' + num + ' queda a precio normal.', async () => { try { await apiPost({ a: 'solicitud', k: ses.k, numero: num, valor: ok ? 'aprobada' : 'rechazada' }); toast(ok ? 'Aprobado ✓' : 'Queda a precio normal ✓'); buscar(); } catch (er) { toast('No se pudo: ' + er.message); } }); return; }
+  if (n.sa || n.sr) { const num = n.sa || n.sr, ok = !!n.sa; confirmar(ok ? '¿Aprobar el precio especial con menos cantidad al pedido #' + num + '?' : '¿No aprobar? El pedido #' + num + ' queda a precio normal.', async () => { try { await apiPost({ a: 'solicitud', k: ses.k, numero: num, valor: ok ? 'aprobada' : 'rechazada' }); toast(ok ? 'Aprobado ✓' : 'Queda a precio normal ✓'); buscar(); } catch (er) { toast('No se pudo: ' + er.message); } }); return; }
   if (e.target.classList.contains('chk')) { const k = +n.n; e.target.checked ? marcados.add(k) : marcados.delete(k); return; }
   if (n.pf) { const ped = pedidos.find(p => p.numero == n.pf); e.target.textContent = 'Creando…'; imagenPedido(ped).then(b => { e.target.textContent = '📷 Foto'; compartirImagen(b, 'pedido-' + ped.numero + '.jpg', 'Pedido #' + ped.numero + ' · ' + ped.cliente); }); return; }
   if (n.cot) return cotizar(pedidos.find(p => p.numero == n.cot));
+  if (n.tg) { const c = e.target.closest('.ped'); verUno(c, !c.classList.contains('open')); return; }
+  if (n.liq) return liquidar(pedidos.find(p => p.numero == n.liq));
+  if (n.fa) return firmarAqui(pedidos.find(p => p.numero == n.fa));
   if (n.pt) return imprimir(pedidoHTML(pedidos.find(p => p.numero == n.pt), 'ticket'), 'ticket');
   if (n.pc) return imprimir(pedidoHTML(pedidos.find(p => p.numero == n.pc), 'carta'), 'carta');
-  const h = e.target.closest('.h'); if (h) h.parentNode.classList.toggle('open');
+  const h = e.target.closest('.h'); if (h) verUno(h.parentNode, !h.parentNode.classList.contains('open'));
 });
 $('#todos').onchange = e => { marcados = new Set(e.target.checked ? pedidos.map(p => p.numero) : []); pintar(); };
 const sel = () => pedidos.filter(p => marcados.has(p.numero)).sort((a, b) => a.numero - b.numero);
@@ -220,7 +308,7 @@ function pintarClientes() {
   $('#cres').innerHTML = `<span><b>${l.length}</b> clientes</span><span><b>${clientesO.filter(c => !c.vendedor).length}</b> sin vendedor</span>`;
   $('#clis').innerHTML = l.length ? l.map(c => { const i = clientesO.indexOf(c); return `<div class="cli${c.vendedor ? '' : ' sin'}"><div class="t"><div><b>${esc(c.negocio || c.nombre)}${pnom(c.precio) ? ` <span class="lchip">${pnom(c.precio)}</span>` : ''}</b><small>${esc(c.nombre)}</small></div>${c.telefono ? `<a class="tel" href="tel:${esc(c.telefono)}">📞 ${esc(c.telefono)}</a>` : '<small>sin teléfono</small>'}</div>
      <label><span style="font-size:.8em;font-weight:700">Vendedor que lo atiende</span><select data-ci="${i}">${optVend(c.vendedor)}</select></label>
-     <div class="pv"><b>Precios que ve:</b> ${vE(c) ? 'Solo su Precio Especial (sin detalle)' : 'Detalle y Precio 1, 2, 3, 4'}${vA(c) ? ' + Autorizado' : ''}</div><div class="sws">${sw(vE(c), i, 'e', 'Ver Precio Especial')}${sw(vA(c), i, 'a', 'Ver Precio Autorizado')}</div>
+     <div class="pv"><b>Precios que ve:</b> ${vE(c) && vA(c) ? 'Solo su Precio Especial y Autorizado (sin detalle)' : vE(c) ? 'Solo su Precio Especial (sin detalle)' : vA(c) ? 'Solo su Precio Autorizado (sin detalle)' : 'Detalle y Precio 1, 2, 3, 4'}</div><div class="sws">${sw(vE(c), i, 'e', 'Ver Precio Especial')}${sw(vA(c), i, 'a', 'Ver Precio Autorizado')}</div>
      <button class="b wa prod" data-enl="${i}"><svg class="avion" viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.18em;margin-right:.3em"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>Mandarle su catálogo privado</button>
      ${c.telefono2 ? `<div class="otro"><span>👤 <b>${esc(c.contacto2 || 'Otro número')}</b> · ${esc(c.telefono2)}</span><button class="b wa" data-enl2="${i}">Mandarle a él</button><button class="b l" data-otro="${i}">✏</button></div>` : `<button class="b l prod" data-otro="${i}">➕ Mandar también a otro número (encargado de compras)</button>`}
      ${c.amarrado ? `<button class="b l prod" data-lib="${i}">🔓 Liberar enlace (cambió de celular)</button>` : ''}
@@ -251,7 +339,7 @@ async function enlacePrivado(i, dos) { const c = clientesO[i], aQuien = dos ? (c
   try { const j = await apiPost({ a: 'cliente_enlace', k: ses.k, nombre: c.nombre, negocio: c.negocio }); const link = new URL('./' + '?c=' + j.token, location.href).toString();
     const msg = `Hola ${aQuien}, le saludamos de Distribuidora San Jorge. Este es el catálogo${dos ? ' de *' + (c.negocio || c.nombre) + '*' : ''}${c.precio ? ' con *sus precios*' : ''}. Desde aquí puede hacer sus pedidos cuando los necesite:\n\n${link}\n\nGuárdelo en su celular: en Chrome toque ⋮ → Instalar y crear acceso directo.`;
     const tel = telWA(dos ? c.telefono2 : c.telefono);
-    abrirOv((dos ? 'Para ' + aQuien + ' · ' : 'Catálogo privado de ') + (c.negocio || c.nombre), `<p class="nota" style="margin:0 0 8px">${dos ? 'Se lo manda al <b>' + esc(aQuien) + '</b> (' + esc(c.telefono2) + '). Es el mismo cliente: ve los mismos precios y sus pedidos salen a nombre de <b>' + esc(c.negocio || c.nombre) + '</b>. ' : ''}Ve ${vE(c) ? 'solo su Precio Especial' : 'detalle y Precio 1 al 4'}${vA(c) ? ' + Autorizado' : ''}${c.productos ? ' y solo <b>' + String(c.productos).split(',').filter(Boolean).length + ' productos</b>' : ''}. Sus pedidos le llegan a <b>${esc(c.vendedor || 'la oficina')}</b>. Si le cambia el precio o los productos, el enlace se actualiza solo.</p><div style="word-break:break-all;background:#f1f4f7;border-radius:10px;padding:10px;font-size:.85em">${esc(link)}</div>`,
+    abrirOv((dos ? 'Para ' + aQuien + ' · ' : 'Catálogo privado de ') + (c.negocio || c.nombre), `<p class="nota" style="margin:0 0 8px">${dos ? 'Se lo manda al <b>' + esc(aQuien) + '</b> (' + esc(c.telefono2) + '). Es el mismo cliente: ve los mismos precios y sus pedidos salen a nombre de <b>' + esc(c.negocio || c.nombre) + '</b>. ' : ''}Ve ${vE(c) || vA(c) ? 'solo su precio ' + pnom(c.precio).replace('Precio ', '') : 'detalle y Precio 1 al 4'}${c.productos ? ' y solo <b>' + String(c.productos).split(',').filter(Boolean).length + ' productos</b>' : ''}. Sus pedidos le llegan a <b>${esc(c.vendedor || 'la oficina')}</b>. Si le cambia el precio o los productos, el enlace se actualiza solo.</p><div style="word-break:break-all;background:#f1f4f7;border-radius:10px;padding:10px;font-size:.85em">${esc(link)}</div>`,
       `<a class="btn wa full" href="https://wa.me/${tel.length >= 11 ? tel : ''}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">💬 Mandarlo por WhatsApp</a>` + (window.DEMO ? `<a class="btn no full" href="${esc(link)}">Abrir como el cliente (prueba)</a>` : ''));
   } catch (er) { toast('No se pudo crear el enlace: ' + er.message); } }
 $('#clis').addEventListener('click', async e => { const en = e.target.closest('[data-enl]'); if (en) return enlacePrivado(+en.dataset.enl); const e2 = e.target.closest('[data-enl2]'); if (e2) return enlacePrivado(+e2.dataset.enl2, 1); const ot = e.target.closest('[data-otro]'); if (ot) return otroNumero(+ot.dataset.otro); const lb = e.target.closest('[data-lib]'); if (lb) { const c = clientesO[+lb.dataset.lib]; return confirmar('¿Liberar el catálogo de ' + (c.negocio || c.nombre) + '? Úselo si el cliente cambió de celular.', async () => { try { await apiPost({ a: 'liberar_enlace', k: ses.k, nombre: c.nombre, negocio: c.negocio }); c.amarrado = 0; pintarClientes(); toast('Enlace liberado ✓ Mándele su catálogo otra vez'); } catch (er) { toast(er.message); } }); } const pr = e.target.closest('[data-pr]'); if (pr) return elegirProductos(+pr.dataset.pr);
@@ -328,17 +416,20 @@ function ejemplo() {
 // ---------- Mandar precios al cliente (el vendedor puede ajustar el precio antes) ----------
 function precioLista(it) { const px = (window._PRECIOS || {})[String(it.c).toUpperCase()]; if (!px) return 0; const x = precioUnit(px, 'mayoreo', it.q); return x.precio || 0; }
 function cotizar(p) {
-  if (!p) return; const its = p.items.map(i => ({ c: i.c, n: i.n, q: i.q, u: uVenta(i.c, 'mayoreo'), pr: i.precio || precioLista(i) }));
-  const fila = (i, k) => `<div class="cq"><div><b>${esc(i.n)}</b><small>${i.q} ${esc(plural(i.u, i.q) || 'unid.')}</small></div><label>L <input type="number" inputmode="decimal" step="0.01" min="0" data-k="${k}" value="${i.pr || ''}" placeholder="precio"></label><span class="cs" id="cs${k}">${i.pr ? fmt(i.pr * i.q) : '—'}</span></div>`;
-  const { o, cerrar } = abrirOv('Precios · ' + (p.negocio || p.cliente), `<p class="nota" style="margin:0 0 8px">Pedido #${p.numero} · precio de lista. Puede cambiar alguno; si quiere se lo manda al cliente.</p>
+  if (!p) return; const fijo = ses.rol != 'oficina' || (hechoCliente(p) && !/sin precios/i.test(p.nota || '')) || String(p.firma || '').length > 50; /* el vendedor nunca cambia precios */ const its = p.items.map(i => ({ c: i.c, n: i.n, q: i.q, u: uVenta(i.c, 'mayoreo'), pr: i.precio || precioLista(i), max: i.precio || precioLista(i) }));
+  const VENP = ses.rol != 'oficina';   // el vendedor solo puede BAJAR el precio, nunca subirlo
+  const fila = (i, k) => `<div class="cq"><div><b>${esc(i.n)}</b><small>${i.q} ${esc(plural(i.u, i.q) || 'unid.')}</small></div><label>L <input type="number" inputmode="decimal" step="0.01" min="0" data-k="${k}" value="${i.pr || ''}" placeholder="precio" ${fijo ? 'readonly' : ''}></label><span class="cs" id="cs${k}">${i.pr ? fmt(i.pr * i.q) : '—'}</span></div>`;
+  const { o, cerrar } = abrirOv('Precios · ' + (p.negocio || p.cliente), `<p class="nota" style="margin:0 0 8px">Pedido #${p.numero} · ${fijo ? (ses.rol != 'oficina' ? '<b>Precios de lista. No se pueden cambiar.</b>' : '<b>Pedido hecho o firmado por el cliente: los precios no se pueden cambiar.</b>') : (VENP ? 'precio de lista. Solo puede <b>bajar</b> el precio (descuento), nunca subirlo.' : 'precio de lista. Puede cambiar alguno; si quiere se lo manda al cliente.')}</p>
     <div class="cql">${its.map(fila).join('')}</div><div class="cqt"><span>Total</span><b id="cqT"></b></div>
     <label class="cqn"><span>Nota (opcional)</span><textarea id="cqN" rows="2" placeholder="Ej. le entrego el jueves"></textarea></label>`,
     `<button class="no">Cerrar</button><button class="wa" id="cqE">${'<svg class="avion" viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.18em;margin-right:.3em"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>'}Enviar al cliente</button>`);
   const tot = () => { let t = 0; its.forEach((i, k) => { t += (i.pr || 0) * i.q; o.querySelector('#cs' + k).textContent = i.pr ? fmt(i.pr * i.q) : '—'; }); o.querySelector('#cqT').textContent = fmt(Math.round(t * 100) / 100); return t; };
   o.querySelector('.cql').addEventListener('input', e => { const k = e.target.dataset.k; if (k === undefined) return; its[+k].pr = parseFloat(e.target.value) || 0; tot(); });
+  o.querySelector('.cql').addEventListener('change', e => { const k = e.target.dataset.k; if (k === undefined || !VENP) return; const it = its[+k]; if (it.max && it.pr > it.max) { it.pr = it.max; e.target.value = it.max; tot(); toast('No puede subir el precio. El máximo es ' + fmt(it.max)); } });
   o.querySelector('.no').onclick = cerrar; tot();
   o.querySelector('#cqE').onclick = () => {
     if (its.some(i => !i.pr)) return toast('Ponga el precio a todos los productos');
+    if (VENP && its.some(i => i.max && i.pr > i.max)) return toast('No puede subir precios por encima de la lista');
     const t = tot(), nota = o.querySelector('#cqN').value.trim();
     let m = `Hola ${p.cliente} 👋\nEstos son los precios de su pedido #${p.numero}:\n------------------------\n`;
     its.forEach(i => { m += `▪ ${i.q} ${plural(i.u, i.q) || 'x'} · ${i.n}\n   ${fmt(i.pr)} ${i.u ? 'por ' + i.u : 'c/u'} = ${fmt(i.pr * i.q)}\n`; });

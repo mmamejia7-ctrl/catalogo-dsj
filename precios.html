@@ -104,7 +104,7 @@ header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f
 <script src="comun.js"></script>
 <script>
 const PRODUCTOS = window.PRODUCTOS;
-const CAMPOS = ['precio_detalle','unidad_detalle','precio_1','unidad_mayoreo','precio_2','desde_2','precio_3','desde_3','precio_4','desde_4','precio_especial','precio_autorizado','desde_autorizado','grupo','equiv','unidad','agotado'];
+const CAMPOS = ['precio_detalle','unidad_detalle','precio_1','unidad_mayoreo','precio_2','desde_2','precio_3','desde_3','precio_4','desde_4','precio_especial','desde_especial','precio_autorizado','desde_autorizado','grupo','equiv','unidad','agotado'];
 let ses = LS.get('sesP', null), orig = {}, edit = {}, vistos = [];
 // ---- listas especiales con nombre (ej. "Precio Rey", "Precio 4"); a cada cliente se le asigna una lista
 const CE = ['precio_1', 'precio_2', 'desde_2', 'precio_3', 'desde_3', 'precio_4', 'desde_4'];
@@ -144,7 +144,7 @@ const fila = c => lista ? filaE(c) : filaDe(c);
 function cambiado(c) { if (lista) { const a = (eorig[lista] || {})[c] || {}, b = (eedit[lista] || {})[c] || {}; return CE.some(k => v(a[k]) !== v(b[k])); } const a = orig[c] || {}, b = edit[c] || {}; return CAMPOS.some(k => v(a[k]) !== v(b[k])); }
 function errores(r) {
   const e = []; const p = [1, 2, 3, 4].map(i => n2(r['precio_' + i])), d = [1, n2(r.desde_2), n2(r.desde_3), n2(r.desde_4)];
-  if ([n2(r.precio_detalle), n2(r.precio_especial), n2(r.precio_autorizado), n2(r.desde_autorizado), ...p, ...d.slice(1)].some(x => Number.isNaN(x))) e.push('Use solo números (ej. 125.50)');
+  if ([n2(r.precio_detalle), n2(r.precio_especial), n2(r.desde_especial), n2(r.precio_autorizado), n2(r.desde_autorizado), ...p, ...d.slice(1)].some(x => Number.isNaN(x))) e.push('Use solo números (ej. 125.50)');
   let ult = 1, up = p[0];
   for (let i = 1; i < 4; i++) { if (p[i] === '') continue;   // sin precio = nivel no se usa
     if (d[i] === '') { e.push(`Precio ${i + 1}: escriba desde cuántos aplica`); continue; }
@@ -158,7 +158,7 @@ function resumen(c, r) {
   esc2.sort((a, b) => a.d - b.d);
   const m = esc2.map((x, i) => `${esc2[i + 1] ? x.d + ' a ' + (esc2[i + 1].d - 1) : x.d + ' o más'} ${u}: <b>${fmt(x.pr)}</b>`).join(' · ');
   const de = n2(r.precio_detalle);
-  const pe = n2(r.precio_especial), pa = n2(r.precio_autorizado), ex = (pe !== '' && !Number.isNaN(pe) ? ` · ★ Especial: <b>${fmt(pe)}</b>` : '') + (pa !== '' && !Number.isNaN(pa) ? ` · ★ Autorizado: <b>${fmt(pa)}</b>${n2(r.desde_autorizado) > 1 ? ' desde ' + n2(r.desde_autorizado) + ' ' + (r.grupo ? (r.unidad || 'fardos') : plural(r.unidad_mayoreo || 'unid.', 2)) : ''}` : '');
+  const pe = n2(r.precio_especial), pa = n2(r.precio_autorizado), ex = (pe !== '' && !Number.isNaN(pe) ? ` · ★ Especial: <b>${fmt(pe)}</b>${n2(r.desde_especial) > 1 ? ' desde ' + n2(r.desde_especial) + ' ' + (r.grupo ? (r.unidad || 'fardos') : plural(r.unidad_mayoreo || 'unid.', 2)) : ''}` : '') + (pa !== '' && !Number.isNaN(pa) ? ` · ★ Autorizado: <b>${fmt(pa)}</b>${n2(r.desde_autorizado) > 1 ? ' desde ' + n2(r.desde_autorizado) + ' ' + (r.grupo ? (r.unidad || 'fardos') : plural(r.unidad_mayoreo || 'unid.', 2)) : ''}` : '');
   return (ex ? `<span style="color:#1f7a4d">${ex.slice(3)}</span><br>` : '') + (de !== '' && !Number.isNaN(de) ? `Detalle: <b>${fmt(de)}</b>${r.unidad_detalle ? ' por ' + esc(r.unidad_detalle) : ''}<br>` : '') + (m ? 'Mayoreo' + (r.unidad_mayoreo ? ' por ' + esc(r.unidad_mayoreo) : '') + ': ' + m : '<span style="color:#b26a00">Sin precio de mayoreo: el catálogo dirá "Consulte precio"</span>');
 }
 function tarjetaEsp(p) {
@@ -196,7 +196,7 @@ function tarjeta(p) {
    <div class="g espg">
     <label class="f"><span>★ Precio Especial (L)</span>${inp('precio_especial', 'vacío = precio normal')}</label>
     <label class="f"><span>★ Precio Autorizado (L)</span>${inp('precio_autorizado', 'vacío = precio normal')}</label>
-    <span></span>
+    <label class="f"><span>★ Especial desde (cantidad)</span>${inp('desde_especial', 'vacío = desde 1', 'numeric')}</label>
     <label class="f"><span>★ Autorizado desde (cantidad)</span>${inp('desde_autorizado', 'vacío = desde 1', 'numeric')}</label>
    </div>
    <div class="res">${resumen(c, r)}</div>
