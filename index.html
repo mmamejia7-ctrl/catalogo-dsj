@@ -422,9 +422,9 @@ function otroH(p) {
 // Marca de agua con el nombre del cliente (precio especial/autorizado): si reenvía una captura, se sabe de quién salió
 function marcaAgua(info) {
   let m = document.getElementById('marcaAgua'); if (!info || !info.autorizado) { if (m) m.remove(); return; }
-  const t = String(info.telefono || '').replace(/\D/g, '').slice(-8), txt = [info.negocio || info.nombre, t.length == 8 ? t.slice(0, 4) + '-' + t.slice(4) : t].filter(Boolean).join(' · ');
+  const t = String(info.telefono || '').replace(/\D/g, ''), nom = String(info.nombre || '').trim(), neg = String(info.negocio || '').trim(), txt = [nom, neg && neg.toLowerCase() != nom.toLowerCase() ? neg : '', t.length >= 2 ? '××' + t.slice(-2) : ''].filter(Boolean).join(' · ');   /* nombre · negocio · ××32 (sin el número completo) */
   const x = txt.replace(/[<>&"']/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' }[c]));
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="170"><text x="150" y="95" text-anchor="middle" transform="rotate(-24 150 85)" font-family="Arial,sans-serif" font-size="17" font-weight="700" fill="#0f3d5e" fill-opacity=".11">${x}</text></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="360" height="190"><text x="180" y="105" text-anchor="middle" transform="rotate(-24 180 95)" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#0f3d5e" fill-opacity=".11">${x}</text></svg>`;
   if (!m) { m = document.createElement('div'); m.id = 'marcaAgua'; m.setAttribute('aria-hidden', 'true'); m.style.cssText = 'position:fixed;inset:0;z-index:2147483000;pointer-events:none;background-repeat:repeat'; document.body.appendChild(m); }
   m.style.backgroundImage = 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")';
 }
