@@ -466,7 +466,7 @@ function addH(c) { if (agot(c)) return '<button class="agr off" disabled>Sin sto
 async function cargar(manual) {
   try {
     let rows, vs = null;
-    if (API) { const j = await apiGet(ESP ? { a: 'datos', c: ESP, tel: LS.get('espTel', '') || '', dev: DEV, t: Date.now() } : { a: 'datos', t: Date.now() }); rows = j.precios; vs = ESP ? null : j.vendedores;
+    if (API) { const j = await apiGet(ESP ? { a: 'datos', cl: ESP, tel: LS.get('espTel', '') || '', dev: DEV, t: Date.now() } : { a: 'datos', t: Date.now() }); rows = j.precios; vs = ESP ? null : j.vendedores;
       if (ESP && j.especial) { const ant = JSON.stringify([EI.tipo, EI.autorizado, EI.sinprecio || 0]); LS.set('espInfo', j.especial); marcaAgua(j.especial); LS.set('espWA', j.whatsapp || ''); vend = { nombre: j.especial.vendedor || 'Distribuidora San Jorge', telefono: j.whatsapp || '' }; $('#modoBar').textContent = (j.especial.autorizado || j.especial.tipo === undefined ? 'PRECIOS ESPECIALES · ' : 'SU CATÁLOGO · ') + (j.especial.negocio || j.especial.nombre);
         if (j.especial.tipo !== undefined && JSON.stringify([j.especial.tipo, j.especial.autorizado, j.especial.sinprecio || 0]) !== ant) { LS.set(PKEY, null); location.reload(); return; } } }
     else { const r = await fetch('precios.csv?t=' + Date.now(), { cache: 'no-store' }); rows = csvAObjs(await r.text()); }
@@ -528,7 +528,7 @@ function abrir(i) {
   idx = (i + visibles.length) % visibles.length; const p = visibles[idx]; const x = pr(p);
   $('#mimg').src = '' + p.i + '.jpg'; $('#mn').textContent = p.n; $('#md').textContent = p.d;
   $('#mtag').innerHTML = tagH(p);
-  const tq = tipoDe(p.c); $('#mp').innerHTML = x.precio ? fmt(x.precio) + '<small>Precio ' + tq + (uVenta(p.c, tq) ? ' por ' + uVenta(p.c, tq) : '') + (tq == 'mayoreo' && x.nivel ? ' · ' + x.nivel : '') + '</small>' : '<span style="font-size:.5em;color:#bbb">Consulte precio con su vendedor</span>';
+  const tq = tipoDe(p.c); $('#mp').innerHTML = x.precio ? fmt(x.precio) + '<small>Precio ' + tq + (uVenta(p.c, tq) ? ' por ' + uVenta(p.c, tq) : '') + (tq == 'mayoreo' && x.nivel ? ' · ' + x.nivel : '') + '</small>' : '<span style="font-size:.5em;color:#bbb">Consulte precio con su vendedor</span><small style="display:block;font-size:.32em;color:#b23b2e;font-weight:700;margin-top:6px">' + esc(($('#infot').textContent || '') + ' · ' + (ESP ? 'enlace cliente' : 'general') + ' · ' + Object.keys(precios || {}).length + ' precios') + '</small>';
   const e = tipo == 'mayoreo' ? escalones(precios[p.c.toUpperCase()]) : [];
   const gg = grupoDe(p.c), uni = gg ? unidadDe(p.c) : (plural(uVenta(p.c, 'mayoreo'), 2) || 'unid.');
   $('#mesc').innerHTML = e.length > 1 ? e.map(r => { const mq = r.nivel == 'P1' ? 1 : ((marcasEscala(p.c).find(m => m.nivel == r.nivel) || {}).q || r.desde), act = r.nivel == x.nivel && (carrito[p.c] || 0) > 0, ag = agot(p.c);
