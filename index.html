@@ -478,7 +478,8 @@ async function cargar(manual) {
     if (ESP && /otro celular/i.test(e.message || '')) { enlaceOcupado((e.data || {}).vendedor); return; }
     if (ESP && /celular/i.test(e.message || '')) { pedirCelular(false, (e.data || {}).saludo); return; }
     if (ESP && /no válido/i.test(e.message || '')) { precios = {}; LS.set(PKEY, null); $('#infot').textContent = 'Este enlace ya no está activo. Comuníquese con Distribuidora San Jorge.'; $('#info').classList.add('off'); pintar(); return; }
-    const c = LS.get(PKEY, null);
+    const c = LS.get(PKEY, null), srv = e.data ? 'El servidor dijo: ' + (e.message || 'error') : e.name == 'SyntaxError' ? 'El servidor no respondió bien' : '';
+    if (srv && !c) { precios = {}; $('#infot').textContent = '⚠ No se pudieron cargar los precios. ' + srv; $('#info').classList.add('off'); pintar(); return; }
     if (c) { precios = c.p; window._PRECIOS = precios; $('#infot').textContent = 'Sin internet · precios guardados del ' + fechaHora(c.ts); } else $('#infot').textContent = 'Sin internet · aún no hay precios guardados';
     $('#info').classList.add('off'); if (manual) toast('Sin conexión, se muestran los últimos precios');
   }
