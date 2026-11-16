@@ -323,7 +323,7 @@ async function cargarInicio() {
       apiGet({ a: 'datos', k: K }).catch(() => ({ precios: [] })),
       ROL == 'oficina' ? apiGet({ a: 'vendedores_admin', k: K }).catch(() => ({ vendedores: [] })) : Promise.resolve({ vendedores: [] }),
       apiGet({ a: 'pedidos', k: K, desde: new Date(Date.now() - 90 * 864e5).toISOString().slice(0, 10), hasta: new Date().toISOString().slice(0, 10) }).catch(() => ({ pedidos: [] }))]);
-    PEDS = pj.pedidos || []; P90 = cb.pedidos || []; COBRAR = P90.filter(x => x.entrega == 'dejado').sort((a, b) => String(a.paga_el || '9').localeCompare(String(b.paga_el || '9')));   // primero los que ya deben pagar   // recordatorio de cobro (últimos 90 días) CLIS = cj.clientes || []; VENDS = vj.vendedores || [];
+    PEDS = pj.pedidos || []; P90 = cb.pedidos || []; COBRAR = P90.filter(x => x.entrega == 'dejado').sort((a, b) => String(a.paga_el || '9').localeCompare(String(b.paga_el || '9')));   /* primero los que ya deben pagar · recordatorio de cobro (últimos 90 días) */ CLIS = cj.clientes || []; VENDS = vj.vendedores || [];
     if (ROL == 'oficina') LS.set('vendedores', VENDS.map(v => ({ nombre: v.nombre, telefono: v.telefono })));
     pintarInicio(dj.precios || []);
   } catch (e) {
