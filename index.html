@@ -310,6 +310,7 @@ header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f
 #m .mf{flex-wrap:wrap}
 .mces{flex:1 0 100%;display:flex;justify-content:space-between;align-items:center;gap:8px;border:0;border-radius:12px;background:#eef6fd;color:#0f3d5e;padding:9px 12px;font:inherit;font-size:.92em;cursor:pointer;margin-bottom:-4px}
 .mces[hidden]{display:none}.mces .vp{font-weight:800;color:#1f78b4;white-space:nowrap}
+.masp{display:block;width:100%;margin:10px 0 14px;padding:14px;border:2px solid #1592e6;background:#eef7ff;color:#0f3d5e;font:700 1em system-ui,Arial;border-radius:14px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -352,6 +353,7 @@ header,#ped .ph{background:linear-gradient(115deg,#0b3150 0%,#0f3d5e 35%,#17577f
   <div id="plist"></div>
   <div id="pfz"></div>
   <div class="tot"><span>Total aprox.</span><span id="ptot"></span></div>
+  <button class="masp" id="pmas">✏ Editar pedido · agregar más productos</button>
   <div class="cbox">
    <h3>Cliente</h3>
    <div id="cliBuscar" style="display:none">
@@ -673,6 +675,7 @@ $('#cbar').onclick = abrirPed; // La canastita queda flotando arriba a la derech
   if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => c.classList.toggle('flota', !e.isIntersecting), { threshold: 0 }).observe(top); })();
 $('#mcesta').onclick = () => { history.back(); setTimeout(() => $('#cesta').click(), 150); };
 $('#cesta').onclick = () => { if (!armarPedido().items.length) return toast('Todavía no ha agregado productos'); abrirPed(); }; $('#pback').onclick = () => history.back();
+$('#pmas').onclick = () => history.back();   /* vuelve al catálogo con todo su pedido */
 $('#pvaciar').onclick = () => confirmar('¿Vaciar todo el pedido?', () => { carrito = {}; LS.set('carrito', carrito); pintar(); lineas(); });
 
 // Buscar clientes guardados (vendedor / oficina)
