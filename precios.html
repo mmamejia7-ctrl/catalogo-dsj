@@ -207,7 +207,7 @@ function tarjeta(p) {
      <label class="f"><span>Se cuenta en</span>${inp('unidad', 'fardos, cajas…', 'text')}</label>
      <label class="f"><span>Equivale a (1 unidad = ? del grupo)</span>${inp('equiv', 'vacío = 1')}</label>
     </div>
-    <p style="font-size:.78em;color:var(--tx);margin:6px 0 0">Los productos con el mismo grupo suman sus cantidades para escoger el precio. Ej.: paquete de pañal = 0.25 (4 paquetes = 1 fardo).</p>
+    <p style="font-size:.78em;color:var(--tx);margin:6px 0 0">Los productos con el mismo grupo suman sus cantidades para escoger el precio. Ej.: paquete de pañal = 0.25 (4 paquetes = 1 fardo). <b>Papel de 1 rollo (Cariñoso y Bingo):</b> escriba el precio del fardo completo y ponga 0.5; el sistema cobra la mitad por cada paquete.</p>
     ${r.grupo ? `<div class="btns"><button class="bs" data-act="grupo">Copiar estas escalas a todo el grupo ${esc(r.grupo)}</button></div>` : ''}
    </details>
   </div>`;

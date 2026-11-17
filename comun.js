@@ -18,12 +18,17 @@ function toast(t) { const e = $('#toast'); if (!e) return alert(t); e.textConten
 function parseCSV(t) { const r = []; let row = [], c = '', q = false; for (let i = 0; i < t.length; i++) { const ch = t[i]; if (q) { if (ch == '"') { if (t[i + 1] == '"') { c += '"'; i++; } else q = false; } else c += ch; } else if (ch == '"') q = true; else if (ch == ',') { row.push(c); c = ''; } else if (ch == '\n') { row.push(c); r.push(row); row = []; c = ''; } else if (ch != '\r') c += ch; } if (c || row.length) { row.push(c); r.push(row); } return r; }
 function csvAObjs(t) { const r = parseCSV(t); const h = r[0].map(x => x.trim().toLowerCase()); return r.slice(1).filter(x => x.join('')).map(x => Object.fromEntries(h.map((k, i) => [k, x[i]]))); }
 
+// Solo los productos que en el catálogo dicen "2 paq. = 1 fardo" (Cariñoso y Bingo de 1 rollo)
+function medioFardo(c) { const p = (window.PRODUCTOS || []).find(x => String(x.c).toUpperCase() == String(c).toUpperCase()); return !!(p && /paq\. = 1 fardo/i.test(p.d || '')); }
 // Convierte filas de la hoja en { CODIGO: {det, p:[p1,p2,p3,p4], d:[1,d2,d3,d4]} }
 function mapaPrecios(rows) {
   const m = {};
   for (const x of rows) {
     const c = String(x.codigo || '').trim().toUpperCase(); if (!c) continue;
     m[c] = { det: num(x.precio_detalle), p: [num(x.precio_1), num(x.precio_2), num(x.precio_3), num(x.precio_4)], d: [1, num(x.desde_2), num(x.desde_3), num(x.desde_4)], g: String(x.grupo || '').trim().toUpperCase(), e: num(x.equiv) || 1, u: String(x.unidad || '').trim().toLowerCase() || 'fardos', ud: String(x.unidad_detalle || '').trim().toLowerCase(), um: String(x.unidad_mayoreo || '').trim().toLowerCase(), s: !!x.especial, a: /^(si|sí|x|1|true|agotado)$/i.test(String(x.agotado || '').trim()), au: num(x.aut_desde) > 1 ? [num(x.aut_desde), num(x.aut_precio)] : null };
+    if (m[c].e > 0 && m[c].e < 1 && medioFardo(c)) {   /* papel de 1 rollo (2 paq. = 1 fardo): el precio escrito es por fardo completo */
+      const e = m[c].e, r2 = v => v ? Math.round(v * e * 100) / 100 : v; m[c].pf = m[c].p.slice(); m[c].p = m[c].p.map(r2); if (m[c].au) m[c].au = [m[c].au[0], r2(m[c].au[1])];
+    }
   }
   return m;
 }

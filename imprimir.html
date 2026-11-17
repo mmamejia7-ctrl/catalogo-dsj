@@ -142,7 +142,7 @@ function leer() {
 // Precios que se imprimen de un producto, según lo marcado
 function filasPrecio(r) {
   const sin = OPC.pre.includes('sin'); if (sin) return null;
-  const out = [], g = String(r.grupo || '').trim(), um = sing(r.unidad_mayoreo || '') || sing(r.unidad || 'fardos'), ud = sing(r.unidad_detalle || '') || 'unidad';
+  const out = [], g = String(r.grupo || '').trim(), um = n2(r.equiv) > 0 && n2(r.equiv) < 1 && medioFardo(r.codigo) ? sing(r.unidad || 'fardos') : (sing(r.unidad_mayoreo || '') || sing(r.unidad || 'fardos')), ud = sing(r.unidad_detalle || '') || 'unidad';
   const uDesde = g ? plu(r.unidad || 'fardos') : plu(r.unidad_mayoreo || 'unidad');
   const ver = k => OPC.pre.includes(k);
   if (ver('det') && n2(r.precio_detalle)) out.push(['', 'Detalle · ' + ud, n2(r.precio_detalle)]);
